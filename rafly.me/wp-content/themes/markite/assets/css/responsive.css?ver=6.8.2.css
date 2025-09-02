@@ -1,0 +1,112 @@
+/* Normal desktop :1200px. */
+@media (min-width: 1200px) and (max-width: 1500px) {
+.woocommerce .extra {
+	width: 100%;
+}
+.hero__height {
+	min-height: 800px;
+}
+
+}
+
+
+/* Normal desktop :992px. */
+@media (min-width: 992px) and (max-width: 1200px) {
+.woocommerce .extra {
+	width: 100%;
+}
+.hero__height {
+	min-height: 750px;
+}
+
+}
+
+ 
+/* Tablet desktop :768px. */
+@media (min-width: 768px) and (max-width: 991px) {
+.woocommerce .extra {
+	width: 100%;
+}
+.single-post .page__title-content h2 {
+    font-size: 40px;
+}
+.header__cart a {
+	margin-right: 25px;
+}
+.header__login a::after {
+	display: none;
+}
+.hero__height {
+	min-height: 850px;
+}
+
+}
+
+ 
+/* small mobile :320px. */
+@media (max-width: 767px) {
+.woocommerce form .form-row-first, .woocommerce form .form-row-last, .woocommerce-page form .form-row-first, .woocommerce-page form .form-row-last {
+	width: 100%;
+}
+.admin-bar .header__area.sticky {
+	margin-top: 0;
+}
+.footer-col-2-3 .footer__widget {
+	padding-left: 0;
+}
+.single-post .page__title-content h2 {
+    font-size: 32px;
+}
+.banner__item {
+	padding-right: 30px;
+}
+.header__login a::after {
+	display: none;
+}
+.postbox__item.sticky::before {
+	right: 8px;
+	top: 6px;
+	font-size: 26px;
+}
+#coupon_code {
+	width: 100%;
+	margin-bottom: 10px;
+}
+.coupon .m-btn-2 {
+	width: 100%;
+}
+.woocommerce .m-btn-disabled:disabled {
+	width: 100%;
+}
+.m-btn.m-btn-2.m-btn-disabled {
+	width: 100%;
+}
+.woocommerce .cart-collaterals .cart_totals, .woocommerce-page .cart-collaterals .cart_totals {
+	width: 100%;
+}
+.woocommerce a.remove {
+	transform: translateY(-9px);
+}
+.hero__height {
+	min-height: 750px;
+}
+
+ 
+}
+ 
+/* Large Mobile :480px. */
+@media only screen and (min-width: 560px) and (max-width: 767px) {
+.woocommerce .extra {
+	width: 100%;
+}
+.banner__item {
+	padding-right: 150px;
+}
+.header__cart a {
+	margin-right: 25px;
+}
+.admin-bar .header__area.sticky {
+	margin-top: 46px;
+}
+ 
+}

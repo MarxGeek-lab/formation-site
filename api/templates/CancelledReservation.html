@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="font-family: Poppins, sans-serif; margin: 0; padding: 0; line-height: 26px;">
+    <div style="max-width: 600px; margin: 0 auto;">
+        <!-- En-tête avec logo et titre -->
+        <div style="background-color: #1f5bdc2a; text-align: center; padding: 20px; border-radius: 10px 10px 0 0;">
+            <img src="https://api.reservetout.com/logo/logo.png" alt="Logo ReserveTout" style="max-width: 200px;">
+            <h1 style="margin-top: 15px; font-size: 30px; text-align: center; width: 80%; margin: 15px auto; line-height: 35px;">
+                Annulation d'une réservation sur ReserveTout
+            </h1>
+        </div>
+        <!-- Corps du message -->
+        <div style="background-color: #ffffff; padding: 20px; border-radius: 0 0 10px 10px;">
+            <p style="font-size: 15px;">Bonjour M/Mme <strong>{{fullname}}</strong>,</p>
+            <p style="font-size: 15px;">
+                Le client {{ fullname }} a annulé sa réservation sur ReserveTout.
+            </p>
+            <p style="font-size: 15px;">
+                Détails :
+            </p>
+            <ul style="font-size: 15px;">
+                <li><strong>Référence :</strong> {{reference}}</li>
+                <li><strong>Bien :</strong> {{nom_bien}}</li>
+                <li><strong>Date :</strong> {{date_annulation}}</li>
+            </ul>
+            <p style="font-size: 15px; margin-top: 20px;">
+                Si vous avez des questions ou besoin d'assistance, vous pouvez nous contacter à : <strong>contact@reservetout.com</strong>.
+            </p>
+            <p style="font-size: 16px;">Cordialement,</p>
+            <p style="font-size: 16px;">L'équipe <strong>ReserveTout</strong></p>
+        </div>
+    </div>
+</body>
+
+</html>

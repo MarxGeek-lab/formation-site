@@ -1,0 +1,67 @@
+.policyContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section {
+  margin-bottom: 3.5rem;
+  background: var(--card-background);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+}
+
+.sectionTitle {
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+  font-size: 1.25rem !important;
+  margin-bottom: 1.5rem !important;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--primary);
+  
+  @media (max-width: 768px) {
+    font-size: 1.1rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+.sectionContent {
+  line-height: 1.7;
+  
+  p {
+    color: var(--foreground);
+    margin-bottom: 1rem;
+    
+    strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: underline;
+      
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+.contactSection {
+  background: linear-gradient(135deg, var(--primary-subtle), var(--card-background));
+  border: 2px solid var(--primary);
+  
+  .sectionTitle {
+    color: var(--primary) !important;
+  }
+  
+  .sectionContent {
+    p {
+      color: var(--foreground);
+    }
+  }
+}

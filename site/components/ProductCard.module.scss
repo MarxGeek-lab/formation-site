@@ -1,0 +1,222 @@
+// Product Card Component Styles
+.productCard {
+  background: var(--card-background);
+  border: 1px solid var(--primary);
+  border-radius: 12px;
+  padding: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(95, 58, 252, 0.15);
+    border-color: var(--primary);
+    
+    .hoverOverlay {
+      opacity: 1;
+    }
+  }
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: var(--card-background);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  
+  .imagePlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    
+    svg {
+      opacity: 0.6;
+    }
+  }
+  
+  .productImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .hoverOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(95, 58, 252, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    
+    .buyNowButton {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      transform: translateY(10px);
+      
+      &:hover {
+        background: var(--foreground);
+        color: white;
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.category {
+  font-size: 1rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.priceSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap !important;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+
+.priceContainer {
+  flex: 1;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--foreground);
+  white-space: nowrap;
+}
+
+.features {
+  display: flex;
+  align-items: center;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--foreground);
+  opacity: 0.8;
+}
+
+.checkIcon {
+  width: 1rem;
+  height: 1rem;
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.accessButton {
+  background: var(--primary);
+  border: 1px solid rgba(95, 58, 252, 0.2);
+  border-radius: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  color: var(--foreground);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin:  auto;
+  margin-top: 1rem;
+  width: 100%;
+  
+  &:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(95, 58, 252, 0.3);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .productCard {
+    padding: 0.875rem;
+  }
+  
+  .title {
+    font-size: 1.125rem;
+  }
+  
+  .category {
+    font-size: 0.9rem;
+  }
+  
+  .price {
+    font-size: 1.25rem;
+  }
+  
+  .priceSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .accessButton {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  
+  .price {
+    font-size: 1.125rem;
+  }
+  
+  .feature {
+    font-size: 0.8rem;
+  }
+  
+  .checkIcon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}

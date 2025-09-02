@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="width: 550px; margin: 0 auto; font-family: Poppins, sans-serif; padding: 0; line-height: 26px;">
+    <div style="text-align: center; padding: 10px 0; border-radius: 10px 10px 0 0; border-bottom: 1px solid #e0e0e0;">
+        <img src="https://api.reservetout.com/logo/logo.png" alt="Logo ReserveTout" style="max-width: 120px;">
+        <h1 style="margin-top: 15px; font-size: 24px; text-align: center; width: 80%; margin: 15px auto; line-height: 35px;">{{title}}</h1>
+    </div>
+    <div style="background-color: #ffffff; padding: 20px; border-radius: 0 0 10px 10px;">
+        <p style="font-size: 15px;">Bonjour M/Mme <strong>{{fullname}}</strong>,</p>
+        <p style="font-size: 15px;">
+            {{{message}}}
+        </p>
+        <ul style="font-size: 15px;">
+            <li><strong>Commande ID :</strong> {{orderId}}</li>
+            <li><strong>Nombre d'articles :</strong> {{numberArticle}}</li>
+            <li><strong>Montant total :</strong> {{amount}} FCFA</li>
+            <li><strong>Montant payé :</strong> {{paidAmount}} FCFA</li>
+            <li><strong>Date de paiement :</strong> {{createdAt}}</li>
+        </ul>
+        <p style="font-size: 15px;">
+            Si vous avez des questions ou besoin d'assistance, contactez le propriétaire du bien depuis votre tableau de bord.
+        </p>
+        <p style="font-size: 16px;">Cordialement,</p>
+        <p style="font-size: 16px;">L'équipe <strong>ReserveTout</strong></p>
+    </div>
+</div>
+
+</body>
+</html>

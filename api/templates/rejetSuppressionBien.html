@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="font-family: Poppins, sans-serif; margin: 0; padding: 0; line-height: 26px;">
+    <div style="max-width: 600px; margin: 0 auto; ">
+        <div style="background-color: #fce8e6; text-align: center; padding: 20px; border-radius: 10px 10px 0 0;">
+            <img src="https://api.reservetout.com/logo/logo.png" alt="Logo ReserveTout" style="max-width: 200px;">
+        </div>
+        <div style="background-color: #ffffff; padding: 20px; border-radius: 0 0 10px 10px;">
+            <p style="font-size: 15px;">{{salutation}} M/Mme <strong>{{fullname}}</strong>,</p>
+            <p style="font-size: 15px;">
+                Nous sommes au regret de vous informer que votre demande de <strong>{{type_demande}}</strong> pour le bien <strong>{{nom_bien}}</strong> (ID : {{reference}}) a été <strong>{{raison_rejet_suppression}}</strong>.
+            </p>
+            <p style="font-size: 15px;">
+                <strong>Motif :</strong> {{motif}}
+            </p>
+            <p style="font-size: 15px;">
+                Nous comprenons que cette décision puisse être décevante. Si vous avez des questions ou souhaitez obtenir des clarifications, n'hésitez pas à nous contacter.
+            </p>
+            <p style="font-size: 15px;">
+                Pour consulter les détails de votre demande et l'historique de vos actions, rendez-vous sur votre tableau de bord utilisateur.
+            </p>
+            <p style="font-size: 15px; margin-top: 20px;">
+                Si vous avez des questions ou besoin d'assistance, vous pouvez nous contacter à : <strong>contact@reservetout.com</strong>.
+            </p>
+            <p style="font-size: 16px;">Cordialement,</p>
+            <p style="font-size: 16px;">L'équipe <strong>ReserveTout</strong></p>
+        </div>
+    </div>
+</body>
+
+</html>

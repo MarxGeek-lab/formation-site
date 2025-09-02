@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Service Node.js pour le backend
+  backend:
+    build:
+      context: .
+    container_name: backend
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules # Préserve le dossier `node_modules` dans le conteneur
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    command: "npm start"
+    networks:
+      - app-network
+    environment:
+      MONGO_URI: mongodb://admin:password@mongo:27017
+
+  # Base de données MongoDB
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27018:27017"
+    networks:
+      - app-network
+
+
+  # Service Nginx pour le reverse proxy
+  #nginx:
+  #  image: nginx:latest
+   # container_name: nginx
+    #ports:
+   #   - "80:80"
+   # volumes:
+      # - ./nginx.conf:/etc/nginx/nginx.conf
+    # depends_on:
+    #   - backend
+    # networks:
+    #   - app-network
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

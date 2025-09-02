@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../assets/fonts/Poppins-Regular.ttf");
+}
+:root {
+  /* Rafly Colors - Extracted from post-6.css */
+  --primary: #5F3AFC;
+  --primary-subtle: #0e0a25;
+  --primary-border: #2c1c71;
+  --primary-text: #d3cff2;
+  --secondary: #1A152E;
+  --text: #1A152E;
+  --accent: #5F3AFC;
+  --primary-light: #5E3AFC33;
+  --background-light: #ECEFFFB2;
+  --dark-bg: #090619;
+  --darker-bg: #0A0719;
+  /* --primary-subtle: #5E3AFC0D; */
+  --white: #FFFFFF;
+  --page-transition: #FFBC7D;
+  
+  /* Elementor Global Colors */
+  --e-global-color-primary: #5F3AFC;
+  --e-global-color-secondary: #1A152E;
+  --e-global-color-text: #1A152E;
+  --e-global-color-accent: #5F3AFC;
+  --e-global-color-c3c16f7: #5E3AFC33;
+  --e-global-color-83ce759: #ECEFFFB2;
+  --e-global-color-1397ae0: #090619;
+  --e-global-color-7e150af: #0A0719;
+  --e-global-color-2819805: #5E3AFC0D;
+  
+  /* Legacy variables for compatibility */
+  --background: #090619;
+  --foreground: #ffffff;
+}
+
+/* Theme variations */
+[data-theme="light"] {
+  --background: #ffffff;
+  --foreground: #1a152e;
+  --theme-toggle-bg: rgba(0,0,0,0.05);
+  --theme-toggle-bg-hover: rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+  --background: #090619;
+  --foreground: #ffffff;
+  --theme-toggle-bg: rgba(255,255,255,0.1);
+  --theme-toggle-bg-hover: rgba(255,255,255,0.2);
+}
+
+/* Tailwind CSS custom properties */
+.theme-config {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-text: var(--text);
+  --font-sans: var(--font-roboto);
+  --font-serif: var(--font-roboto-slab);
+  --font-mono: var(--font-roboto);
+}
+
+/* Removed media query - using data-theme instead */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+}
+
+/* Rafly specific styles - Following post-6.css structure */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text);
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+}
+
+/* Theme-based heading colors */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: #FFFFFF !important;
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+  color: #1A152E !important;
+}
+
+/* Default headings for dark background - following post-6.css */
+h1, h2, h3, h4, h5, h6 {
+  color: #FFFFFF !important;
+}
+
+p {
+  color: var(--primary-text) !important;
+  font-size: 14px !important;
+}
+
+/* Override headings for light backgrounds */
+.bg-white h1,
+.bg-white h2,
+.bg-white h3,
+.bg-white h4,
+.bg-white h5,
+.bg-white h6,
+.bg-gray-50 h1,
+.bg-gray-50 h2,
+.bg-gray-50 h3,
+.bg-gray-50 h4,
+.bg-gray-50 h5,
+.bg-gray-50 h6 {
+  color: #1A152E !important;
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+/* Container max-widths following post-6.css */
+.container-rafly {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.rafly-sub {
+  background-color: transparent;
+  padding: 8px 20px !important;
+  background-image: linear-gradient(90deg, #5E3AFC33 0%, #5E3AFC00 100%);
+  border-style: solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: var(--e-global-color-secondary);
+  border-radius: 30px;
+  width: fit-content;
+  margin: auto !important;
+  margin-bottom:0rem !important;
+  color: var(--primary) !important;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 15px;
+}
+
+.rafly-sub svg {
+  width: 20px;
+  height: 20px;
+}
+
+.rafly-title {
+  font-size: 40px !important;
+  font-weight: bold !important;
+  text-align: left;
+  color: var(--foreground);
+  font-family: 'Nunito', sans-serif;
+  line-height: 52px !important;
+  background: -webkit-linear-gradient(50deg, #5E3AFC, #ECEFFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: fit-content !important;
+  margin: auto;
+  margin-bottom: 1.5rem !important;
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .container-rafly {
+    max-width: 1024px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container-rafly {
+    max-width: 767px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .rafly-title {
+    font-size: 28px !important;
+    line-height: 42px !important;
+  }
+
+  .rafly-sub {
+    font-size: 12px !important;
+    text-align: center;
+  }
+}

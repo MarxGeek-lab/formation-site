@@ -1,0 +1,15 @@
+.featuredCard {
+  cursor: pointer;
+  position: relative;
+  
+  &:hover {
+    .productOverlay {
+      background: rgba(0, 0, 0, 0.7) !important;
+    }
+  }
+}
+
+.productOverlay {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}

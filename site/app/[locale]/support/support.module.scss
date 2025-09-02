@@ -1,0 +1,339 @@
+// Support Page Styles
+.supportPage {
+  min-height: 100vh;
+  color: var(--foreground);
+  display: flex;
+  flex-direction: column;
+  gap: 5rem !important;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+// Hero Section
+.heroSection {
+  text-align: center;
+  padding: 0rem 0;
+  position: relative;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+  
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.heroDescription {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--foreground);
+  opacity: 0.8;
+  margin-bottom: 3rem;
+}
+
+// Support Cards
+.supportCard {
+  background: var(--card-background);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(95, 58, 252, 0.15);
+    border-color: var(--primary);
+  }
+}
+
+.supportIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+  background: rgba(95, 58, 252, 0.1);
+  border-radius: 50%;
+  
+  svg {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.supportTitle {
+  font-size: 1.2rem ;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+
+.supportDescription {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--foreground);
+  opacity: 0.8;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+
+.supportButton {
+  background: var(--primary);
+  border-radius: 12px;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+  margin: auto;
+  
+  &:hover {
+    background: var(--primary);
+    
+    a {
+      color: white;
+    }
+  }
+  
+  a {
+    display: block;
+    padding: 0.65rem 1.2rem;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+  }
+}
+
+// Team Section
+.teamSection {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.teamImages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.teamMember {
+  position: relative;
+  margin-left: -20px;
+  
+  &:first-child {
+    margin-left: 0;
+    z-index: 4;
+  }
+  
+  &:nth-child(2) {
+    z-index: 3;
+  }
+  
+  &:nth-child(3) {
+    z-index: 2;
+  }
+  
+  &:nth-child(4) {
+    z-index: 1;
+  }
+}
+
+.teamImage {
+  border-radius: 50%;
+  border: 3px solid white;
+  transition: all 0.3s ease;
+  width: 55px;
+  height: 55px;
+  
+  &:hover {
+    transform: scale(1.05);
+    border-color: var(--primary);
+  }
+
+  @media (max-width: 600px) {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
+.teamContact {
+  font-size: 1.125rem;
+  color: var(--foreground);
+  opacity: 0.8;
+  
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// CTA Section
+.ctaSection {
+//   background: linear-gradient(135deg, var(--primary) 0%, rgba(95, 58, 252, 0.8) 100%);
+  border-radius: 8px;
+  padding: 4rem 2rem;
+  margin: 0;
+  text-align: center;
+  color: white;
+  background-image: linear-gradient(40deg, #6017e7 0%, #c320f9 100%);
+}
+
+.ctaContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  
+  span {
+    color: #FFD700;
+  }
+}
+
+.ctaDescription {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  opacity: 0.9;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ctaButtonPrimary {
+  background: white;
+  color: var(--primary);
+  padding: 0.85rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.ctaButtonSecondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 0.85rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: white;
+    color: var(--primary);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .supportPage {
+    gap: 3rem !important;
+    padding-top: 2rem;
+  }
+  
+  .heroSection {
+    padding: 2rem 0;
+  }
+  
+  .supportCard {
+    padding: 2rem 1.5rem;
+  }
+  
+  .teamSection {
+    padding: 3rem 0;
+  }
+  
+  .ctaSection {
+    padding: 3rem 1.5rem;
+  }
+  
+  .ctaTitle {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .supportPage {
+    gap: 2rem !important;
+  }
+  
+  .heroDescription {
+    font-size: 1rem;
+  }
+  
+  .supportCard {
+    padding: 1.5rem 1rem;
+  }
+  
+  .supportTitle {
+    font-size: 1rem;
+  }
+  
+  .supportDescription {
+    font-size: 0.9rem;
+  }
+  
+  .teamImages {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .teamMember {
+    margin-left: -10px;
+  }
+  
+  .teamImage {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .ctaTitle {
+    font-size: 1.75rem;
+  }
+  
+  .ctaDescription {
+    font-size: 1rem;
+  }
+  
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .ctaButtonPrimary,
+  .ctaButtonSecondary {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+  }
+}

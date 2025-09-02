@@ -1,0 +1,439 @@
+// Page Paiement Styles
+.billingCard {
+  background: var(--card-background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+.orderSummary {
+  background: var(--card-background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  position: sticky;
+  top: 2rem;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  label {
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  textarea {
+    padding: 12px 16px;
+    border: 1px solid var(--primary-light);
+    border-radius: 8px;
+    background-color: var(--primary-light);
+    color: white;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    &:hover {
+      border-color: var(--primary);
+    }
+    
+    &.error {
+      border-color: #ef4444;
+    }
+  }
+  
+  input {
+    padding: 12px 16px;
+    border: 1px solid var(--primary-light);
+    border-radius: 8px;
+    background-color: var(--primary-light);
+    color: white;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    &:hover {
+      border-color: var(--primary);
+    }
+    
+    &.error {
+      border-color: #ef4444;
+    }
+  }
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.checkboxField {
+  margin-top: 1.5rem;
+}
+
+.checkbolgabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--primary);
+  }
+  
+  .checkboxText {
+    color: white;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    
+    .link {
+      color: var(--primary);
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.paymentSection {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.paymentHeader {
+  margin-bottom: 1rem;
+  
+  h3 {
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.4;
+  }
+}
+
+.paymentIcons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  
+  span {
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.paymentMessage {
+  margin-bottom: 1.5rem;
+  background-color: white;
+  border-radius: 4px;
+  padding: 1rem;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  /* Speech bubble triangle pointer */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 30px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid white;
+  }
+  
+  p {
+    color: #666 !important;
+    font-size: 0.8rem !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+}
+
+.privacyNote {
+  margin-bottom: 1.5rem;
+  
+  p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+    margin: 0;
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.commanderButton {
+  background: var(--primary) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  padding: 8px 24px !important;
+  border-radius: 12px !important;
+  text-transform: none !important;
+  
+  &:hover {
+    background: var(--primary) !important;
+    opacity: 0.9;
+  }
+}
+
+/* Section Code Promo */
+.promoSection {
+  background: transparent !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.promoMessage {
+  background: var(--primary-light) !important;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--primary-border);
+  border: 1px solid var(--primary-border) !important;
+  border-radius: 12px !important;
+  background: var(--primary-subtle) !important;
+  
+  span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--foreground);
+  }
+}
+
+.promoIcon {
+  font-size: 1.25rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.promoInputSection {
+  background: var(--primary-subtle);
+  padding: 1.5rem;
+}
+
+.promoInputContainer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.promoInput {
+  width: 350px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: white;
+  color: #333;
+  font-size: 0.9rem;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+  
+  &::placeholder {
+    color: #999;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.applyPromoButton {
+  background: var(--primary) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  text-transform: none !important;
+  white-space: nowrap;
+  width: fit-content !important;
+  
+  &:hover {
+    background: var(--primary) !important;
+    opacity: 0.9;
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.paymentMethod {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid var(--border) !important;
+  
+  &:hover {
+    border-color: var(--primary) !important;
+    box-shadow: 0 4px 12px rgba(95, 58, 252, 0.1) !important;
+  }
+  
+  &.selected {
+    border-color: var(--primary) !important;
+    background: rgba(95, 58, 252, 0.05) !important;
+  }
+}
+
+.paymentIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.cartItems {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.cartItem {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+  
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.itemImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagePlaceholder {
+  font-size: 1.5rem;
+  opacity: 0.6;
+}
+
+.orderTotal {
+  background: rgba(95, 58, 252, 0.05);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.placeOrderButton {
+  background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%) !important;
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 12px rgba(95, 58, 252, 0.3) !important;
+  
+  &:hover {
+    box-shadow: 0 6px 16px rgba(95, 58, 252, 0.4) !important;
+    transform: translateY(-1px);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .orderSummary {
+    position: static;
+    margin-top: 2rem;
+  }
+  
+  .paymentMethods {
+    gap: 0.75rem;
+  }
+  
+  .cartItem {
+    padding: 0.75rem 0;
+  }
+  
+  .itemImage {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .orderTotal {
+    padding: 1rem;
+  }
+}
+
+// Custom scrollbar for cart items
+.cartItems::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cartItems::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 2px;
+}
+
+.cartItems::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+.cartItems::-webkit-scrollbar-thumb:hover {
+  background: #4c1d95;
+}

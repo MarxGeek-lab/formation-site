@@ -1,0 +1,523 @@
+{
+  "Header": {
+    "catalogue": "Catalog",
+    "about": "About",
+    "pricing": "Pricing",
+    "affiliation": "Affiliation",
+    "support": "Support",
+    "mysteryProduct": "Mystery Product",
+    "viewCatalogue": "View catalog",
+    "menuToggle": "Menu Toggle",
+    "switchToTheme": "Switch to {theme} theme",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode"
+  },
+  "Home": {
+    "heroSubtitle": "Designed for resellers, creators and e-merchants",
+    "heroTitle": "The #1 platform for reselling digital products",
+    "heroDescription": "Access a selection of profitable digital products, validated by the market, with visuals and action plan included to sell from today.",
+    "browseProducts": "Browse products",
+    "orderVisual": "Order a visual",
+    "satisfiedResellers": "+ 150 satisfied resellers with our products",
+    "presentationVideo": "Presentation video",
+    "featuresTitle": "What makes our products different",
+    "featuresDescription": "Access a selection of profitable digital products, validated by the market, with visuals and action plan included to sell from today.",
+    "readyToUse": "Ready to use",
+    "readyToUseDescription": "No need to configure everything. Download, open and start using the product in minutes.",
+    "resultsFocused": "Results focused",
+    "resultsFocusedDescription": "Our resources are designed to get straight to the point. You save time and boost your efficiency effortlessly.",
+    "fastSupport": "Fast support",
+    "fastSupportDescription": "A question or problem? We respond within 24h so you never stay stuck.",
+    "findRightProduct": "Find the right product",
+    "timeMatters": "Every minute counts.",
+    "takeActionNow": "Take action now with the right tools.",
+    "productsSubtitle": "Featured",
+    "productsTitle": "Find the digital product you need",
+    "productsDescription": "All our products are designed to save you time, improve your productivity and simplify your daily life.",
+    "ecommerceTraining": "E-commerce Training",
+    "business": "Business",
+    "ecommercePrice": "29,000 CFA",
+    "ecommerceDisplayText": "Online sales strategies",
+    "conversionTechniques": "Conversion techniques",
+    "digitalMarketing": "Digital marketing",
+    "storeManagement": "Store management",
+    "designTemplatesPack": "Design Templates Pack",
+    "design": "Design",
+    "templatesPrice": "15,000 CFA",
+    "templatesDisplayText": "Professional templates",
+    "fiftyTemplates": "50+ templates",
+    "variousFormats": "Various formats",
+    "customizable": "Customizable",
+    "photoshopLuts": "10 PHOTOSHOP LUTS",
+    "graphicDesign": "Graphic Design",
+    "lutsPrice": "14,000 CFA",
+    "lutsDisplayText": "Professional LUTs for Photoshop",
+    "readyToUseLuts": "10 ready-to-use LUTs",
+    "editableFiles": "Editable files",
+    "installationGuide": "Installation guide",
+    "buyNow": "Buy Now",
+    "accessProduct": "Access product"
+  },
+  "MysteryProduct": {
+    "subtitle": "Mystery",
+    "title": "Mystery Product of the Week",
+    "description": "Are you a reseller looking for a \"winner\" product with high potential? Discover it in preview right now.",
+    "productTitle": "Video Training – Mystery Product S1 June 2025",
+    "productDescription": "Are you a reseller looking for a \"winner\" product with high potential? Discover it in preview right now.",
+    "buyNow": "Buy Now",
+    "subscribe": "Subscribe"
+  },
+  "Pricing": {
+    "subtitle": "Subscriptions",
+    "title": "Flexible plans, designed for your comfort",
+    "description": "Whether you're looking for a single product or full access to the entire library, our plans are designed to adapt to your needs.",
+    "popular": "Popular",
+    "subscribe": "Subscribe",
+    "basic": {
+      "title": "Basic Subscription",
+      "description": "Perfect to get started in digital reselling.",
+      "features": {
+        "access3Products": "Access to 3 winning products",
+        "advertisingPosters": "2 advertising posters offered",
+        "plrLicense": "PLR license contract",
+        "earlyAccess": "Early access to new products",
+        "monthlySuprise": "Surprise product every month",
+        "weeklyMystery": "Trending mystery products every week",
+        "adTexts": "Optimized advertising texts pack",
+        "monthlyCall": "Monthly call with a Facebook Ads expert",
+        "monthlyAudit": "Free monthly audit of advertising campaigns",
+        "marketingStrategies": "Marketing strategy suggestions"
+      }
+    },
+    "elite": {
+      "title": "Elite Subscription",
+      "description": "Designed to scale and dominate the digital market."
+    },
+    "essential": {
+      "title": "Essential Subscription",
+      "description": "Ideal for those who want to go further.",
+      "features": {
+        "access15Products": "Access to 15 winning products",
+        "advertising8Posters": "8 advertising posters offered",
+        "weeklyTrends": "Weekly advice on general trends",
+        "monthlyStrategyAudit": "Free monthly audit on advertising strategies",
+        "plrLicense": "PLR license contract"
+      }
+    }
+  },
+  "Team": {
+    "subtitle": "Designers",
+    "title": "Our Expert Graphic Designers",
+    "description": "Our team of professional graphic designers is at your disposal for creating visuals for your winning products.",
+    "roles": {
+      "graphicDesigner": "Graphic Designer"
+    }
+  },
+  "Testimonials": {
+    "subtitle": "Reviews",
+    "title": "What our users say",
+    "description": "Hundreds of satisfied customers in different fields: design, freelance, productivity, content...",
+    "texts": {
+      "testimonial1": "Rafly is a real gem! I found exactly the resources I needed for my project. Smooth interface and quality products!",
+      "testimonial2": "Top-notch service! Products are well sorted, and support is super responsive. I really recommend 100%.",
+      "testimonial3": "Thanks to Rafly, I was able to get super useful templates and tools in just a few clicks. A real time saver!",
+      "testimonial4": "A clear platform, fast downloads and a great selection of digital products."
+    }
+  },
+  "FAQ": {
+    "subtitle": "FAQs",
+    "title": "Frequently Asked Questions",
+    "description": "You'll find answers to most of your questions about Rafly and its products",
+    "questions": {
+      "whatIsRafly": "What is Rafly?",
+      "howToBuy": "How to buy a product on Rafly?",
+      "productTypes": "What types of products can I find on Rafly?",
+      "immediateAccess": "Are files accessible immediately?",
+      "sellProducts": "Can I sell my own products on Rafly?",
+      "paymentMethods": "What payment methods are accepted?",
+      "refunds": "Can I get a refund after purchase?",
+      "fileProblems": "What to do if I have a problem with a downloaded file?",
+      "promotions": "Are there promotions or discounts on Rafly?",
+      "contactSupport": "How to contact Rafly support?"
+    },
+    "answers": {
+      "whatIsRaflyAnswer": "📝 Rafly is a marketplace specialized in selling digital products. You'll find templates, graphic files, developer resources and much more.",
+      "howToBuyAnswer": "📝 Simply browse the catalog, add a product to your cart and complete your purchase via available payment methods.",
+      "productTypesAnswer": "📝 Rafly offers various digital files: website templates, graphic elements, ebooks, presets, plugins, etc.",
+      "immediateAccessAnswer": "📝 Yes, as soon as your payment is validated, you can download your files directly from your account.",
+      "sellProductsAnswer": "📝 Yes! Rafly allows creators to sell their digital products. Contact us to learn more.",
+      "paymentMethodsAnswer": "📝 We accept payments by credit card, mobile money and other solutions adapted to Africa.",
+      "refundsAnswer": "📝 Since digital products are downloadable immediately, refunds are subject to certain conditions. Check our refund policy for more details.",
+      "fileProblemsAnswer": "📝 Contact our support, we'll do our best to help you or find a solution with the seller.",
+      "promotionsAnswer": "📝 Yes, we regularly organize special offers. Stay connected so you don't miss anything!",
+      "contactSupportAnswer": "📝 You can write to us via the site's contact page or directly by email."
+    }
+  },
+  "Footer": {
+    "description": "The #1 platform for reselling digital products. Access a selection of profitable digital products, validated by the market.",
+    "quickLinks": "Quick Links",
+    "myAccount": "My Account",
+    "pricing": "Pricing",
+    "support": "Support",
+    "privacyPolicy": "Privacy Policy",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Subscribe to not miss our mystery products",
+    "emailPlaceholder": "Email",
+    "subscribe": "Subscribe",
+    "copyright": "© 2025 Rafly. All rights reserved."
+  },
+  "Catalogue": {
+    "subtitle": "Our Products",
+    "title": "Product Catalogue",
+    "categoriesTitle": "Categories",
+    "categories": {
+      "all": "All",
+      "ebooks": "E-Books & Guides",
+      "subscriptions": "Subscriptions",
+      "business": "Business",
+      "graphicDesign": "Graphic Design",
+      "entertainment": "Entertainment",
+      "training": "Training",
+      "ai": "AI",
+      "videoEditing": "Video Editing",
+      "mysteries": "Mysteries & Puzzles",
+      "premiumTools": "Premium Tools",
+      "spirituality": "Spirituality & Wellness",
+      "templates": "Templates"
+    }
+  },
+  "About": {
+    "hero": {
+      "title": "Rafly, the platform that transforms beginners into successful sellers.",
+      "description": "We don't just sell digital products. We provide weapons to win: validated products, concrete strategies, and a community that takes action. Launch your business today, without getting lost along the way."
+    },
+    "whatIsRafly": {
+      "title": "What is Rafly? And why will you love it?",
+      "description": "Rafly was born from a real and personal need, directly experienced by a field e-commerce entrepreneur. Before Rafly, selling a digital product was a real obstacle course."
+    },
+    "problems": {
+      "problem1": "...you had to spend hours scrolling on Facebook",
+      "problem2": "... hope to find an interesting product then waste time looking for a good graphic designer",
+      "problem3": "...wait days to receive sometimes disappointing visuals",
+      "summary": "In short, a lot of time wasted, for few results."
+    },
+    "solution": {
+      "intro": "It's by experiencing all these obstacles that a simple idea was born:",
+      "idea": "What if a single platform could take care of everything",
+      "description": "Rafly is therefore this solution: an all-in-one tool designed to save you time, accelerate your sales and focus only on what really matters: selling.",
+      "mission": "Our mission: make digital business simple, fast and profitable for everyone.",
+      "intro2": "Whether you're a beginner or already launched, Rafly gives you direct access to:",
+      "features": {
+        "feature1": "tested, sorted and validated digital products",
+        "feature2": "professional visuals ready to use",
+        "feature3": "concrete strategies to get started, without complicating things",
+        "feature4": "Less stress, more results"
+      }
+    },
+    "testimonials": {
+      "title": "Some client results",
+      "testimonial1": {
+        "description": "In just 6 months, a seller using our digital products generated over €16,500 in revenue. How? By exploiting our ready-to-sell products and taking advantage of all Rafly's features to attract, convert and retain customers.",
+        "mission": "Our mission: make digital business simple, fast and profitable for everyone.",
+        "clientName": "Positif Godson, CEO",
+        "result": "€16,500",
+        "period": "generated in 6 months"
+      }
+    },
+    "cta": {
+      "title": "Ready to take action?",
+      "description": "You no longer need to search for hours, nor struggle with unprofessional visuals. Rafly brings you directly the best tested digital products and ready-to-sell tools. Join now the hundreds of sellers who are already getting results.",
+      "primaryButton": "Discover successful products",
+      "secondaryButton": "Get my subscription"
+    }
+  },
+  "Affiliation": {
+    "hero": {
+      "title": "Earn",
+      "titleHighlight": "10% recurring revenue for life",
+      "description": "Recommend RAFLY to your audience and receive 10% commission every month, as long as your referrals stay subscribed. You just have to share a link, we take care of the rest.",
+      "ctaButton": "Become an affiliate partner"
+    },
+    "howItWorks": {
+      "title": "How does it work?",
+      "steps": {
+        "step1": {
+          "title": "Sign up",
+          "description": "Sign up and fill out the affiliate form. It's quick and easy."
+        },
+        "step2": {
+          "title": "Promote",
+          "description": "Share your personalized link via your social networks, newsletter, blog or private group."
+        },
+        "step3": {
+          "title": "Earn",
+          "description": "Make money as soon as someone subscribes or buys a product through your link."
+        }
+      }
+    },
+    "whatWeProvide": {
+      "title": "What",
+      "titleSuffix": "provides for you",
+      "features": {
+        "feature1": {
+          "title": "Automatic and unlimited commissions",
+          "description": "Your income increases effortlessly, as your members create their own groups. Rafly becomes a lucrative source of income, not an expense."
+        },
+        "feature2": {
+          "title": "Use our proven marketing resources",
+          "description": "Turnkey marketing support: posts, visuals, ready-to-use email templates"
+        },
+        "feature3": {
+          "title": "Get free training for promotion",
+          "description": "Free training to learn how to properly promote our products"
+        },
+        "feature4": {
+          "title": "Join our supportive affiliate community",
+          "description": "Collaborate with like-minded affiliates, receive advice from our team and stay informed of the latest news."
+        }
+      }
+    },
+    "videos": {
+      "title": "Share Rafly like the best affiliates"
+    }
+  },
+  "Support": {
+    "hero": {
+      "title": "Need assistance?",
+      "description": "Our different support teams are at your disposal for all your concerns."
+    },
+    "supportCards": {
+      "contactButton": "Contact this support",
+      "client": {
+        "title": "Customer Support",
+        "description": "Our customer support team is here to answer all your questions regarding your purchases and account."
+      },
+      "technical": {
+        "title": "Technical Support",
+        "description": "Technical problems? Our technical team helps you with all technical aspects of the platform."
+      },
+      "designer": {
+        "title": "Design Support",
+        "description": "Need help with your designs? Our team of professional graphic designers accompanies you."
+      }
+    },
+    "team": {
+      "contactText": "Contact us at"
+    },
+    "cta": {
+      "title": "Increase your income",
+      "titleHighlight": "Now",
+      "description": "We select our winning products based on several sales tests with different targeting to enumerate the potential of each product in different targets.",
+      "primaryButton": "Get my subscription",
+      "secondaryButton": "View products"
+    }
+  },
+  "PrivacyPolicy": {
+    "title": "Privacy Policy",
+    "subtitle": "Discover how we protect your personal data and respect your privacy.",
+    "sections": {
+      "section1": {
+        "title": "1. PERSONAL DATA PROTECTION",
+        "paragraph1": "Rafly.me attaches particular importance to the confidentiality of its users' information. When a user accesses the platform and purchases a digital product, certain personal data may be collected, notably the email address and username.",
+        "paragraph2": "This information is strictly used to provide access to purchased products and to ensure follow-up when needed. Rafly.me undertakes never to sell, rent or share this information with third parties, except in case of legal obligation.",
+        "paragraph3": "Users have the right to access, rectify and delete their personal data. Any request in this regard can be addressed via the platform's customer support.",
+        "paragraph4": "The collected data is stored securely and is only accessible to authorized persons within Rafly.me."
+      },
+      "section2": {
+        "title": "2. USE AND RESALE OF DIGITAL PRODUCTS",
+        "paragraph1": "All products offered on Rafly.me are white-label digital products. When a user purchases a product, they get immediate access and can exploit it as they wish.",
+        "paragraph2": "The user is free to resell the digital products purchased on the platform, without restriction. However, it is their responsibility to ensure they comply with applicable laws regarding the resale of digital content.",
+        "paragraph3": "Rafly.me does not guarantee automatic success in product resale. Profitability will depend on the efforts and strategies implemented by the user."
+      },
+      "section3": {
+        "title": "3. PRODUCT ACCESS CONDITIONS AND SUPPORT",
+        "paragraph1": "Purchasing a digital product on Rafly.me gives unlimited access to the relevant content. Once the transaction is validated, the user can download or consult the product without time limitation.",
+        "paragraph2": "Some users choose to subscribe to a subscription plan offered on the platform. These subscriptions give access to specific products and strategies that can help them in their resale.",
+        "paragraph3": "Rafly.me offers support only to users who have subscribed to a subscription plan. This support may include advice, strategies and additional resources to help the user better exploit the purchased digital products.",
+        "paragraph4": "Users who purchase individual products do not have access to this support and must manage the resale and exploitation of products autonomously."
+      },
+      "section4": {
+        "title": "4. REFUND POLICY",
+        "paragraph1": "Since digital products are accessible immediately after purchase, no refund will be granted, except in exceptional cases.",
+        "paragraph2": "Some products available on Rafly.me display the name and details before purchase.",
+        "paragraph3": "For mystery products, the product image is partially hidden, but a general description is provided. These products are supposed to be winners, and the user accepts these conditions with full knowledge of the facts.",
+        "paragraph4": "It is the user's responsibility to carefully read all information provided before proceeding with payment. Once the purchase is made, no refund will be granted, unless the situation is deemed exceptional and valid by Rafly.me.",
+        "paragraph5": "Any refund request will be examined on a case-by-case basis, and Rafly.me reserves the right to accept or refuse the request."
+      },
+      "section5": {
+        "title": "5. USER RESPONSIBILITY",
+        "paragraph1": "The user is solely responsible for the use they make of products purchased on Rafly.me.",
+        "paragraph2": "If the user applies the strategies proposed by Rafly.me as part of a subscription, they may obtain results. However, Rafly.me cannot guarantee precise income or automatic success, as these results depend on the individual efforts of each user.",
+        "paragraph3": "Rafly.me cannot be held responsible for losses, failures or unachieved results related to the exploitation of products purchased on the platform."
+      },
+      "section6": {
+        "title": "6. SUSPENSION AND TERMINATION",
+        "paragraph1": "Rafly.me reserves the right to suspend or delete a user account in case of abuse, fraud or non-compliance with these conditions.",
+        "paragraph2": "A user may decide to terminate their subscription at any time. However, no refund will be granted after subscription, except in exceptional cases mentioned in section 4."
+      },
+      "section7": {
+        "title": "7. GENERAL CONDITIONS MODIFICATIONS",
+        "paragraph1": "Rafly.me may be required to modify these conditions to guarantee better user protection and ensure proper platform operation.",
+        "paragraph2": "Any update to the conditions will be communicated to users via the site or by email. Users are invited to regularly consult these conditions to stay informed of possible modifications.",
+        "paragraph3": "By continuing to use Rafly.me after a conditions update, the user automatically accepts the new provisions."
+      },
+      "section8": {
+        "title": "8. CONDITIONS ACCEPTANCE",
+        "paragraph1": "By purchasing a digital product or subscribing to a subscription on Rafly.me, the user accepts all the conditions stated in this contract.",
+        "paragraph2": "Using the platform implies full and complete adherence to these conditions, without possibility of contestation after purchase.",
+        "paragraph3": "Rafly.me undertakes to provide a service that meets user expectations while guaranteeing total transparency on purchase, resale and support modalities."
+      }
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "For any questions regarding this privacy policy or to exercise your rights on your personal data, you can contact us:",
+      "email": "Email",
+      "supportPage": "Support page",
+      "lastUpdated": "Last updated"
+    }
+  },
+  "Product": {
+    "productNotFound": "Product not found",
+    "backToCatalogue": "Back to catalogue",
+    "productPresentation": "📌 Product presentation",
+    "whyGoldenOpportunity": "💡 Why this product is a golden opportunity for resale?",
+    "targetAudience": "🎯 Target audience",
+    "includedInPack": "📦 Included in the pack",
+    "winningProduct": "✅ Winning product ready to resell:",
+    "winningProductDescription": "A powerful and sought-after visual tool, perfect for professionals and creators. LUTs represent a niche in constant demand and generate regular sales.",
+    "visualAdvertisingOption": "Advertising Visual Option",
+    "withVisual": "With Advertising Visual",
+    "withVisualDescription": "Order an advertising visual for your product",
+    "withoutVisual": "Without Advertising Visual",
+    "withoutVisualDescription": "Buy the product only without advertising visual",
+    "additionalOptions": "Additional options",
+    "personalizedSupport": "Personalized support 1 month",
+    "personalizedSupportDescription": "Get personalized support for 1 month with our experts!",
+    "buyNow": "Buy Now",
+    "or": "or",
+    "subscribeToSubscription": "Subscribe to a Subscription",
+    "subscriptionDescription": "Choose a subscription to have access to multiple products without additional fees.",
+    "takeSubscription": "Take a subscription",
+    "similarProducts": "Similar Products",
+    "discoverSimilarProducts": "Discover products in the same category"
+  },
+  "Payment": {
+    "finalizeOrder": "Finalize your order",
+    "promoCodeQuestion": "Do you have a promo code?",
+    "clickToEnterCode": "Click here to enter your code",
+    "enterPromoCode": "Enter your promo code",
+    "applyPromoCode": "APPLY PROMO CODE",
+    "billingDetails": "Billing details",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email address",
+    "phone": "Phone",
+    "country": "Country/Region",
+    "city": "City",
+    "address": "Address",
+    "additionalInfo": "Additional information",
+    "optional": "(optional)",
+    "required": "*",
+    "yourOrder": "Your order",
+    "quantity": "Quantity",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "paymentMethods": "Mobile Payments, Credit Card, Bank Transfer and More...",
+    "paymentMessage": "Pay securely with your Mobile Money account, credit card, bank account or other payment methods.",
+    "privacyNote": "Your personal data will be used to process your order, support your experience on this website and for other purposes described in our",
+    "privacyPolicy": "privacy_policy",
+    "orderButton": "Order",
+    "visualIncluded": "Visual included",
+    "personalizedSupport1Month": "Personalized support 1 month",
+    "errors": {
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "emailRequired": "Email is required",
+      "phoneRequired": "Phone is required",
+      "cityRequired": "City is required",
+      "addressRequired": "Address is required",
+      "acceptTermsRequired": "You must accept the terms"
+    }
+  },
+  "Auth": {
+    "login": "Login",
+    "loginSubtitle": "Sign in to your Rafly account",
+    "register": "Register",
+    "registerSubtitle": "Create your Rafly account",
+    "forgotPassword": "Forgot Password",
+    "resetPassword": "Reset Password",
+    "email": "Email address",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "required": "*",
+    "emailPlaceholder": "your@email.com",
+    "passwordPlaceholder": "Your password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "firstNamePlaceholder": "Your first name",
+    "lastNamePlaceholder": "Your last name",
+    "phonePlaceholder": "Your phone number",
+    "forgotPasswordLink": "Forgot password?",
+    "loginButton": "Sign in",
+    "registerButton": "Create account",
+    "sendResetButton": "Send reset link",
+    "resetPasswordButton": "Reset password",
+    "loginLoading": "Signing in...",
+    "registerLoading": "Creating account...",
+    "sendingReset": "Sending...",
+    "resettingPassword": "Resetting...",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "createAccount": "Create account",
+    "loginToAccount": "Sign in",
+    "backToLogin": "Back to login",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithFacebook": "Continue with Facebook",
+    "or": "or",
+    "acceptTerms": "I accept the",
+    "termsAndConditions": "terms and conditions",
+    "and": "and",
+    "privacyPolicy": "privacy policy",
+    "forgotPasswordDescription": "Enter your email address and we'll send you a link to reset your password.",
+    "resetPasswordDescription": "Enter your new password.",
+    "emailSent": "Email sent!",
+    "resetLinkSentTo": "We've sent a reset link to",
+    "checkInbox": "Check your inbox",
+    "resetLinkExpires": "The reset link expires in 24 hours. If you don't see the email, check your spam folder.",
+    "resendEmail": "Resend email",
+    "invalidLink": "Invalid link",
+    "invalidLinkDescription": "This reset link is invalid or has expired.",
+    "linkExpiredTitle": "Link expired or invalid",
+    "requestNewLink": "Please request a new reset link.",
+    "requestNewLinkButton": "Request new link",
+    "passwordChanged": "Password changed!",
+    "passwordChangedDescription": "Your password has been successfully changed. You can now sign in with your new password.",
+    "changeSuccessful": "Change successful",
+    "accountSecured": "Your account is now secured with your new password.",
+    "newPassword": "New password",
+    "newPasswordDescription": "Choose a secure new password for your account.",
+    "newPasswordPlaceholder": "Create a new password",
+    "passwordMinLengthHelper": "At least 8 characters",
+    "errors": {
+      "emailRequired": "Email address is required",
+      "emailInvalid": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordsNotMatch": "Passwords do not match",
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "phoneRequired": "Phone is required",
+      "termsRequired": "You must accept the terms and conditions"
+    },
+    "toasts": {
+      "accountCreatedSuccess": "Account created successfully. You will be redirected to the login page.",
+      "emailAlreadyExists": "This email is already associated with another account.",
+      "accountCreationError": "Error creating account. Please try again",
+      "generalError": "An error occurred. Please try again.",
+      "tooManyAttempts": "Too many attempts",
+      "invalidCredentials": "Invalid email or password"
+    }
+  }
+}

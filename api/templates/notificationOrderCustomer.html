@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="font-family: Poppins, sans-serif; margin: 0; padding: 0; line-height: 26px;">
+    <div style="max-width: 600px; margin: 0 auto; ">
+        <!-- En-tête avec logo et titre -->
+        <div style="background-color: #1f5bdc2a; text-align: center; padding: 20px; border-radius: 10px 10px 0 0;">
+            <img src="https://api.reservetout.com/logo/logo.png" alt="Logo ReserveTout" style="max-width: 200px;">
+            <h1 style="margin-top: 15px; font-size: 30px; text-align: center; width: 80%; margin: 15px auto; line-height: 35px;">Confirmation de votre demande sur ReserveTout</h1>
+        </div>
+        <!-- Corps du message -->
+        <div style="background-color: #ffffff; padding: 20px; border-radius: 0 0 10px 10px;">
+            <p style="font-size: 15px;">{{salutation}} M/Mme <strong>{{fullname}}</strong>,</p>
+            <p style="font-size: 15px;">
+                Nous vous confirmons que votre commande a bien été reçue.
+            </p>
+            <p style="font-size: 15px;">
+                Détails de votre commande :
+            </p>
+            <ul style="font-size: 15px;">
+                <li><strong>Commande ID :</strong> {{orderId}}</li>
+                <li><strong>Nombre d'articles :</strong> {{nbItems}}</li>
+                <li><strong>Montant total:</strong> {{amount}}</li>
+                <li><strong>Statut:</strong> {{status}}</li>
+                <li><strong>Date de la commande:</strong> {{createdAt}}</li>
+            </ul>
+            <p style="font-size: 15px;">
+                Votre commande sera traitée dans les plus brefs délais.
+            </p>
+            <p style="font-size: 15px;">
+                Pour suivre le statut de votre commande, veuillez vous rendre sur votre tableau de bord utilisateur.
+            </p>
+            <p style="font-size: 15px; margin-top: 20px;">
+                Si vous avez des questions ou besoin d'assistance, vous pouvez nous contacter à : <strong>contact@reservetout.com</strong>.
+            </p>
+            <p style="font-size: 16px;">Cordialement,</p>
+            <p style="font-size: 16px;">L'équipe <strong>ReserveTout</strong></p>
+        </div>
+    </div>
+</body>
+
+</html>

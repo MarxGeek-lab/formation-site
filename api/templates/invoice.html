@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facture</title>
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fc;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: #1f5bdc;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            color: #fff;
+        }
+
+        .header img {
+            max-width: 150px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .details {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            background: #f4f7fc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .details div {
+            width: 48%;
+        }
+
+        .details h3 {
+            font-size: 18px;
+            color: #1f5bdc;
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: #1f5bdc;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background: #f4f7fc;
+        }
+
+        .total {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .total h6 {
+            font-size: 14px;
+            color:#333;
+        }
+
+        .total h5 {
+            font-size: 16px;
+            color: black;
+            margin: 0 !important;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+            padding: 10px;
+            border-top: 2px solid #ddd;
+        }
+
+        .btn-download {
+            display: inline-block;
+            background: #1f5bdc;
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .btn-download:hover {
+            background: #143e8b;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- En-tête de la facture -->
+        <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Facture</h1>
+            <img src="{{websiteLogo}}" alt="Logo">
+        </div>
+
+        <!-- Détails de l'entreprise et du client -->
+        <div class="details">
+            <div>
+                <h3>Boutique</h3>
+                <p><strong>Nom :</strong> {{websiteTitle}}</p>
+                <p><strong>Email :</strong> {{websiteEmail}}</p>
+                <p><strong>Téléphone :</strong> {{websitePhone}}</p>
+                <p><strong>Adresse :</strong> {{websiteAddress}}</p>
+            </div>
+            <div>
+                <h3>Client</h3>
+                <p><strong>Nom :</strong> {{client_name}}</p>
+                <p><strong>Email :</strong> {{client_email}}</p>
+                <p><strong>Téléphone :</strong> {{client_phone}}</p>
+                <p><strong>Adresse :</strong> {{client_address}}</p>
+            </div>
+        </div>
+
+        <!-- Tableau des articles/services facturés -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantité</th>
+                    <th>Prix Unitaire</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{{items}}}
+            </tbody>
+        </table>
+
+        <!-- Total de la facture -->
+        <div class="total">
+            <p>Sous-total : {{subtotal}} FCFA</p>
+            <p>Livraison : {{shipping}}</p>
+            <p>TVA ({{taxe}}%) : {{taxeAmount}} FCFA</p>
+            <h5><strong>Total à payer : {{totalAmount}} FCFA</strong></h5>
+            <h5><strong>Montant payé : {{paidAmount}} FCFA</strong></h5>
+        </div>
+
+        <!-- Pied de page -->
+        <div class="footer">
+            <p>Merci pour votre confiance !</p>
+            <p>Pour toute question, contactez-nous à {{websiteEmail}}</p>
+            <a href="#" class="btn-download">Télécharger la facture</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

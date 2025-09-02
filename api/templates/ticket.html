@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Réservation</title>
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fc;
+            color: #333;
+        }
+
+        .ticket-container {
+            max-width: 500px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ticket-header {
+            background: #2196F3 !important;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .ticket-body {
+            padding: 20px;
+            background-color: #2195f311;
+            padding-bottom: 20px;
+        }
+
+        .ticket-body h3 {
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .ticket-body p {
+            font-size: 14px;
+            width: 50%;
+        }
+
+        .ticket-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .qr-code {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .qr-code img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: #2c3e50;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .download-btn:hover {
+            background: #1a252f;
+        }
+
+        .ticket-divider {
+            height: 2px;
+            background: #ddd;
+            margin: 15px 0;
+        }
+        .line {
+            padding: 0px 12px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .line h3 {
+            font-size: 15px;
+            white-space: nowrap;
+        }
+        
+        .line:nth-child(even) {
+            /* background-color: #ffffff; */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ticket-container">
+        <!-- En-tête du ticket -->
+        <div class="ticket-header">
+            🏨 Ticket de Réservation
+        </div>
+
+        <!-- Corps du ticket -->
+        <div class="ticket-body">
+
+            <div class="ticket-divider"></div>
+
+            <div class="line">
+                <h3>Nom du Client :</h3>
+                <p>{{customer_name}}</p>
+            </div>
+
+            <div class="line">
+                <h3>Hébergement Réservé :</h3>
+                <p>{{property_name}}</p>
+            </div>
+
+            <div class="line">
+                <h3>Date d'Arrivée :</h3>
+                <p>{{check_in_date}}</p>
+            </div>
+
+            <div class="line">
+                <h3>Date de Départ :</h3>
+                <p>{{check_out_date}}</p>
+            </div>
+
+            <div class="line">
+                <h3>Date de création :</h3>
+                <p>{{createdAt}}</p>
+            </div>
+
+            <div class="line">
+                <h3>Adresse :</h3>
+                <p>{{property_address}}</p>
+            </div>
+
+            <div class="line">
+                <h3>Prix Total</h3>
+                <p><strong>{{total_price}}</strong></p>
+            </div>
+
+            <div class="qr-code">
+                <img src="{{qr_code}}" alt="QR Code">
+            </div>
+        </div>
+
+        <!-- Pied du ticket -->
+        <div class="ticket-footer">
+            <p>Merci pour votre réservation !</p>
+        </div>
+        <div style="text-align: center;">
+            <img src="https://api.reservetout.com/logo/logo.png" alt="" style="margin: auto;" />
+        </div>
+    </div>
+
+</body>
+</html>

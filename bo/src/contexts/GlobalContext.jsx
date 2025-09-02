@@ -1,0 +1,77 @@
+import { AuthProvider } from "./AuthContext";
+import { PropertyProvider } from "./PropertyStore";
+import { StatsProvider } from "./statsContext";
+import { ReservationProvider } from "./ReservationStore";
+import { CustomerProvider } from "./CustomerStore";
+import { MessagesProvider } from "./MessagesStore";
+import { ReviewProvider } from "./ReviewStore";
+import { HelpCenterProvider } from "./HelpCenterContext";
+import { CommonProvider } from "./CommonContext";
+import { WalletProvider } from "./WalletContext";
+import { PaymentProvider } from "./PaymentStore";
+import { AdminProvider } from "./AdminContext";
+import { NewsletterProvider } from "./NewsletterContext";
+import { SiteSettingsProvider } from "./SiteSettingsContext";
+import { WithdrawalProvider } from "./WithdrawalContext";
+import { AnnoncesProvider } from "./AnnoncesContext";
+import { OrderProvider } from "./orderStore";
+
+export const GlobalStoreProvider = ({ children }) => {
+    return (
+        <AuthProvider>  
+            <AdminProvider>
+                <OrderProvider>
+                <NewsletterProvider>
+                <SiteSettingsProvider>
+                <WithdrawalProvider>
+                    <AnnoncesProvider>
+                <ReservationProvider>
+                     <PropertyProvider> 
+                     <StatsProvider>
+                        {/* <RentalProvider>  */}
+                            <CustomerProvider>
+                                <MessagesProvider>
+                                    <ReviewProvider>
+                                        <HelpCenterProvider>
+                                            <CommonProvider>
+                                                <WalletProvider>
+                                                    <PaymentProvider>   
+                                                    {children}
+                                                    </PaymentProvider>
+                                                </WalletProvider>
+                                            </CommonProvider>
+                                        </HelpCenterProvider>
+                                    </ReviewProvider>
+                                </MessagesProvider>
+                            </CustomerProvider>
+                         {/* </RentalProvider> */}
+                         </StatsProvider> 
+                    </PropertyProvider> 
+                </ReservationProvider>
+                </AnnoncesProvider>
+                </WithdrawalProvider>
+                </SiteSettingsProvider>
+                </NewsletterProvider>
+                </OrderProvider>
+            </AdminProvider>
+        </AuthProvider>
+    );
+}
+
+export { useAuthStore } from "./AuthContext";
+export { useReservationStore } from "./ReservationStore"; 
+export { usePropertyStore } from "./PropertyStore"; 
+export { useStatsStore } from "./statsContext"; 
+export { useCustomerStore } from './CustomerStore';
+export { useMessagesStore } from './MessagesStore';
+export { useReviewStore } from './ReviewStore';
+export { useHelpCenterStore } from './HelpCenterContext';
+export { useCommonStore } from "./CommonContext"; 
+export { useWalletStore } from "./WalletContext";
+export { usePaymentStore } from "./PaymentStore";
+export { useAdminStore } from "./AdminContext";
+export { useNewsletterStore } from "./NewsletterContext";
+export { useSiteSettingsStore } from "./SiteSettingsContext";
+export { useWithdrawalStore } from "./WithdrawalContext";
+export { useAnnoncesStore } from "./AnnoncesContext";
+export { useOrderStore } from "./orderStore";
