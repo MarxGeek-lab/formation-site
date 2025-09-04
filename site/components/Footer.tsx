@@ -17,7 +17,7 @@ export default function Footer({ locale }: { locale: string }) {
   const t = useTranslations('Footer');
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleNewsletterSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email) {
         showLoader();

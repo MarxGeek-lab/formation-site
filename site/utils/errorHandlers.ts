@@ -1,5 +1,4 @@
 import type { AxiosError } from "axios";
-import { HOME_SCREEN } from "../settings/constant";
 
 export const handleAxiosError = (error: unknown): number => {
   const axiosError = error as AxiosError;
