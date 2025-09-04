@@ -125,10 +125,8 @@ const ProductCategoryTable = ({ fetchAdmin, allAdmin }) => {
             >
             </CustomAvatar>
             <div className='flex flex-col items-start'>
-              <Typography >#{row.original?._id?.toString().slice(0, 6).toUpperCase()}</Typography>
-              <Typography className='font-medium' color='text.primary'>
-                {row.original?.name}
-              </Typography>
+              <Typography variant='body2' color='text.primary'>#{row.original?._id?.toString().slice(0, 6).toUpperCase()}</Typography>
+              <Typography variant='body2' color='text.primary'>{row.original?.name}</Typography>
             </div>
           </div>
         )
@@ -136,7 +134,7 @@ const ProductCategoryTable = ({ fetchAdmin, allAdmin }) => {
       columnHelper.accessor('date', {
         header: 'Ajouter le',
         cell: ({ row }) => (
-          <Typography>
+          <Typography variant='body2' color='text.primary'>
             {new Date(row.original?.createdAt).toLocaleDateString()}
           </Typography>
         )
@@ -144,7 +142,7 @@ const ProductCategoryTable = ({ fetchAdmin, allAdmin }) => {
       columnHelper.accessor('lastlogin', {
         header: 'dernière connexion',
         cell: ({ row }) => (
-          <Typography>
+          <Typography variant='body2' color='text.primary'>
             {new Date(row.original?.lastLogin).toLocaleString()}
           </Typography>
         )

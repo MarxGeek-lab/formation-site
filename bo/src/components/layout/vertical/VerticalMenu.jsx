@@ -143,6 +143,9 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             {dictionary['navigation'].add}
           </MenuItem> */}
 
+        <MenuItem href={`/${locale}/dashboards/subscription`} label={dictionary['navigation'].customers} icon={<i className='tabler-user-check' />}>
+          Mes Abonnements
+        </MenuItem>
         <MenuItem href={`/${locale}/dashboards/customers/list`} label={dictionary['navigation'].customers} icon={<i className='tabler-users' />}>
           Mes Clients
         </MenuItem>
@@ -184,7 +187,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem href={`/${locale}/dashboards/settings`} icon={<i className='tabler-settings' />}>
           Paramètres
         </MenuItem>
-
+{/* 
           <Box className="absolute bottom-5 w-[90%] py-3"
             sx={{ borderTop: '1px solid #ccc', padding: '10px' }}>
             <Box className="mb-8 flex items-center gap-4">
@@ -201,7 +204,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
               <i className='tabler-logout'></i>
               Déconnexion
             </Button>
-          </Box>
+          </Box> */}
         {/* <SubMenu label={dictionary['navigation'].frontPages} icon={<i className='tabler-files' />}>
           <MenuItem href='/front-pages/landing-page' target='_blank'>
             {dictionary['navigation'].landing}

@@ -34,10 +34,9 @@ const { chromium } = require('playwright');
 app.use("/api/", routes);
 app.use("/templates", express.static("templates"));
 app.use("/", express.static("uploads"));
-app.use("/", express.static("uploads/pictures"));
+app.use("/", express.static("uploads/products"));
 app.use("/", express.static("uploads/documents"));
-app.use("/", express.static("uploads/profile"));
-app.use("/", express.static("uploads/tickets"));
+app.use("/", express.static("uploads/video"));
 
 // Initialize cron jobs
 // initReservationCron();

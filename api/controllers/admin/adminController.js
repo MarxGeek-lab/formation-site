@@ -6,16 +6,11 @@ const { generateToken, generateAccessToken } = require('../../utils/auth');
 const { verifyPassword, getGreeting, encryptData, encryptPassword, getStatusPayout } = require('../../utils/helpers');
 const EmailService = require('../../services/emailService');
 const { generateTemplateHtml } = require('../../services/generateTemplateHtml');
-const Rental = require('../../models/Rental');
-const Reservation = require('../../models/Reservation');
 const Sale = require('../../models/Sale');
 const Product = require('../../models/Product');
 const HelpCenter = require('../../models/helpCenter');
 const Notifications = require('../../models/Notifications');
-const Withdrawal = require('../../models/Withdrawal');
-const commonService = require('../../services/commonService');
-const { urls_payout } = require('../../utils/constant');
-const axios = require('axios');
+
 const SiteSettings = require('../../models/Settings');
 const Order = require('../../models/Order');
 
@@ -229,6 +224,7 @@ const adminController = {
   // Demande de réinitialisation de mot de passe
   async requestPasswordReset(req, res) {
     try {
+      console.log(req.body)
       const { email } = req.body;
       const admin = await Admin.findOne({ email: email });
 
@@ -388,52 +384,6 @@ const adminController = {
       res.status(500).json({ message: error.message });
     }
   },
-
-  getUserDataById: async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        // Vérifier si l'utilisateur existe
-        const user = await User.findById(id).lean();
-        if (!user) {
-            return res.status(404).json({ message: "Client non trouvé." });
-        }
-
-        // Récupérer les statistiques
-        const [totalRentals, totalReservations, totalPayments, totalSale] = await Promise.all([
-            Rental.countDocuments({ tenant: id }),
-            Reservation.countDocuments({ tenant: id }),
-            Transaction.countDocuments({ buyer: id }),
-            Sale.countDocuments({ buyer: id }),
-        ]);
-
-        const [rentals, reservations, payments, sale] = await Promise.all([
-            Rental.find({ tenant: id }).populate('property'),
-            Reservation.find({ tenant: id }).populate('property'),
-            Transaction.find({ tenant: id }).populate('property'),
-            Sale.find({ buyer: id }).populate('property'),
-        ]);
-
-        const customers = {
-          totalRentals,
-          rentals,
-          totalReservations,
-          reservations,
-          totalPayments,
-          payments,
-          totalSale,
-          sale,
-          user,
-          totalWhishlist: user?.favorites.length || 0
-        };
-
-        return res.status(200).json(customers);
-    } catch (error) {
-        console.error("Erreur lors de la récupération du client :", error);
-        return res.status(500).json({ message: "Erreur serveur", error });
-    }
-  },
-
   /**
    * Product
    */

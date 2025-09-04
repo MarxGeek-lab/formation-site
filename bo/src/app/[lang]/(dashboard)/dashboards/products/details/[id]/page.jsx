@@ -23,7 +23,7 @@ dayjs.extend(duration);
 
 const OrderDetailsPage = () => {
   const params = useParams();
-  const { getPropertyById } = usePropertyStore();
+  const { getProductById } = usePropertyStore();
   const [product, setProduct] = useState(null);
   
   const settings = {
@@ -40,7 +40,7 @@ const OrderDetailsPage = () => {
   const fetchProperty = async () => {
     if (params && params?.id) {
       try {
-        const response = await getPropertyById(params.id);
+        const response = await getProductById(params.id);
         setProduct(response.data);
         console.log("Property data:", response.data);
       } catch (error) {

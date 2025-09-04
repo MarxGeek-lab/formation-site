@@ -1,16 +1,14 @@
 const Category = require("../models/Categories");
 const Product = require("../models/Product");
-const path = require('path');
-const fs = require('fs');
 
 // Créer une nouvelle catégorie
 exports.createCategory = async (req, res) => {
   try {
     console.log(req.body)
-    const image = req.file?.filename || '';
+    const { nameEn, nameFr, isActive } = req.body;
 
     // Vérifier si la catégorie existe déjà par son nom
-    const existingCategory = await Category.findOne({ name: req.body.name });
+    const existingCategory = await Category.findOne({ nameEn });
 
     if (existingCategory) {
       return res.status(400).json({
@@ -19,8 +17,11 @@ exports.createCategory = async (req, res) => {
       });
     }
 
-    const newCategory = await Category.create({ ...req.body, image });
-    await newCategory.save();
+    const newCategory = await Category.create({
+      nameEn,
+      nameFr,
+      isActive: isActive !== undefined ? isActive : true
+    });
 
     res.status(201).json({
       status: 'success',
@@ -61,11 +62,12 @@ exports.getAllCategoriesByAdmin = async (req, res) => {
         return {
           _id: category._id,
           name: category.name,
-          image: category.image || 'default_category.png',
+          nameEn: category.nameEn,
+          nameFr: category.nameFr,
           date: category.createdAt,
-          propertyCount: productCount || 0,
+          productCount: productCount || 0,
+          totalProduct: category.totalProduct || productCount || 0,
           isActive: category.isActive || false,
-          subcategories: category.subcategories || [],
           updatedAt: category.updatedAt,
           createdAt: category.createdAt
         };
@@ -105,30 +107,21 @@ exports.getCategory = async (req, res) => {
 // Mettre à jour une catégorie par ID
 exports.updateCategory = async (req, res) => {
   try {
-    const image = req.file?.filename || '';
+    const { nameEn, nameFr, isActive } = req.body;
 
     const category = await Category.findById(req.params.id);
-    if (!category) return res.status(404).json();
-
-    category.name = req.body.name;
-    if (image) {
-      // Suppression des images
-      const uploadDir = path.join(__dirname, '..', 'uploads', 'pictures');
-      if (category.image) {
-         const oldFile = path.join(uploadDir, category.image);
-         if (fs.existsSync(oldFile)) {
-            try {
-                fs.unlinkSync(oldFile);
-            } catch (error) {
-                console.error('Erreur lors de la suppression du fichier :', error);
-            }
-         }
-      }
-      category.image = image;
+    if (!category) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Catégorie non trouvée'
+      });
     }
-    category.isActive = req.body.isActive || category.isActive;
-    const subcategories = req.body.subcategories ? JSON.parse(req.body.subcategories) : [];
-    category.subcategories = subcategories;
+
+    // Mettre à jour les champs
+    category.nameEn = nameEn || category.nameEn;
+    category.nameFr = nameFr || category.nameFr;
+    category.isActive = isActive || category.isActive;
+    
     await category.save();
 
     res.status(200).json({

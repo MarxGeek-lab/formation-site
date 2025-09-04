@@ -36,7 +36,7 @@ export const SiteSettingsProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchSiteSettings()
+    // fetchSiteSettings()
   }, [])
 
   const value = {

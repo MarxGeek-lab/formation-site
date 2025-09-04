@@ -1,8 +1,6 @@
 const Transaction = require('../models/Transaction');
 const Product = require('../models/Product');
-const Expense = require('../models/Expense');
 const User = require('../models/User');
-const Reservation = require('../models/Reservation');
 const EmailService = require('../services/emailService');
 const axios = require('axios');
 const { getStatusPayment, getGreeting } = require('../utils/helpers');
@@ -329,31 +327,11 @@ const transactionController = {
         return res.status(404).json({ message: 'Transaction non trouvée' });
       }
 
-      const reservation = await Reservation.findById(transaction.reservation);
-      if (!reservation) {
-        return res.status(404).json({ message: 'Reservation non trouvée' });
-      }
-
-      const property = await Product.findById(reservation.property);
-      if (!property) {
-        return res.status(404).json({ message: 'Product non trouvée' });
-      }
 
       transaction.status = status;
       if (reference) transaction.reference = reference;
       if (status === 'success') {
         transaction.completedAt = new Date();
-
-        reservation.status = 'confirmed';
-        reservation.paidAmount = transaction.amount;
-        await reservation.save();
-
-        if (property.state === 'available') {
-          property.status = 'unavailable';
-          property.stock.available = property.stock.available - reservation.quantity;
-          property.stock.rented = property.stock.total - property.stock.available;
-          await property.save();
-        }
       }
 
       await transaction.save();
@@ -413,16 +391,6 @@ const transactionController = {
     }
   },
 
-  async getExpenseByUser(req, res) {
-    try {
-      const expenses = await Expense.find({ user: req.params.id })
-        .populate('user');
-
-      res.json(expenses);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  },
 
   async getPaymentsBySeller(req, res) {
     try {

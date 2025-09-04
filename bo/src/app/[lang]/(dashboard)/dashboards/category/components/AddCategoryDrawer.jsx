@@ -14,6 +14,7 @@ import CustomTextField from '@core/components/mui/TextField'
 import { useAdminStore } from '@/contexts/GlobalContext'
 import { showToast } from '@/components/ToastNotification/ToastNotification'
 import { hideLoader, showLoader } from '@/components/Loader/loaderService'
+import { FormControlLabel, Switch } from '@mui/material'
 
 const AddCategoryDrawer = props => {
   // Props
@@ -22,8 +23,8 @@ const AddCategoryDrawer = props => {
   const { createCategory, updateCategory } = useAdminStore();
   // States
   const [file, setFile] = useState(null)
-  const [category, setCategory] = useState('')
-  const [subcategories, setSubcategories] = useState([''])
+  const [categoryFr, setCategoryFr] = useState('')
+  const [categoryEn, setCategoryEn] = useState('')
   const [isActive, setIsActive] = useState(false)
 
   // Refs
@@ -31,19 +32,12 @@ const AddCategoryDrawer = props => {
 
   // Handle Form Submit
   const handleFormSubmit = async data => {
-    if (category) {
+    if (categoryFr) {
       const newData = new FormData();
-      newData.append('name', category);
+      newData.append('nameFr', categoryFr);
+      newData.append('nameEn', categoryEn);
       newData.append('isActive', true);
       
-      // Filter out empty subcategories
-      const filteredSubcategories = subcategories.filter(subcat => subcat.trim() !== '');
-      newData.append('subcategories', JSON.stringify(filteredSubcategories));
-
-      if (file) {
-        newData.append('images', file);
-      }
-
       showLoader();
 
       try {
@@ -81,8 +75,8 @@ const AddCategoryDrawer = props => {
   const handleReset = () => {
     handleClose()
     setFile(null)
-    setCategory('')
-    setSubcategories([''])
+    setCategoryFr('')
+    setCategoryEn('')
     setIsActive(false)
   }
 
@@ -112,21 +106,10 @@ const AddCategoryDrawer = props => {
     setSubcategories(newSubcategories);
   };
 
-  // Add new subcategory field
-  const addSubcategory = () => {
-    setSubcategories([...subcategories, '']);
-  };
-
-  // Remove subcategory field
-  const removeSubcategory = (index) => {
-    const newSubcategories = subcategories.filter((_, i) => i !== index);
-    setSubcategories(newSubcategories);
-  };
-
   useEffect(() => {
     if (categoryData) {
-      setCategory(categoryData.name);
-      setSubcategories(categoryData.subcategories?.length ? categoryData.subcategories : ['']);
+      setCategoryFr(categoryData.nameFr);
+      setCategoryEn(categoryData.nameEn);
       setIsActive(categoryData.isActive || false);
     }
   },[categoryData]);
@@ -150,72 +133,23 @@ const AddCategoryDrawer = props => {
       <div className='flex flex-col gap-5 p-6'>
           <CustomTextField
             fullWidth
-            label='Nom'
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-            placeholder='Nom de la catégorie'
+            label='Nom en français'
+            value={categoryFr}
+            onChange={e => setCategoryFr(e.target.value)}
+            placeholder='Nom en français'
             required
           />
-          
-          <Typography variant='subtitle2'>Sous-catégories</Typography>
-          {subcategories.map((subcategory, index) => (
-            <Box key={index} className='flex items-center gap-2 mb-0'>
-              <CustomTextField
-                fullWidth
-                value={subcategory}
-                onChange={(e) => handleSubcategoryChange(index, e.target.value)}
-                placeholder='Nom de la sous-catégorie'
-                size='small'
-              />
-              {subcategories.length > 1 && (
-                <IconButton 
-                  size='small' 
-                  onClick={() => removeSubcategory(index)}
-                  color='error'
-                  className='bg-error text-white'
-                >
-                  <i className='tabler-minus' />
-                </IconButton>
-              )}
-              {index === subcategories.length - 1 && (
-                <IconButton 
-                  size='small' 
-                  onClick={addSubcategory}
-                  color='primary'
-                  className='bg-primary text-white'
-                >
-                  <i className='tabler-plus' />
-                </IconButton>
-              )}
-            </Box>
-          ))}
-{/* 
-          <div className='flex items-end gap-4'>
-            <CustomTextField
-              label='Image'
-              placeholder='No file chosen'
-              value={file?.name}
-              className='flex-auto'
-              slotProps={{
-                input: {
-                  readOnly: true,
-                  endAdornment: file ? (
-                    <InputAdornment position='end'>
-                      <IconButton size='small' edge='end' onClick={() => setFile(null)}>
-                        <i className='tabler-x' />
-                      </IconButton>
-                    </InputAdornment>
-                  ) : null
-                }
-              }}
-            />
-            <Button component='label' variant='tonal' htmlFor='contained-button-file' className='min-is-fit'>
-              Choisissez
-              <input hidden id='contained-button-file' type='file' onChange={handleFileUpload} ref={fileInputRef} />
-            </Button>
-          </div> */}
 
-          {/* <FormControlLabel
+          <CustomTextField
+            fullWidth
+            label='Nom en anglais'
+            value={categoryEn}
+            onChange={e => setCategoryEn(e.target.value)}
+            placeholder='Nom en Anglais'
+            required
+          />
+
+          <FormControlLabel
             control={
               <Switch
                 checked={isActive}
@@ -224,7 +158,7 @@ const AddCategoryDrawer = props => {
               />
             }
             label="Catégorie active"
-          /> */}
+          />
 
           <div className='flex items-center gap-4'>
             <Button variant='contained' onClick={handleFormSubmit}>

@@ -3,35 +3,35 @@ const mongoose = require('mongoose');
 const ProductSchema = new mongoose.Schema({
   // Informations de base du produit
   category: { type: String, required: true, trim: true },
-  subCategory: { type: String, trim: true },
   name: { type: String, required: true, trim: true },
   description: { type: String, trim: true },
   
-  // Identification du produit
-  productCode: { type: String, trim: true, unique: true, sparse: true }, // SKU
-  brand: { type: String, trim: true },
-  barcode: { type: String, trim: true },
-  
-  // Caractéristiques physiques
-  color: [String], // Couleurs séparées par virgules
-  size: [String],  // Tailles séparées par virgules
-  material: { type: String, trim: true },
-  weight: { type: Number }, // en kg
-  dimensions: { type: String, trim: true }, // LxlxH en cm
-  
-  // Prix et gestion financière
-  price: { type: Number, required: true, min: 0 },
-  wholesalePrice: { type: Number, min: 0 },
-  taxe: { type: Number, default: 0, min: 0, max: 100 }, // TVA en pourcentage
-  
-  // Gestion des stocks
-  stock: {
-    total: { type: Number, default: 1, min: 0 },
-    available: { type: Number, default: 1, min: 0 },
-    sold: { type: Number, default: 0, min: 0 }
+  // Type de produit
+  productType: { 
+    type: String, 
+    enum: ['standard', 'mystere'], 
+    default: 'standard',
+    required: true 
   },
-  minStock: { type: Number, default: 0, min: 0 }, // Alerte stock minimum
   
+
+  // Prix et gestion financière
+  isSubscriptionBased: { type: Boolean, default: false },
+  subscriptionId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Subscription',
+    required: function() { return this.isSubscriptionBased; }
+  },
+  price: { 
+    type: Number, 
+    min: 0,
+  },
+
+  pricePromo: { 
+    type: Number, 
+    min: 0,
+  },
+
   // Statut et état du produit
   productStatus: { 
     type: String, 
@@ -43,13 +43,12 @@ const ProductSchema = new mongoose.Schema({
     enum: ['available', 'unavailable', 'out_of_stock'], 
     default: 'available' 
   },
-  
-  // Options avancées
-  tags: { type: String, trim: true }, // Mots-clés séparés par virgules
-  isFeatured: { type: Boolean, default: false },
-  
   // Images du produit
   photos: [String],
+  
+  // Documents et médias
+  saleDocument: { type: String }, // PDF de vente
+  demoVideo: { type: String }, // Vidéo de démonstration
   
   // Caractéristiques personnalisées
   characteristics: [{
@@ -57,11 +56,12 @@ const ProductSchema = new mongoose.Schema({
     value: { type: String, trim: true }
   }],
 
-  isPromotion: { type: Boolean, default: false },
-  promotionRate: { type: Number, default: 0 },
 
   // Gestion administrative
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  assignedAdminId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' // Référence vers un utilisateur admin
+  },
 
   // Gestion par les administrateurs
   managedBy: [{

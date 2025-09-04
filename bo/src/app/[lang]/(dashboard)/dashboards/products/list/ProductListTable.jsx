@@ -121,15 +121,12 @@ const ProductListTable = ({ productData }) => {
         header: 'Produit',
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
-            <img src={row.original.photos[0]} width={60} height={60} className='rounded bg-actionHover' />
+            <img src={row.original.photos[0]} width={60} className='rounded bg-actionHover' />
             <div className='flex flex-col'>
               <Typography variant='body2'>PROD-{row.original?._id?.toString().slice(0, 6).toUpperCase()}</Typography>
-              <Typography className='font-medium' color='text.primary' style={{ whiteSpace: 'wrap' }}>
+              <Typography variant='body2' className='font-medium' color='text.primary' style={{ whiteSpace: 'wrap' }}>
                 {row.original?.name}
               </Typography>
-              {["Chambre à louer", "Appartements", "Studio", "Maison", "Villa", 'Bureau'].includes(row.original?.category) && (
-                <Typography variant='body2'>{row.original?.location?.city+", "+row.original?.location?.district}</Typography>
-              )}
             </div>
           </div>
         )
@@ -138,7 +135,7 @@ const ProductListTable = ({ productData }) => {
         header: 'Category',
         cell: ({ row }) => (
           <div className='flex items-center gap-4' style={{ width: '100px' }}>
-            <Typography variant='body2' whiteSpace={'wrap'}>{row.original?.category}, {row.original?.subCategory}</Typography>
+            <Typography variant='body2' whiteSpace={'wrap'}>{row.original?.category}</Typography>
           </div>
         )
       }),
@@ -147,25 +144,28 @@ const ProductListTable = ({ productData }) => {
         cell: ({ row }) => {
           return (
             <div className='flex flex-col gap-1'>
-              <Typography>
-                {formatAmount(row.original?.price)} FCFA
+              <Typography variant='body2'>
+                {!row.original.isSubscriptionBased ? formatAmount(row.original?.price) + 'FCFA'
+                : row.original?.subscriptionId?.title} 
               </Typography>
             </div>
           );
         }
       }),
-      columnHelper.accessor('stock', {
-        header: 'Stock Disponible',
-        cell: ({ row }) => (
-          <div className='flex justify-center' style={{ width: '120px' }}>
-            <Badge
-              badgeContent={row.original?.stock?.available}
-              color={row.original?.stock?.available > 0 ? 'success' : 'error'}
-              size='small'
-            />
-          </div>
-        )
+      columnHelper.accessor('pricePromo', {
+        header: 'Prix Promotion',
+        cell: ({ row }) => {
+          return (
+            <div className='flex flex-col gap-1'>
+              <Typography variant='body2'>
+                {!row.original.isSubscriptionBased ? formatAmount(row.original?.pricePromo || row.original?.price) + ' FCFA' 
+                : row.original?.subscriptionId?.title}
+              </Typography>
+            </div>
+          );
+        }
       }),
+      
       columnHelper.accessor('statuss', {
         header: 'Status',
         cell: ({ row }) => (
@@ -180,7 +180,7 @@ const ProductListTable = ({ productData }) => {
       columnHelper.accessor('createdAt', {
         header: 'Date de Création',
         cell: ({ row }) => (
-          <Typography>
+          <Typography variant='body2'>
             {dayjs(row.original?.createdAt).format('DD/MM/YYYY HH:mm:ss')} 
           </Typography>
         )
@@ -189,6 +189,9 @@ const ProductListTable = ({ productData }) => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
+            <IconButton onClick={() => {} }>
+              <i className='tabler-' color={{color: COLORS.primary}} />
+            </IconButton>
             <IconButton onClick={() => window.location.href = `/${locale}/dashboards/products/details/${row.original._id}`}>
               <i className='tabler-eye' color={{color: COLORS.primary}} />
             </IconButton>
@@ -209,33 +212,6 @@ const ProductListTable = ({ productData }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data, filteredData]
   );
-
-  const handleDelecteProperty = async () => {
-    let id = sessionStorage.getItem("_productId") || '';
-    if (id) {
-      setShowDialog(false);
-        showLoader();
-
-        try {
-            const res = await deleteProperty(id);
-            hideLoader();
-            if (res) {
-                if (res === 200) {
-                    sessionStorage.removeItem("_productId");
-                    showToast("La suppression a réussie !", "success", 5000);
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 3000);
-                } else {
-                    showToast("Erreur Inconnue! Veuillez réessayer", "error", 5000);
-                }
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-  }
-
   const table = useReactTable({
     data: filteredData,
     columns,
@@ -264,6 +240,57 @@ const ProductListTable = ({ productData }) => {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
+
+  const handleDelecteProperty = async () => {
+    let id = sessionStorage.getItem("_productId") || '';
+    if (id) {
+      setShowDialog(false);
+        showLoader();
+
+        try {
+            const res = await deleteProperty(id);
+            hideLoader();
+            if (res) {
+                if (res === 200) {
+                    sessionStorage.removeItem("_productId");
+                    showToast("La suppression a réussie !", "success", 5000);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                } else {
+                    showToast("Erreur Inconnue! Veuillez réessayer", "error", 5000);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+  }
+
+  const handleActiveOrInactive = async (id) => {
+    if (id) {
+      setShowDialog(false);
+        showLoader();
+
+        try {
+            const res = await updateStatusProduct(id);
+            hideLoader();
+            if (res) {
+                if (res === 200) {
+                    sessionStorage.removeItem("_productId");
+                    showToast("Le statut a été modifié !", "success", 5000);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                } else {
+                    showToast("Erreur Inconnue! Veuillez réessayer", "error", 5000);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+  }
 
   return (
     <>

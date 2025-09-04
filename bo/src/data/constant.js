@@ -299,8 +299,10 @@ export const categories2 = [
   }
 ];
 
-export const permissionsArray2 = [ "Tous les accès", "Gérer les propriétés","Gérer les utilisateurs","Voir les statistiques","Voir les locations",
-  "Gérer le contenu","Gérer les administrateurs", "Gérer les supports", "Gérer les paramètres"
+export const permissionsArray2 = [ 
+  "Tous les accès", "Gérer les produits","Gérer les utilisateurs","Voir les statistiques","Gérer les commandes",
+  "Gérer les catégories", "Gérer les paramètres", "Gérer les abonnements", "Gérer les paiements",
+  "Gérer la newsletter", "Gérer les avis"
 ];
 
 export const colors = {

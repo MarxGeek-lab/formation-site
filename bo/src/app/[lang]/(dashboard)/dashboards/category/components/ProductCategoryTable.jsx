@@ -117,32 +117,19 @@ const ProductCategoryTable = ({ fetchCategories, categories }) => {
 
   const columns = useMemo(
     () => [
-      columnHelper.accessor('categoryTitle', {
+       columnHelper.accessor('categoryTitle', {
         header: 'Categories',
         cell: ({ row }) => (
           <div className='flex items-center gap-3'>
-            <img src={API_URL_ROOT+row.original.image} width={38} height={38} className='rounded bg-white' />
-            <div className='flex flex-col items-start'>
-              <Typography className='font-medium' color='text.primary'>
-                {row.original?.name}
-              </Typography>
-            </div>
+            <Typography className='font-medium' color='text.primary'>
+              {row.original?.nameFr} | {row.original?.nameEn}
+            </Typography>
           </div>
         )
       }),
       columnHelper.accessor('totalProduct', {
         header: 'Total produits',
-        cell: ({ row }) => <Typography className='text-center'>{row.original?.propertyCount.toLocaleString()}</Typography>
-      }),
-      columnHelper.accessor('totalSubCategory', {
-        header: 'Total sous-catégories',
-        cell: ({ row }) => (
-          <Chip 
-            label={row.original?.subcategories.length}
-            color={'secondary'}
-            variant='filled'
-          />
-        )
+        cell: ({ row }) => <Typography className='text-center'>{row.original?.productCount.toLocaleString()}</Typography>
       }),
       columnHelper.accessor('date', {
         header: 'Date de création',

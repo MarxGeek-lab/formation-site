@@ -4,12 +4,12 @@ const fs = require('fs');
 
 // Définition des répertoires de stockage
 const uploadDir = path.join(__dirname, '..', 'uploads');
-const pictureDir = path.join(uploadDir, 'pictures');
+const productsDir = path.join(uploadDir, 'products');
 const documentDir = path.join(uploadDir, 'documents');
-const profilDir = path.join(uploadDir, 'profile');
+const videosDir = path.join(uploadDir, 'videos');
 
 // Création des répertoires nécessaires
-[uploadDir, pictureDir].forEach(dir => {
+[uploadDir, productsDir, documentDir, videosDir].forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -22,13 +22,13 @@ const storage = multer.diskStorage({
     // Sélection du répertoire en fonction du type de fichier
     switch (file.fieldname) {
       case 'images':
-        cb(null, pictureDir);
+        cb(null, productsDir);
         break;
       case 'pdf':
         cb(null, documentDir);
         break;
-      case 'profile':
-        cb(null, profilDir);
+      case 'videos':
+        cb(null, videosDir);
         break;
       default:
         cb(new Error('Type de fichier non supporté'), null);
@@ -45,8 +45,7 @@ const fileFilter = (req, file, cb) => {
 
   const allowedTypes = {
     images: /\.(jpg|jpeg|png|webp)$/i,
-    profile: /\.(jpg|jpeg|png|webp)$/i,
-    // videos: /\.(mp4|webm|mov)$/i,
+    videos: /\.(mp4|webm|mov)$/i,
     pdf: /\.pdf$/i,
   };
 

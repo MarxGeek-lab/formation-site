@@ -1,41 +1,63 @@
 const mongoose = require('mongoose');
 
+// This model represents subscription products/plans that can be offered
 const SubscriptionSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  plan: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Plan',
-    required: true
-  },
-  status: {
+  title: {
     type: String,
-    enum: ['ACTIVE', 'CANCELLED', 'EXPIRED', 'PENDING'],
-    default: 'PENDING'
+    required: true,
+    trim: true
   },
-  startDate: Date,
-  endDate: Date,
-  nextBillingDate: Date,
-  cancelledAt: Date,
-  paymentHistory: [{
-    amount: Number,
-    status: {
-      type: String,
-      enum: ['SUCCESS', 'FAILED', 'PENDING']
-    },
-    transactionId: String,
-    date: {
-      type: Date,
-      default: Date.now
-    }
+  description: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  priceEUR: {
+    type: Number,
+    min: 0
+  },
+  features: [{
+    type: String,
+    trim: true
   }],
+  duration: {
+    type: Number,
+    min: 0
+  },
+  maxFormations: {
+    type: Number,
+  },
+  relatedProducts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }],
+  isPublished: {
+    type: Boolean,
+    default: true
+  },
+  admin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Admin'
+  },
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
   }
+});
+
+// Update the updatedAt field before saving
+SubscriptionSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 module.exports = mongoose.model('Subscription', SubscriptionSchema); 

@@ -111,6 +111,8 @@ const ProductImage = ({ setSelectedFiles, selectedFiles, selectedFiles2, setSele
     setSelectedFiles([])
   }
 
+  console.log(selectedFiles2)
+
   return (
     <Dropzone>
       <Card>
@@ -155,7 +157,7 @@ const ProductImage = ({ setSelectedFiles, selectedFiles, selectedFiles2, setSele
             </>
           ) : null}
         </CardContent>
-        {selectedFiles2.length ? (
+        {selectedFiles2.length > 0 ? (
           <CardContent>
             <List>{fileList2}</List>
           </CardContent>

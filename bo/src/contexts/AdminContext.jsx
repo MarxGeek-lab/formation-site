@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import api from "@/configs/api";
 import axios from "axios"
 import { handleAxiosError } from "@/utils/errorHandlers";
@@ -16,6 +16,7 @@ const AdminStore = createContext({
     managedPropertyStatus: async () => 500,
     
     // categories
+    allCategories: [],
     getAllCategories: async () => ({ data: [], status: 500 }),
     createCategory: async () => 500,
     updateCategory: async () => 500,
@@ -59,7 +60,8 @@ const AdminStore = createContext({
 export const useAdminStore = () => useContext(AdminStore);
 
 export const AdminProvider = ({ children }) => {
-    
+    const [allCategories, setAllCategories] = useState([]);
+
     const getAllUsers = async () => {
         try {
             const response = await api.get(`admin/users`);
@@ -113,6 +115,7 @@ export const AdminProvider = ({ children }) => {
     const getAllCategories = async () => {
         try {
           const response = await api.get("admin/category");
+          setAllCategories(response.data);
           return { data: response.data, status: response.status };
         } catch (error) {
           return { data: [], status: handleAxiosError(error) };
@@ -337,7 +340,10 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-
+  useEffect(() => {
+    getAllCategories();
+  }, []);
+  
   const data = {
     getAllUsers,
     managedUserStatus,
@@ -350,6 +356,7 @@ export const AdminProvider = ({ children }) => {
     managedPropertyStatus,
 
     // categories
+    allCategories,
     getAllCategories,
     createCategory,
     updateCategory,

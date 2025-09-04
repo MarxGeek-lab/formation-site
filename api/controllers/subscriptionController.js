@@ -1,101 +1,78 @@
-const Subscription = require('../models/Subscription');
-const Plan = require('../models/Plan');
+const Subscription = require("../models/Subscription");
 
-const subscriptionController = {
-  // Créer un abonnement
-  async createSubscription(req, res) {
+exports.create = async (req, res) => {
+    console.log(req.body);
     try {
-      const { userId, planId } = req.body;
-      
-      const subscription = new Subscription({
-        user: userId,
-        plan: planId,
-        startDate: new Date(),
-        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // +30 jours
-        nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-      });
+        const verify = await Subscription.findOne({ title: req.body.title });
+        if (verify) return res.status(409).send();
 
-      await subscription.save();
-      res.status(201).json(subscription);
+        const newPlan = new Subscription({ ...req.body });
+        await newPlan.save();
+
+        return res.status(201).json(newPlan);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+        console.log(error);
+        return res.status(500).json({ message: 'Erreur lors de la création' });   
     }
-  },
+}
 
-  // Obtenir les abonnements actifs
-  async getActiveSubscriptions(req, res) {
+exports.update = async (req, res) => {
     try {
-      const subscriptions = await Subscription.find({ status: 'ACTIVE' })
-        .populate('user', 'firstName lastName email')
-        .populate('plan');
-      res.json(subscriptions);
+        const subscription = await Subscription.findById(req.params.id);
+        if (!subscription) return res.status(404).send();
+
+        await subscription.updateOne(
+            { ...req.body },
+            {new: true}
+        );
+
+        return res.json(subscription);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        console.log(error);
+        return res.status(500).json({ message: 'Erreur lors de la mise à jour' }); 
     }
-  },
+}
 
-  // Annuler un abonnement
-  async cancelSubscription(req, res) {
+exports.delete = async (req, res) => {
     try {
-      const subscription = await Subscription.findById(req.params.id);
-      subscription.status = 'CANCELLED';
-      subscription.cancelledAt = new Date();
-      await subscription.save();
-      res.json(subscription);
+        const subscription = await Subscription.findById(req.params.id);
+        if (!subscription) return res.status(404).send();
+
+        await subscription.deleteOne();
+
+        return res.status(200).send();
     } catch (error) {
-      res.status(400).json({ message: error.message });
+        console.log(error);
+        return res.status(500).json({ message: 'Erreur lors de la mise à jour' }); 
     }
-  },
+}
 
-  // Ajouter un paiement
-  async addPayment(req, res) {
+exports.publishOrUnpublish = async (req, res) => {
     try {
-      const { subscriptionId, paymentData } = req.body;
-      const subscription = await Subscription.findById(subscriptionId);
-      
-      subscription.paymentHistory.push(paymentData);
-      if (paymentData.status === 'SUCCESS') {
-        subscription.status = 'ACTIVE';
-        subscription.nextBillingDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        console.log(req.body)
+      const subscription = await Subscription.findById(req.params.id)
+  
+      if (!subscription) {
+        return res.status(404).json({ message: 'Cours non trouvé' });
       }
-
+  
+      subscription.is_active = !subscription.is_active;
       await subscription.save();
+  
       res.json(subscription);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      console.log(error);
+      return res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'État de publication' });
     }
-  },
+}
 
-  // Obtenir les statistiques des abonnements
-  async getSubscriptionStats(req, res) {
+exports.getAllSubscription = async (req, res) => {
     try {
-      const stats = await Subscription.aggregate([
-        {
-          $group: {
-            _id: '$status',
-            count: { $sum: 1 },
-            totalRevenue: {
-              $sum: {
-                $reduce: {
-                  input: '$paymentHistory',
-                  initialValue: 0,
-                  in: {
-                    $add: [
-                      '$$value',
-                      { $cond: [{ $eq: ['$$this.status', 'SUCCESS'] }, '$$this.amount', 0] }
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]);
-      res.json(stats);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
-};
+        const subscriptions = await Subscription.find();
 
-module.exports = subscriptionController; 
+        return res.json(subscriptions)
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Erreur lors de la récupération' });
+    }
+}

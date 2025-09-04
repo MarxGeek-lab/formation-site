@@ -56,10 +56,6 @@ export const CommonProvider = ({ children }) => {
       } 
     };
 
-    useEffect(() => {
-      fetchCategories();
-    }, []);
-
     const data = {
         fetchAnnonces,
         fetchSiteSettings,

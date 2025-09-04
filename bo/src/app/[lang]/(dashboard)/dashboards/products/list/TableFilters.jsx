@@ -21,33 +21,33 @@ const TableFilters = ({ setData, productData }) => {
   const [category, setCategory] = useState('')
   const [stock, setStock] = useState('')
   const [status, setStatus] = useState('')
-  const [status2, setStatus2] = useState('')
+  const [type, setType] = useState('')
 
   const categories = useMemo(() => {
-    const uniqueCategories = new Set(productData?.map(item => item.subCategory).filter(Boolean));
+    const uniqueCategories = new Set(productData?.map(item => item.category).filter(Boolean));
     return Array.from(uniqueCategories).sort();
   }, [productData]);
 
   useEffect(
     () => {
       const filteredData = productData.filter(property => {
-        if (category && category !== 'tout' && property.subCategory !== category) return false
+        if (category && category !== 'tout' && property.category !== category) return false
         if (stock && property.stock !== productStockObj[stock]) return false
-        if (status && status !== 'tout' && property.statusValidate !== status) return false
-        if (status2 && status2 !== 'tout' && property.availability !== status2) return false
+        if (status && status !== 'tout' && property.productStatus !== status) return false
+        if (type && type !== 'tout' && property.productType !== type) return false
 
         return true
       })
 
       setData(filteredData)
     },
-    [category, stock, status, status2, productData]
+    [category, stock, status, type, productData]
   )
 
   return (
     <CardContent>
       <Box className='flex flex-wrap gap-3'>
-        <Typography variant='h5' mr={2}>Filtrer par </Typography>
+        <Typography variant='subtitle1' mr={2}>Filtrer par </Typography>
         <CustomTextField
           select
           id='select-status'
@@ -62,7 +62,6 @@ const TableFilters = ({ setData, productData }) => {
           <MenuItem value='tout'>Tout</MenuItem>
           <MenuItem value='active'>Actif</MenuItem>
           <MenuItem value='inactive'>Inactif</MenuItem>
-          <MenuItem value='draft'>Brouillon</MenuItem>
         </CustomTextField>
         <CustomTextField
           select
@@ -79,6 +78,21 @@ const TableFilters = ({ setData, productData }) => {
           {categories.map((cat) => (
             <MenuItem key={cat} value={cat}>{cat}</MenuItem>
           ))}
+        </CustomTextField>
+        <CustomTextField
+          select
+          id='select-status'
+          value={status}
+          onChange={e => setStatus(e.target.value)}
+          slotProps={{
+            select: { displayEmpty: true }
+          }}
+          className='min-is-[130px] text-sm'
+        >
+          <MenuItem value='' defaultChecked>Type de produit</MenuItem>
+          <MenuItem value='tout'>Tout</MenuItem>
+          <MenuItem value='standard'>Standard</MenuItem>
+          <MenuItem value='mystere'>Mystère</MenuItem>
         </CustomTextField>
       </Box>
     </CardContent>

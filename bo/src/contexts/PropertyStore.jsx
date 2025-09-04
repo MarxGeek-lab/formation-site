@@ -1,26 +1,25 @@
 'use client';
 import axios from "axios";
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext, useEffect } from "react";
 import { API_URL } from "@/settings";
 import { handleAxiosError } from "@/utils/errorHandlers";
 import api from "@/configs/api";
 
 const PropertyStore = createContext({
-  property: null,
+  product: null,
+  allProducts: [],
   getAllProducts: async () => ({ data: [], status: 500 }),
-  getPropertyById: async () => ({ data: null, status: 500 }),
-  createProperty: async () => 500,
-  updateProperty: async () => 500,
-  deleteProperty: async () => 500,
-  getPropertiesByUser: async () => ({ data: [], status: 500 }),
-  getPropertiesByCategory: async () => ({ data: [], status: 500 }),
-  getPropertiesByFilter: async () => ({ data: [], status: 500 }),
+  getProductById: async () => ({ data: null, status: 500 }),
+  createProduct: async () => 500,
+  updateProduct: async () => 500,
+  updateStatusProduct: async () => 500,
+  deleteProduct: async () => 500,
+  getProductsByUser: async () => ({ data: [], status: 500 }),
+  getProductsByCategory: async () => ({ data: [], status: 500 }),
   addToFavorites: async () => 500,
   removeFromFavorites: async () => 500,
   getUserFavorites: async () => ({ data: [], status: 500 }),
-  downloadPropertyExcel: async () => 500,
-  getRentalByOwner: async () => ({ data: [], status: 500 }),
-  getRentalById: async () => ({ data: any, status: 500 }),
+  downloadProductExcel: async () => 500,
   
   // paymen
   getPaymentsBySeller: async () => ({ data: [], status: 500 }),
@@ -30,18 +29,20 @@ const PropertyStore = createContext({
 export const usePropertyStore = () => useContext(PropertyStore);
 
 export const PropertyProvider = ({ children }) => {
-  const [property, setProperty] = useState(null);
+  const [product, setProduct] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
 
   const getAllProducts = async () => {
     try {
       const response = await axios.get(`${API_URL}products`);
+      setAllProducts(response.data);
       return { data: response.data, status: response.status };
     } catch (error) {
       return { data: [], status: handleAxiosError(error) };
     }
   };
 
-  const getPropertyById = async (id) => {
+  const getProductById = async (id) => {
     try {
       const response = await api.get(`${API_URL}products/${id}`);
       return { data: response.data, status: response.status };
@@ -50,7 +51,7 @@ export const PropertyProvider = ({ children }) => {
     }
   };
 
-  const getPropertiesByUser = async (userId) => {
+  const getProductsByUser = async (userId) => {
     try {
       const response = await api.get(`products/user/${userId}`);
       return { data: response.data, status: response.status };
@@ -59,7 +60,7 @@ export const PropertyProvider = ({ children }) => {
     }
   };
 
-  const getPropertiesByCategory = async (categoryId) => {
+  const getProductsByCategory = async (categoryId) => {
     try {
       const response = await axios.get(`${API_URL}products/category/${categoryId}`);
       return { data: response.data, status: response.status };
@@ -68,16 +69,7 @@ export const PropertyProvider = ({ children }) => {
     }
   };
 
-  const getPropertiesByFilter = async (filter) => {
-    try {
-      const response = await api.get(`${API_URL}products/search`, { params: filter });
-      return { data: response.data, status: response.status };
-    } catch (error) {
-      return { data: [], status: handleAxiosError(error) };
-    }
-  };
-
-  const createProperty = async (property) => {
+  const createProduct = async (property) => {
     try {
       const response = await api.post(`products/create`,
         property,
@@ -90,7 +82,7 @@ export const PropertyProvider = ({ children }) => {
     }
   };
 
-  const updateProperty = async (id, property) => {
+  const updateProduct = async (id, property) => {
     try {
       const response = await api.put(`products/update/${id}`,
         property,
@@ -102,7 +94,7 @@ export const PropertyProvider = ({ children }) => {
     }
   };
 
-  const deleteProperty = async (id) => {
+  const deleteProduct = async (id) => {
     try {
       const response = await api.delete(`${API_URL}products/delete/${id}`);
       return response.status;
@@ -138,7 +130,7 @@ export const PropertyProvider = ({ children }) => {
     }
   };
 
-  const downloadPropertyExcel = async (userId) => {
+  const downloadProductExcel = async (userId) => {
     try {
       const response = await api.get(`${API_URL}products/download-products/${userId}`, {
         responseType: "blob",
@@ -163,26 +155,6 @@ export const PropertyProvider = ({ children }) => {
     }
   };
 
-  // récupérer les locations
-  const getRentalByOwner = async (userId) => {
-    try {
-        const response = await api.get(`rental/owner/${userId}`);
-        return { data: response.data, status: response.status };
-    } catch (error) {
-        return { data: [], status: handleAxiosError(error) };
-    }
-  };
-
-  const getRentalById = async (rentalId) => {
-    try {
-        const response = await api.get(`rental/${rentalId}`);
-        return { data: response.data, status: response.status };
-    } catch (error) {
-        return { data: null, status: handleAxiosError(error) };
-    }
-  };
-
-
   // get payment
   const getPaymentsBySeller = async () => {
     try {
@@ -202,24 +174,24 @@ export const PropertyProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    getAllProducts()
+  }, []);
+
   const data = {
-    property,
+    product,
+    allProducts,
     getAllProducts,
-    getPropertyById,
-    createProperty,
-    updateProperty,
-    deleteProperty,
-    getPropertiesByUser,
-    getPropertiesByCategory,
-    getPropertiesByFilter,
+    getProductById,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getProductsByUser,
+    getProductsByCategory,
     addToFavorites,
     removeFromFavorites,
     getUserFavorites,
-    downloadPropertyExcel,
-
-    // Rental
-    getRentalByOwner,
-    getRentalById,
+    downloadProductExcel,
 
     //payments
     getPaymentsBySeller,

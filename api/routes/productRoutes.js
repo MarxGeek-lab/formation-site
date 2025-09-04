@@ -7,17 +7,17 @@ const upload = require('../middleware/multer');
 // Routes publiques
 router.get('/',  productController.getAllProducts);
 router.get('/:id', /* authenticateToken */ productController.getProductById);
-router.get('/search', productController.getProductByFilter);
 router.get('/download-products/:id', authenticateToken, productController.downloadProductsByUser);
 router.get('/category/:categoryId', productController.getProductsByCategory);
 router.get('/user/:userId', /* authenticateToken */ productController.getProductsByUser);
-router.get('/page', productController.getProductsByPage);
 
 // Routes protégées (nécessitant une authentification)
 router.post('/create', 
     // authenticateToken, 
     upload.fields([
-        { name: 'images', maxCount: 10 }
+        { name: 'images', maxCount: 20 },
+        { name: 'videos', maxCount: 1 },
+        { name: 'pdf', maxCount: 1 },
     ]), 
     productController.createProduct
 );
@@ -25,7 +25,9 @@ router.post('/create',
 router.put('/update/:id', 
     authenticateToken, 
     upload.fields([
-        { name: 'images', maxCount: 10 }
+        { name: 'images', maxCount: 10 },
+        { name: 'videos', maxCount: 1 },
+        { name: 'pdf', maxCount: 1 },
     ]),
     productController.updateProduct
 );
@@ -51,7 +53,6 @@ router.get('/favorites/:id',
     authenticateToken, 
     productController.getUserFavorites
 );
-router.get('/search/:search', productController.searchProduct);
 /* 
 // Routes de gestion des avis
 router.post('/:id/reviews', 

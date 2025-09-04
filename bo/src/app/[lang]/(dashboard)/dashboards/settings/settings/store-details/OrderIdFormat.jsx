@@ -43,10 +43,9 @@ const OrderIdFormat = ({
       </Typography>
       <CardContent>
         <Grid container spacing={6}>
-          <Grid size={{ xs: 12 }}>
+          {/* <Grid size={{ xs: 12 }}>
             {shipping.map((method, index) => (
               <Grid container spacing={2} key={index} className="mbs-2 flex items-end">
-                {/* Nom */}
                 <Grid size={{ xs: 12, md: 4 }}>
                   <CustomTextField
                     select
@@ -62,7 +61,6 @@ const OrderIdFormat = ({
                   </CustomTextField>
                 </Grid>
 
-                {/* Délai min */}
                 <Grid size={{ xs: 12, md: 2 }}>
                   <CustomTextField
                     type="number"
@@ -74,7 +72,6 @@ const OrderIdFormat = ({
                   />
                 </Grid>
 
-                {/* Délai max */}
                 <Grid size={{ xs: 12, md: 2 }}>
                   <CustomTextField
                     type="number"
@@ -86,7 +83,6 @@ const OrderIdFormat = ({
                   />
                 </Grid>
 
-                {/* Unité */}
                 <Grid size={{ xs: 12, md: 2 }}>
                   <CustomTextField
                     select
@@ -101,7 +97,6 @@ const OrderIdFormat = ({
                   </CustomTextField>
                 </Grid>
 
-                {/* Frais */}
                 <Grid size={{ xs: 12, md: 2 }}>
                   <CustomTextField
                     type="number"
@@ -113,7 +108,6 @@ const OrderIdFormat = ({
                   />
                 </Grid>
 
-                {/* Description */}
                 <Grid size={{ xs: 12, md: 6 }}>
                   <CustomTextField
                     multiline
@@ -125,7 +119,6 @@ const OrderIdFormat = ({
                   />
                 </Grid>
 
-                {/* Par défaut */}
                 <Grid size={{ xs: 12, md: 2 }}>
                   <FormControlLabel
                     control={
@@ -138,27 +131,6 @@ const OrderIdFormat = ({
                   />
                 </Grid>
 
-                
-
-                {/* Pays disponibles */}
-                {/* <Grid size={{ xs: 12, md: 4 }}>
-                  <Select
-                    fullWidth
-                    multiple
-                    value={method.availableCountries}
-                    onChange={(e) => handleCharacteristicChange(index, 'availableCountries', e.target.value)}
-                    options={[
-                      { value: 'BJ', label: 'Bénin' },
-                      { value: 'TG', label: 'Togo' },
-                      { value: 'CI', label: 'Côte d’Ivoire' }
-                    ]}
-                    label="Pays disponibles"
-                  />
-                </Grid> */}
-
-                
-
-                {/* Boutons ajout/suppression */}
                 <Grid size={{ xs: 12, md: 2 }} className="flex items-center">
                   {index === shipping.length - 1 ? (
                     <Button variant="contained" onClick={handleAddCharacteristic} className="mie-2">
@@ -172,7 +144,7 @@ const OrderIdFormat = ({
                 </Grid>
               </Grid>
             ))}
-          </Grid>
+          </Grid> */}
           <Grid size={{ xs: 12, md: 6 }}>
             <CustomTextField
               fullWidth

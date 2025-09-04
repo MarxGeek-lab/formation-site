@@ -195,7 +195,7 @@ const StoreDetails = () => {
 
   return (
     <Grid container spacing={6}>
-      <Grid size={{ xs: 12 }}>
+      {/* <Grid size={{ xs: 12 }}>
         <Profile
           supportEmail={supportEmail}
           setSupportEmail={setSupportEmail}
@@ -207,7 +207,7 @@ const StoreDetails = () => {
           websiteTitle={websiteTitle} setWebsiteTitle={setWebsiteTitle}
           logoFile={logoFile} setLogoFile={setLogoFile}
         />
-      </Grid>
+      </Grid> */}
       <Grid size={{ xs: 12 }}>
         <SocialLinks
           facebookUrl={facebookUrl} setFacebookUrl={setFacebookUrl}
@@ -217,7 +217,7 @@ const StoreDetails = () => {
           youtubeUrl={youtubeUrl} setYoutubeUrl={setYoutubeUrl}
         />
       </Grid>
-      <Grid size={{ xs: 12 }}>
+      {/* <Grid size={{ xs: 12 }}>
         <BillingInformation
           country={country}
           setCountry={setCountry}
@@ -228,7 +228,7 @@ const StoreDetails = () => {
           city={city}
           setCity={setCity}
         />
-      </Grid>
+      </Grid> */}
       <Grid size={{ xs: 12 }}>
         <OrderIdFormat
           taxe={taxe}

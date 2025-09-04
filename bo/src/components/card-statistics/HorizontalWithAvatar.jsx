@@ -14,10 +14,10 @@ const HorizontalWithAvatar = props => {
     <Card sx={{
       background: gradient,
     }}>
-      <CardContent className='flex items-center justify-between gap-2'>
+      <CardContent className=' h-[75px] flex items-center justify-between gap-2'>
         <div className='flex flex-col items-start gap-1'>
           <Typography variant='h5' color='white'>{stats}</Typography>
-          <Typography variant='body2' color='white'>{title}</Typography>
+          <Typography variant='body2' color='white' whiteSpace={'nowrap'}>{title}</Typography>
         </div>
         <CustomAvatar variant={avatarVariant} skin={avatarSkin} color={avatarColor} size={avatarSize}>
           <i className={avatarIcon} style={{ color: 'white' }} />

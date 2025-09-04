@@ -23,33 +23,26 @@ const ProductCard = ({ stats }) => {
   
   const data = [
     {
-      stats: stats?.activeCount,
+      stats: stats?.countProductsActive,
       title: 'Produits actif',
       avatarIcon: 'tabler-package',
       avatarColor: 'primary',
       gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' // bleu → violet
     },
     {
-      stats: stats?.inactiveCount,
+      stats: stats?.countProductsInactive,
       title: 'Produits inactif',
       avatarIcon: 'tabler-package',
       avatarColor: 'error',
       gradient: 'linear-gradient(135deg, #f85032 0%, #e73827 100%)' // rouge dégradé
     },
     {
-      stats: stats?.availableCount,
-      title: 'Produits disponible',
+      stats: stats?.countProducts,
+      title: 'Produits total',
       avatarIcon: 'tabler-package',
       avatarColor: 'success',
       gradient: 'linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)' // vert dégradé
     },
-    {
-      stats: stats?.unavailableCount,
-      title: 'Produits indisponible',
-      avatarIcon: 'tabler-package',
-      avatarColor: 'error',
-      gradient: 'linear-gradient(135deg, #ff512f 0%, #dd2476 100%)' // rouge → rose
-    }
   ];
   
 

@@ -6,7 +6,7 @@ export const handleAxiosError = (error) => {
 
   if (axiosError?.response?.status === 401) {
     localStorage.removeItem("accessToken")
-    window.location.href = '/';
+    // window.location.href = '/';
   }
 
   

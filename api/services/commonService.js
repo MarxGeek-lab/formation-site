@@ -36,12 +36,7 @@ const commonService = {
                     isRefundTransaction: true,
                     status: 'success'
                 });
-                
-                const withdrawals = await Withdrawal.find({
-                    user: tenantId,
-                    status: 'paid'
-                });
-    
+          
                 // Calculer la somme des montants de toutes les transactions
                 const balanceTotal = transactions.reduce((total, transaction) => {
                     return total + Number(transaction.amount);

@@ -12,43 +12,32 @@ import ProductListTable from './ProductListTable';
 
 const PropertyList = () => {
   // Vars
-  const { getPropertiesByUser } = usePropertyStore();
+  const { getAllProducts, allProducts } = usePropertyStore();
   const { user } = useAuthStore();
-  const [ products, setProducts ] = useState([]);
   const [ stats, setStats ] = useState([]);
 
-  const fetchProducts = async () => {
-    if (user) {
-      try {
-        const { data } = await getPropertiesByUser(user?._id);
-
-        const activeCount = data.filter((item) => item.productStatus === 'active').length;
-        const inactiveCount = data.filter((item) => item.productStatus === 'inactive').length;
-        const draftCount = data.filter((item) => item.productStatus === 'draft').length;
-        const availableCount = data.filter((item) => item.state === 'available').length;
-        const unavailableCount = data.filter((item) => item.state === 'unavailable').length;
-
-        setStats({ activeCount, inactiveCount, draftCount, availableCount, unavailableCount });
-
-        setProducts(data)
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
+  useEffect(() => {
+    getAllProducts();
+  }, [user]);
 
   useEffect(() => {
-    fetchProducts();
-  }, [user]);
+    const stats = {
+      countProducts: allProducts?.length || 0,
+      countProductsActive: allProducts?.filter(product => product?.productStatus === 'active')?.length || 0,
+      countProductsInactive: allProducts?.filter(product => product?.productStatus === 'inactive')?.length || 0,
+      // countProductsDraft: allProducts?.filter(product => product?.productStatus === 'draft')?.length || 0,
+    }
+    setStats(stats);
+  }, [allProducts]);
 
   return (
     <Grid container spacing={6}>
-      <Typography variant='h5' className='mb-2'>Liste des produits</Typography>
+      <Typography variant='h5' className='mb-1'>Liste des produits</Typography>
       <Grid size={{ xs: 12 }}>
         <ProductCard stats={stats} />
       </Grid>
       <Grid size={{ xs: 12 }}>
-        <ProductListTable productData={products} />
+        <ProductListTable productData={allProducts} />
       </Grid>
     </Grid>
   )

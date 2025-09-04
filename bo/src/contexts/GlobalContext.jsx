@@ -15,6 +15,7 @@ import { SiteSettingsProvider } from "./SiteSettingsContext";
 import { WithdrawalProvider } from "./WithdrawalContext";
 import { AnnoncesProvider } from "./AnnoncesContext";
 import { OrderProvider } from "./orderStore";
+import { SubscriptionProvider } from "./SubscriptionContext";
 
 export const GlobalStoreProvider = ({ children }) => {
     return (
@@ -23,6 +24,7 @@ export const GlobalStoreProvider = ({ children }) => {
                 <OrderProvider>
                 <NewsletterProvider>
                 <SiteSettingsProvider>
+                    <SubscriptionProvider>
                 <WithdrawalProvider>
                     <AnnoncesProvider>
                 <ReservationProvider>
@@ -50,6 +52,7 @@ export const GlobalStoreProvider = ({ children }) => {
                 </ReservationProvider>
                 </AnnoncesProvider>
                 </WithdrawalProvider>
+                </SubscriptionProvider>
                 </SiteSettingsProvider>
                 </NewsletterProvider>
                 </OrderProvider>
@@ -75,3 +78,4 @@ export { useSiteSettingsStore } from "./SiteSettingsContext";
 export { useWithdrawalStore } from "./WithdrawalContext";
 export { useAnnoncesStore } from "./AnnoncesContext";
 export { useOrderStore } from "./orderStore";
+export { useSubscriptionContext } from "./SubscriptionContext";
