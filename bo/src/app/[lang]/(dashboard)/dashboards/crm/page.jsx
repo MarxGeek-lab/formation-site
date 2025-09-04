@@ -51,6 +51,38 @@ const DashboardCRM = () => {
     }
   ]
 
+  const ordersStats = [
+    {
+      title: 'Commandes en Attente',
+      stats: statss?.countOrdersPending || 0,
+      trendNumber: 18.2,
+      avatarIcon: 'tabler-shopping-cart',
+      color: 'primary'
+    },
+    {
+      title: 'Commandes Confirmées',
+      stats: statss?.countOrdersConfirmed || 0,
+      trendNumber: -8.7,
+      avatarIcon: 'tabler-shopping-cart',
+      color: 'warning'
+    },
+    {
+      title: 'Commandes Livrées',
+      stats: statss?.countOrdersDelivered || 0,
+      trendNumber: 4.3,
+      avatarIcon: 'tabler-shopping-cart',
+      color: 'success'
+    },
+    {
+      title: 'Commandes Annulées',
+      stats: statss?.countOrdersCancelled || 0,
+      trendNumber: 2.5,
+      avatarIcon: 'tabler-shopping-cart',
+      color: 'info'
+    }
+  ]
+
+
   const fetchStats = async () => {
     if (user) {
       try {
