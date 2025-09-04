@@ -101,7 +101,7 @@ const columnHelper = createColumnHelper()
 
 const ProductListTable = ({ productData }) => {
   // States
-  const { deleteProperty } = usePropertyStore();
+  const { deleteProperty, updateStatusProduct } = usePropertyStore();
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState(data)
@@ -189,7 +189,7 @@ const ProductListTable = ({ productData }) => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton onClick={() => {} }>
+            <IconButton onClick={() => handleActiveOrInactive(row.original._id) }>
               <i className='tabler-' color={{color: COLORS.primary}} />
             </IconButton>
             <IconButton onClick={() => window.location.href = `/${locale}/dashboards/products/details/${row.original._id}`}>

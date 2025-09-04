@@ -94,12 +94,12 @@ const DashboardCRM = () => {
           </Typography>
         <LogisticsStatisticsCard data={stats1} />
       </Grid>
-      {/* <Grid size={{ xs: 12 }}>
+      <Grid size={{ xs: 12 }}>
         <Typography variant="h5" sx={{ mb: 5 }}>
           Statistiques commandes
         </Typography>
         <LogisticsStatisticsCard data={ordersStats} />
-      </Grid> */}
+      </Grid>
       <Grid size={{ xs: 12 }}>
         <Typography variant="h5" sx={{ mb: 5 }}>
           Dernières Commandes

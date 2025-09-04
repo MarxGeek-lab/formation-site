@@ -8,12 +8,13 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
-
+import Grid from "@mui/material/Grid2"
 import StepPropertyDetails from './StepPropertyDetails'
 import { useAuthStore, usePropertyStore } from '@/contexts/GlobalContext'
 import { hideLoader, showLoader } from '@/components/Loader/loaderService'
 import { showToast } from '@/components/ToastNotification/ToastNotification'
 import { useParams, useSearchParams } from 'next/navigation'
+import ProductCard from './ProductCard'
 
 // Vars
 const steps = [
@@ -326,8 +327,21 @@ const PropertyListingWizard = () => {
             </Button>
           </DialogActions>
         </Dialog>
-      <CardContent className='flex-1 pbs-6'>{getStepContent(activeStep, handleNext, handlePrev)}</CardContent>
 
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 12, sm: 8 }}>
+          <CardContent className='flex-1 pbs-6'>{getStepContent(activeStep, handleNext, handlePrev)}</CardContent>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <ProductCard
+            title={productName}
+            category={category}
+            price={price}
+            pricePromo={wholesalePrice}
+            image={selectedFiles[0]}
+          />
+        </Grid>
+      </Grid>
     </Card>
   )
 }

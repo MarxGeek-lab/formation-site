@@ -27,7 +27,7 @@ const siteSettingsSchema = new mongoose.Schema({
   },
   websiteTitle: {
     type: String,
-    default: 'Market',
+    default: 'Rafly',
   },
   description: {
     type: String,
