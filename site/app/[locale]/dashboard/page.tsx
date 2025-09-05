@@ -38,10 +38,8 @@ import {
 } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
-import styles from './dashboard.module.scss';
 import { useAuthStore, useCommonStore, useOrderStore } from '@/contexts/GlobalContext';
 import { formatAmount } from '@/utils/formatAmount';
-import { COLORS } from '@/settings/theme';
 
 interface DashboardStats {
   totalOrders: number;
