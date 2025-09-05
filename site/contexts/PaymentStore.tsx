@@ -8,7 +8,7 @@ interface PaymentStore {
     getPaymentByUser: (userId: string) => Promise<{ data: any[], status: number }>;
     SubmitPayment: (formData: any) => Promise<{ data: any, status: number }>;
     updatePaymentStatus: (id: string, formData: any) => Promise<{ data: any, status: number }>;
-    getStatusPayment: (transactionId: string) => Promise<{ data: any, status: number }>;
+    getStatusPayment: (formData: any) => Promise<{ data: any, status: number }>;
 }
 
 const PaymentStore = createContext<PaymentStore>({
@@ -53,9 +53,9 @@ export const PaymentProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const getStatusPayment = async (transactionId: string): Promise<{ data: any, status: number }> => {
+    const getStatusPayment = async (formData: any): Promise<{ data: any, status: number }> => {
         try {
-            const response = await axiosInstanceUser.get(`${API_URL}payments/status/${transactionId}`);
+            const response = await axiosInstanceUser.put(`${API_URL}payments/status`, formData);
             return { data: response.data, status: response.status };
         } catch (error) {
             return { data: null, status: handleAxiosError(error) };

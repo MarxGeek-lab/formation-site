@@ -17,3 +17,7 @@ export const getStatsReviews = (data: any[]) => {
 
     return {...ratingStats, averageRating, totalReview: data.length };
   }
+
+export const generateSlug = (text: string) => {
+  return text.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-{2,}/g, '-').replace(/^-+|-+$/g, '');
+}

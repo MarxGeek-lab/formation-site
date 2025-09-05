@@ -1,17 +1,33 @@
 'use client';
 
-import { Box, Container, Typography, Button, Card, CardContent, Divider, Alert } from '@mui/material';
+import { Box, Container, Typography, Button, Card, CardContent, Divider, Alert, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { useCart } from '@/contexts/CartContext';
+import {
+  ArrowBack as ArrowBackIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
+} from '@mui/icons-material';
+
 import styles from './paiement.module.scss';
 
 import icon_monero from '@/assets/images/icon_monero.svg'
 import Image from 'next/image';
+import { hideLoader, showLoader } from '@/components/Loader/loaderService';
+import { useAuthStore, useOrderStore, usePaymentStore } from '@/contexts/GlobalContext';
+import { useRouter } from 'next/navigation';
+import { tree } from 'next/dist/build/templates/app-page';
 
 export default function PaiementPage({ params }: { params: { locale: string } }) {
+  const { user } = useAuthStore();
+  const { createOrder } = useOrderStore();
+  const { SubmitPayment, getStatusPayment } = usePaymentStore();
   const { locale } = params;
+  const router = useRouter();
   const t = useTranslations('Payment');
+  const { cart, clearCart } = useCart();
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -21,39 +37,58 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     country: 'Cameroun',
     city: '',
     address: '',
+    district: '',
+    postalCode: '',
     paymentMethod: 'mobile_money',
     acceptTerms: false,
     promoCode: '',
     
   });
   const [showPromoInput, setShowPromoInput] = useState(false);
-
+  const [message, setMessage] = useState('');
+  const [titleMessage, setTitleMessage] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
 
-  // Charger les données du checkout depuis localStorage
+  // Charger les données du panier depuis le contexte
   useEffect(() => {
-    const checkoutData = localStorage.getItem('checkoutData');
-    if (checkoutData) {
-      const data = JSON.parse(checkoutData);
-      setCartItems([{
-        id: data.product,
-        title: data.title,
-        price: data.price,
-        quantity: 1,
-        options: data.options
-      }]);
+    if (cart.items && cart.items.length > 0) {
+      // Utiliser les données du panier du contexte
+      const formattedItems = cart.items.map(item => ({
+        id: item.id,
+        title: item.name,
+        price: item.price,
+        quantity: item.quantity || 1,
+        image: item.image,
+        category: item.category
+      }));
+      setCartItems(formattedItems);
     } else {
-      // Données par défaut si pas de checkout data
-      setCartItems([
-        {
-          id: 1,
-          title: 'FORMATION COMPLÈTE PREMIERE PRO',
-          price: 45000,
-          quantity: 1
-        }
-      ]);
+      // Fallback: charger depuis localStorage si le panier est vide
+      const checkoutData = localStorage.getItem('checkoutData');
+      if (checkoutData) {
+        const data = JSON.parse(checkoutData);
+        setCartItems([{
+          id: data.product,
+          title: data.title,
+          price: data.price,
+          quantity: 1,
+          options: data.options
+        }]);
+      } else {
+        // Données par défaut si pas de checkout data
+        setCartItems([
+          {
+            id: 1,
+            title: 'FORMATION COMPLÈTE PREMIERE PRO',
+            price: 45000,
+            quantity: 1
+          }
+        ]);
+      }
     }
-  }, []);
+  }, [cart.items]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({
@@ -85,21 +120,126 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     return Object.keys(newErrors).length === 0;
   };
 
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+   const handleSubmit = async () => {
+    if (validateForm()) {
+      const orderData = {
+        items: cart.items,
+        shippingAddress: {
+          fullName: formData.firstName + ' ' + formData.lastName,
+          address: formData.address,
+          city: formData.city,
+          postalCode: formData.postalCode,
+          country: formData.country,
+          phone: formData.phone,
+          district: formData.district,
+          email: formData.email,
+        },
+        paymentMethod: formData.paymentMethod,
+        totalAmount: calculateTotal(),
+        customer: user?._id,
+      }
+  
+      showLoader()
+  
+      try {
+        const { data, status } = await createOrder(orderData)
+        console.log(data)
+
+        if (status === 201) {
+          hideLoader()
+          await payment(data._id, 'orderId')
+        } else {
+          hideLoader()
+          setShowErrorModal(true)
+          setTitleMessage('Erreur')
+          setMessage('Une erreur est survenue lors du traitement de votre commande. Veuillez réessayer.');
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        hideLoader();
+      }
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      console.log('Form submitted:', formData);
-      // Ici vous pouvez intégrer votre logique de paiement
-    }
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
   const formatPrice = (price: number) => {
     return `${price.toLocaleString('fr-FR')} CFA`;
   };
+
+  const payment = async (orderId: string, method: string) => {
+    showLoader()
+    try {
+      const { data: paymentData, status: paymentStatus } = await SubmitPayment({
+        orderId: orderId,
+        userId: user?._id,
+        amount: calculateTotal(),
+        method: method,
+      });
+      console.log(paymentData, paymentStatus)
+
+      if (paymentData.success) {
+        window.location.href = paymentData.url;
+      } else {
+        setShowErrorModal(true)
+        setTitleMessage('Paiement echoué')
+        setMessage('Votre commande a été créée avec succès, mais le paiement a echoué. Veuillez réessayer ou vous rendre sur votre espace personnel pour finaliser le paiement.');
+      }
+      hideLoader()
+    } catch (error) {
+      console.log(error)
+      hideLoader()
+    }
+  }
+
+  const retryPayment = async () => {
+    const url = window.location.href;
+    const urlParams = new URLSearchParams(url);
+    const orderId = urlParams.get('orderId');
+    const paymentId = urlParams.get('paymentId');
+    console.log("retry orderId = ", orderId);
+    console.log("retry orderId = ", urlParams.get('orderId'));
+    console.log("retry paymentId = ", paymentId);
+    if (paymentId) {
+      await payment(paymentId, 'paymentId');
+    }
+  }
+
+  const getStatusPaiement = async () => {
+    const url = window.location.href;
+    const urlParams = new URLSearchParams(url);
+    const paymentId = urlParams.get('paymentId');
+    const paymentStatus = urlParams.get('paymentStatus');
+    console.log( "paymentId == ", paymentId, "paymentStatus == ", paymentStatus)
+    
+    if (paymentId) {
+      try {
+        const { data, status } = await getStatusPayment({paymentId, paymentStatus})
+        console.log(data, status)
+
+        if (data.status === 'success') {
+          setShowSuccessModal(true)
+          setTitleMessage('Paiement effectué')
+          setMessage('Votre commande a été traitée avec succès et le paiement a été effectué avec succès');
+        } else {
+          setShowErrorModal(true)
+          setTitleMessage('Paiement echoué')
+          setMessage('Votre commande a été créée avec succès, mais le paiement a echoué. Veuillez vous rendre sur votre espace personnel pour finaliser le paiement.');
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    
+  }
+
+  useEffect(() => {
+    console.log("vérification de status")
+    getStatusPaiement()
+  }, [])
 
   return (
     <Box sx={{ 
@@ -285,7 +425,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
 
                  
 
-                  {/* <div className={styles.checkboxField}>
+                  <div className={styles.checkboxField}>
                     <label className={styles.checkbolgabel}>
                       <input
                         type="checkbox"
@@ -300,7 +440,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                         </a>
                       </span>
                     </label>
-                  </div> */}
+                  </div>
                   
                   {errors.acceptTerms && (
                     <Alert severity="error" sx={{ mt: 2 }}>
@@ -329,18 +469,43 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                     <Box key={item.id} className={styles.cartItem}>
                       <Box sx={{ display: 'flex', gap: 2 }}>
                         <Box className={styles.itemImage}>
-                          <Box className={styles.imagePlaceholder}>
-                            📦
-                          </Box>
+                          {item.image ? (
+                            <img 
+                              src={item.image?.replace('http://localhost:5000/', 'https://api.rafly.me/')} 
+                              alt={item.title}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                borderRadius: '8px'
+                              }}
+                            />
+                          ) : (
+                            <Box className={styles.imagePlaceholder}>
+                              📦
+                            </Box>
+                          )}
                         </Box>
                         <Box sx={{ flex: 1 }}>
                           <Typography variant="subtitle2" sx={{ 
                             fontWeight: 600,
-                            mb: 1,
-                            fontSize: '0.9rem'
+                            mb: 0,
+                            fontSize: '0.85rem'
                           }}>
                             {item.title}
                           </Typography>
+                          
+                          {/* Afficher la catégorie si disponible */}
+                          {item.category && (
+                            <Typography variant="caption" sx={{ 
+                              display: 'block',
+                              color: 'white',
+                              fontSize: '0.75rem',
+                              mb: 0
+                            }}>
+                              {item.category}
+                            </Typography>
+                          )}
                           
                           {/* Afficher les options sélectionnées */}
                           {item.options && (
@@ -374,10 +539,10 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                           )}
                           
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2" sx={{ color: 'var(--muted-foreground)' }}>
+                            {/* <Typography variant="body2" sx={{ color: 'var(--muted-foreground)' }}>
                               {t('quantity')}: {item.quantity}
-                            </Typography>
-                            <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                            </Typography> */}
+                            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                               {formatPrice(item.price)}
                             </Typography>
                           </Box>
@@ -432,6 +597,194 @@ export default function PaiementPage({ params }: { params: { locale: string } })
           </Grid>
         </Grid>
       </Container>
+
+       <Dialog
+          open={showSuccessModal}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx:{
+              backgroundColor: 'var(--background)',
+              borderRadius: 3,
+              overflow: 'hidden',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+              animation: 'fadeInScale 0.3s ease-out',
+              '@keyframes fadeInScale': {
+                '0%': { opacity: 0, transform: 'scale(0.9)' },
+                '100%': { opacity: 1, transform: 'scale(1)' },
+              },
+            }
+          }}
+          >
+          {/* Titre */}
+          <DialogTitle sx={{ textAlign: 'center', pt: 5 }}>
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                borderRadius: '50%',
+                bgcolor: 'success.light',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mx: 'auto',
+                mb: 2,
+              }}
+            >
+              <CheckCircleIcon sx={{ fontSize: 56, color: 'success.main' }} />
+            </Box>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'success.main' }}>
+              {titleMessage}
+            </Typography>
+          </DialogTitle>
+
+          {/* Contenu */}
+          <DialogContent sx={{ textAlign: 'center', pb: 4, px: 4 }}>
+            <Typography variant="body1" sx={{ mb: 2, fontSize: 16, color: '#374151' }}>
+              {message}
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+              Vous recevrez un email de confirmation avec les détails de votre commande.
+            </Typography>
+          </DialogContent>
+
+          {/* Actions */}
+          <DialogActions sx={{ justifyContent: 'center', gap: 2, pb: 4 }}>
+            <Button
+              onClick={ () => {
+                clearCart(); 
+                setShowSuccessModal(false); 
+                router.push('/')}}
+              variant="outlined"
+              size="large"
+              startIcon={<ArrowBackIcon />}
+              sx={{
+                borderRadius: 2,
+                textTransform: 'none',
+                px: 3,
+                fontWeight: 600,
+              }}
+            >
+              Retour à l'accueil
+            </Button>
+            <Button
+              onClick={ () => {
+                clearCart(); 
+                setShowSuccessModal(false); 
+                router.push('/orders')}}
+              variant="contained"
+              size="large"
+              sx={{
+                borderRadius: 2,
+                textTransform: 'none',
+                px: 3,
+                fontWeight: 700,
+                bgcolor: 'success.main',
+                '&:hover': { bgcolor: 'success.dark' },
+              }}
+            >
+              Voir ma commande
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+
+        {/* Modal d'erreur */}
+        <Dialog
+          open={showErrorModal}
+          onClose={() => {}}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx:{
+              backgroundColor: 'var(--background)',
+              borderRadius: 3,
+              overflow: 'hidden',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+              animation: 'fadeInScale 0.3s ease-out',
+              '@keyframes fadeInScale': {
+                '0%': { opacity: 0, transform: 'scale(0.9)' },
+                '100%': { opacity: 1, transform: 'scale(1)' },
+              },
+            }
+          }}
+        >
+          {/* Titre */}
+          <DialogTitle sx={{ textAlign: 'center', pt: 5 }}>
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mx: 'auto',
+                mb: 2,
+              }}
+            >
+              <ErrorIcon sx={{ fontSize: 48, color: 'error.main' }} />
+            </Box>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'error.main' }}>
+              {titleMessage}
+            </Typography>
+          </DialogTitle>
+
+          {/* Contenu */}
+          <DialogContent sx={{ textAlign: 'center', pb: 4, px: 4 }}>
+            <Typography variant="body1" sx={{ mb: 2, fontSize: 16, color: '#374151' }}>
+              {message}
+            </Typography>
+
+            <Alert
+              severity="info"
+              sx={{
+                mt: 2,
+                borderRadius: 2,
+                color: '#0c4a6e',
+                border: '1px solid var(--primary-border)',
+                backgroundColor: 'var(--primary-subtle)',
+              }}
+            >
+              <Typography variant="body2">
+                Si le problème persiste, veuillez contacter notre service client.
+              </Typography>
+            </Alert>
+          </DialogContent>
+
+          {/* Actions */}
+          <DialogActions sx={{ justifyContent: 'center', pb: 4 }}>
+            <Button
+              onClick={() => {
+                setShowErrorModal(false)
+                retryPayment()
+              }}
+              variant="contained"
+              size="large"
+              sx={{
+                borderRadius: 2,
+                px: 4,
+                textTransform: 'none',
+                fontWeight: 600,
+                bgcolor: 'error.main',
+                '&:hover': { bgcolor: 'error.dark' },
+              }}
+            >
+              Réessayer
+            </Button>
+            <Button
+              onClick={() => {
+                setShowErrorModal(false)
+                router.push(`/${locale}/dashboard`)
+              }}
+              variant='outlined'
+              size="large"
+              color='error'
+            >
+              Retour
+            </Button>
+          </DialogActions>
+        </Dialog>
     </Box>
   );
 }

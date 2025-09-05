@@ -4,9 +4,10 @@ const User = require('../models/User');
 const EmailService = require('../services/emailService');
 const axios = require('axios');
 const { getStatusPayment, getGreeting } = require('../utils/helpers');
-const commonService = require('../services/commonService');
 const Order = require('../models/Order');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
+const { default: MoneroPayment } = require('../services/servicePayment');
+require('dotenv').config();
 
 const transactionController = {
   // Créer une nouvelle transaction
@@ -14,20 +15,24 @@ const transactionController = {
     try {
       const {
         amount,
-        paymentMethod,
         orderId,
         userId,
-        paymentNumber,
-        email,
-        name,
-        mobileProvider,
+        method,
+        paymentId,
       } = req.body;
 
       console.log(req.body)
       // Vérifier si la propriété existe
-      const order = await Order.findById(orderId)
+      let order 
+      if (method === 'orderId') {
+        order = await Order.findById(orderId)
           .populate('customer')
           .populate('items.product');
+      } else {
+        order = await Order.findOne({ reference: paymentId })
+          .populate('customer')
+          .populate('items.product');
+      }
       
       if (!order) {
         return res.status(404).json({ message: 'Commande non trouvée' });
@@ -37,11 +42,8 @@ const transactionController = {
       const transaction = new Transaction({
         amount,
         customer: userId,
-        order: orderId,
-        paymentMethod: paymentMethod.toUpperCase(),
-        mobileProvider: mobileProvider.toUpperCase(),
-        paymentNumber,
-        email,
+        order: order._id,
+        email: order.customer.email,
       });
 
       await transaction.save();
@@ -54,140 +56,137 @@ const transactionController = {
       });
       await order.save();
 
-      const urls_pay = {
-        "MTN": "https://api.feexpay.me/api/transactions/public/requesttopay/mtn",
-        "MOOV": "https://api.feexpay.me/api/transactions/public/requesttopay/moov",
-        "CELTIIS": "https://api.feexpay.me/api/transactions/public/requesttopay/celtiis_bj",
-        "CARD": "https://api.feexpay.me/api/transactions/public/initcard",
-        // "MASTERCARD": "https://api.feexpay.me/api/transactions/public/initcard",
-      }
-
-      // payment
-      const method = mobileProvider.toUpperCase() === 'CELTIIS' ? 'CELTIIS BJ' : mobileProvider.toUpperCase();
-      const payload = {
-        name: name,
-        firstName: name,
-        phoneNumber: paymentNumber,
-        amount: 1,
-        // amount: paidAmount,
-        network: method,
-        shop: process.env.SHOP_ID,
-      }
-
-      const res1 = await axios.post(urls_pay[method], payload, {
-        headers: {
-            "Authorization": `Bearer ${process.env.API_KEY}`
-        }
+      const monero = new MoneroPayment(process.env.MONERO_SECRET_KEY);
+      const payment = await monero.initializePayment({
+        amount: 100,
+        currency: "XOF",
+        description: "Paiement pour la commande #"+order._id,
+        customer: {
+          email: order.customer.email,
+          first_name: order.customer.name,
+          last_name: order.customer.name,
+        },
+        return_url: process.env.URL_APP+'paiement?orderId='+order._id,
+        metadata: {
+          order_id: order._id,
+          customer_id: userId,
+        },
+        methods: ["mtn_bj", "moov_bj", "moov_bf", "moov_ci", 
+          "moov_ml", "moov_tg", "mtn_ci"],
       });
+      
+      console.log(payment)
 
-      if (res1.status === 200 || res1.status === 202) {
-        const ref = res1.data.reference;
-        transaction.reference = ref;
-        
-        await new Promise(resolve => setTimeout(resolve, 30000));
-        // Mettre la transaction avec la reference du paiement
-        const res2 = await getStatusPayment(ref);
-        const status = res2.data.status;
-
-        if (status === 'SUCCESSFUL') {
-
-          if (order.status !== 'confirmed') {
-            for (const item of order.items) {
-              const product = await Product.findById(item.product);
-              if (product) {
-                product.stock.available = product.stock.available - item.quantity;
-                product.stock.sold = product.stock.sold || 0 + item.quantity;
-                
-                if (product.stock.available === 0) {
-                  product.state = 'unavailable';
-                } else {
-                  product.state = 'available';
-                }
-                await product.save();
-              }
-            }
-            order.status = 'confirmed';
-            await order.save();
-          }
-
-          transaction.status = 'success';
-          transaction.completedAt = new Date();
-
-          // Mettre à jour le statut de la commande
-          const paidAmount = order.payments.reduce((total, item) =>  item.status === 'success' ? total + Number(item.amount) : total, 0);
-          order.paidAmount = paidAmount;
-
-          if (paidAmount === order.totalAmount) {
-            order.paymentStatus = 'paid';
-          } else {
-            order.paymentStatus = 'partiallyPaid';
-          }
-          
-          // Mettre à jour la balance du propriétaire
-          await commonService.updateBalanceOwner(order.customer); 
-        } else if (['FAILED', 'PENDING'].includes(status)) {
-          transaction.status = status === 'FAILED' ? 'failed':'pending';
-
-          // mail
-          const templateData = {
-            fullname: name,
-            amount: amount,
-            orderId: order._id,
-            payId: transaction._id,
-            status: transaction.status,
-            salutation: getGreeting(),
-          };
-
-          const emailService = new EmailService();
-          emailService.setSubject(`Paiement non effectué sur STORE`);
-          emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
-          emailService.addTo(email);
-          emailService.setHtml(generateTemplateHtml("templates/notificationPaymentCustomerFailed.html", templateData));
-          await emailService.send();
-        } 
-
+      if (payment.success) {
+        // const ref = payment.data.reference;
+        transaction.reference = payment.data.data.id;
         await transaction.save();
-        await order.save();
+        
+        // await new Promise(resolve => setTimeout(resolve, 30000));
+        // // Mettre la transaction avec la reference du paiement
+        // const res2 = await getStatusPayment(ref);
+        // const status = res2.data.status;
+
+        // if (status === 'SUCCESSFUL') {
+
+        //   if (order.status !== 'confirmed') {
+        //     for (const item of order.items) {
+        //       const product = await Product.findById(item.product);
+        //       if (product) {
+        //         product.stock.available = product.stock.available - item.quantity;
+        //         product.stock.sold = product.stock.sold || 0 + item.quantity;
+                
+        //         if (product.stock.available === 0) {
+        //           product.state = 'unavailable';
+        //         } else {
+        //           product.state = 'available';
+        //         }
+        //         await product.save();
+        //       }
+        //     }
+        //     order.status = 'confirmed';
+        //     await order.save();
+        //   }
+
+        //   transaction.status = 'success';
+        //   transaction.completedAt = new Date();
+
+        //   // Mettre à jour le statut de la commande
+        //   const paidAmount = order.payments.reduce((total, item) =>  item.status === 'success' ? total + Number(item.amount) : total, 0);
+        //   order.paidAmount = paidAmount;
+
+        //   if (paidAmount === order.totalAmount) {
+        //     order.paymentStatus = 'paid';
+        //   } else {
+        //     order.paymentStatus = 'partiallyPaid';
+        //   }
+          
+        //   // Mettre à jour la balance du propriétaire
+        //   await commonService.updateBalanceOwner(order.customer); 
+        // } else if (['FAILED', 'PENDING'].includes(status)) {
+        //   transaction.status = status === 'FAILED' ? 'failed':'pending';
+
+        //   // mail
+        //   const templateData = {
+        //     fullname: name,
+        //     amount: amount,
+        //     orderId: order._id,
+        //     payId: transaction._id,
+        //     status: transaction.status,
+        //     salutation: getGreeting(),
+        //   };
+
+        //   const emailService = new EmailService();
+        //   emailService.setSubject(`Paiement non effectué sur STORE`);
+        //   emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+        //   emailService.addTo(email);
+        //   emailService.setHtml(generateTemplateHtml("templates/notificationPaymentCustomerFailed.html", templateData));
+        //   await emailService.send();
+        // } 
+
+        // await transaction.save();
+        // await order.save();
       }
 
          // Noitification
-      const templateData = {
-        fullname: name,
-        amount: amount,
-        orderId: order._id,
-        payId: transaction._id,
-        status: transaction.status,
-        salutation: getGreeting(),
-      };
+      // const templateData = {
+      //   fullname: name,
+      //   amount: amount,
+      //   orderId: order._id,
+      //   payId: transaction._id,
+      //   status: transaction.status,
+      //   salutation: getGreeting(),
+      // };
 
-      if (transaction.status === 'success') {
-        const emailService = new EmailService();
-        emailService.setSubject(`Paiement effectué avec succès sur STORE`);
-        emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
-        emailService.addTo(email);
-        emailService.setHtml(generateTemplateHtml("templates/notificationPaymentCustomer.html", templateData));
-        await emailService.send();
+      // if (transaction.status === 'success') {
+      //   const emailService = new EmailService();
+      //   emailService.setSubject(`Paiement effectué avec succès sur STORE`);
+      //   emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      //   emailService.addTo(email);
+      //   emailService.setHtml(generateTemplateHtml("templates/notificationPaymentCustomer.html", templateData));
+      //   await emailService.send();
 
-        const emailServiceAdmin = new EmailService();
-        emailServiceAdmin.setSubject(`Nouveau paiement sur STORE`);
-        emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "STORE");
-        emailServiceAdmin.addTo(process.env.EMAIL_HOST_USER);
-        emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationPaymentAdmin.html", templateData));
-        await emailServiceAdmin.send();
+      //   const emailServiceAdmin = new EmailService();
+      //   emailServiceAdmin.setSubject(`Nouveau paiement sur STORE`);
+      //   emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      //   emailServiceAdmin.addTo(process.env.EMAIL_HOST_USER);
+      //   emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationPaymentAdmin.html", templateData));
+      //   await emailServiceAdmin.send();
 
-        const notification = new Notification({
-          type: 'payment',
-          message: `Nouveau paiement sur STORE. ID: PAY-${transaction._id}`,
-          user: null,
-          data: JSON.stringify(transaction),
-        });
-        await notification.save();
-      }
+      //   const notification = new Notification({
+      //     type: 'payment',
+      //     message: `Nouveau paiement sur STORE. ID: PAY-${transaction._id}`,
+      //     user: null,
+      //     data: JSON.stringify(transaction),
+      //   });
+      //   await notification.save();
+      // }
 
       res.status(201).json({
+        success: payment.success,
         statusPayment: transaction.status,
-        reference: transaction.reference,
         transactionId: transaction._id,
+        url: payment.data.data.checkout_url
       });
     } catch (error) {
       console.log(error)
@@ -198,8 +197,9 @@ const transactionController = {
   // Get status
   async getStatusPayment(req, res) {
     try {
-      const { payId } = req.params;
-      const transaction = await Transaction.findById(payId);
+      console.log(req.body)
+      const { paymentId, paymentStatus } = req.body;
+      const transaction = await Transaction.findOne({ reference: paymentId });
       if (!transaction) {
         return res.status(404).json({ message: 'Transaction non trouvée' });
       }
@@ -207,16 +207,29 @@ const transactionController = {
       // if (transaction.status === 'success') {
       //   return res.status(400).json({ message: 'Transaction déjà réussie' });
       // }
+      if (paymentStatus === 'success')  {
+        transaction.status = 'success';
+        transaction.completedAt = new Date();
 
-      const response = await getStatusPayment(transaction.reference);
-      const status = response.data.status;
+        await transaction.save();
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            transaction: transaction,
+          },
+        });
+      }
 
-      if (status === 'SUCCESSFUL') {
+      const monero = new MoneroPayment(process.env.MONERO_SECRET_KEY);
+      const response = await monero.verifyPayment(transaction.reference);
+      const status = response.data.data.status;
+      console.log(response)
+      if (status === 'success') {
         transaction.status = 'success';
 
         // Mettre à jour la balance du propriétaire
-        await commonService.updateBalanceOwner(transaction.seller); 
-      } else if (status === 'PENDING') {
+        // await commonService.updateBalanceOwner(transaction.seller); 
+      } else if (status === 'pending') {
         transaction.status = 'pending';
       } else {
         transaction.status = 'failed';

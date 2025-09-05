@@ -48,13 +48,7 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ['MOBILE', 'CARD'],
-      required: true,
-    },
-    mobileProvider: {
-      type: String,
-      enum: ['MTN', 'MOOV', 'CELTIIS'],
-      required: true
+      default: 'Monero'
     },
     totalAmount: {
       type: Number,
@@ -75,29 +69,6 @@ const orderSchema = new mongoose.Schema(
     },
     deliveredAt: {
       type: Date,
-    },
-    shipping: {
-      type: Boolean,
-      default: false,
-    },
-    shippingMethod: { 
-      type: Object, 
-      default: {
-        name: 'Livraison express',
-        delay: {
-          min: 1,
-          max: 2,
-          unit: 'jour'
-        },
-        fee: 2500,
-        isDefault: false,
-        availableCountries: ['BJ', 'TG', 'CI'],
-        description: 'Livraison rapide à domicile',
-      } 
-    },
-    taxe: {
-      type: Number,
-      default: 0
     },
     payments: [{
       transaction: {
@@ -126,7 +97,7 @@ const orderSchema = new mongoose.Schema(
       cancellationReason: String,
       cancelledByType: { type: String, enum: ['owner', 'user'], default: 'user' },
     },
-    note: {
+    description: {
       type: String,
     },
     invoice: {

@@ -1,0 +1,545 @@
+.dashboardContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  
+  // Mobile-first approach
+  @media (max-width: 600px) {
+    background: #f8fafc;
+    padding: 0;
+  }
+}
+
+.header {
+  margin-bottom: 2rem;
+  
+  .title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    
+    .titleIcon {
+      font-size: 2rem;
+      margin-right: 1rem;
+      color: #1976d2;
+    }
+    
+    .titleText {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+  
+  .subtitle {
+    color: #6c757d;
+    font-size: 1rem;
+  }
+}
+
+.statsGrid {
+  margin-bottom: 2rem;
+  
+  .statCard {
+    height: 100%;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    // Mobile optimizations
+    @media (max-width: 600px) {
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+      }
+      
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+    
+    .statContent {
+      text-align: center;
+      padding: 1.5rem;
+      
+      .statIcon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .statValue {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+      }
+      
+      .statLabel {
+        color: #6c757d;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      // Mobile optimizations
+      @media (max-width: 600px) {
+        padding: 1rem;
+        
+        .statIcon {
+          font-size: 2rem;
+          margin-bottom: 0.25rem;
+        }
+        
+        .statValue {
+          font-size: 1.5rem;
+          margin-bottom: 0.25rem;
+          font-weight: 700;
+        }
+        
+        .statLabel {
+          font-size: 0.75rem;
+          font-weight: 500;
+          letter-spacing: 0.25px;
+        }
+      }
+    }
+  }
+}
+
+.mainContent {
+  .recentOrdersCard {
+    .cardHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      
+      .cardTitle {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+      
+      .viewAllButton {
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: translateX(2px);
+        }
+      }
+    }
+    
+    .emptyState {
+      text-align: center;
+      padding: 2rem 0;
+      
+      .emptyIcon {
+        font-size: 3rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+      }
+      
+      .emptyText {
+        color: #6c757d;
+      }
+    }
+    
+    .ordersList {
+      .orderItem {
+        padding: 1rem 0;
+        
+        .orderHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.5rem;
+          
+          .orderNumber {
+            font-weight: 600;
+            color: #2c3e50;
+          }
+        }
+        
+        .orderDetails {
+          .orderDate {
+            color: #6c757d;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+          }
+          
+          .orderTotal {
+            font-weight: 600;
+            color: #1976d2;
+          }
+        }
+      }
+    }
+  }
+  
+  .quickActionsCard {
+    .actionsGrid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      
+      .actionItem {
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        // Mobile optimizations
+        @media (max-width: 600px) {
+          padding: 1rem;
+          border-radius: 12px;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.8);
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(10px);
+          
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+          }
+          
+          &:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          }
+        }
+        
+        .actionContent {
+          display: flex;
+          align-items: center;
+          
+          .actionIcon {
+            width: 40px;
+            height: 40px;
+            margin-right: 1rem;
+          }
+          
+          .actionText {
+            flex: 1;
+            
+            .actionTitle {
+              font-weight: 600;
+              margin-bottom: 0.25rem;
+              color: #2c3e50;
+            }
+            
+            .actionDescription {
+              color: #6c757d;
+              font-size: 0.875rem;
+            }
+          }
+          
+          .actionArrow {
+            color: #6c757d;
+            transition: all 0.3s ease;
+          }
+        }
+        
+        &:hover .actionArrow {
+          transform: translateX(4px);
+          color: #1976d2;
+        }
+      }
+    }
+  }
+  
+  .accountCard {
+    margin-top: 1.5rem;
+    
+    .accountInfo {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      
+      .infoItem {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        .infoLeft {
+          display: flex;
+          align-items: center;
+          
+          .infoIcon {
+            margin-right: 1rem;
+            color: #6c757d;
+          }
+          
+          .infoText {
+            font-size: 0.875rem;
+            color: #2c3e50;
+          }
+        }
+      }
+      
+      .manageButton {
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
+}
+
+.cartAlert {
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  
+  .alertAction {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.loadingState {
+  text-align: center;
+  padding: 3rem;
+  
+  .loadingText {
+    font-size: 1.125rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+  }
+  
+  .loadingProgress {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
+
+// Mobile-first responsive design
+@media (max-width: 600px) {
+  // Global mobile styles
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .header {
+    padding-bottom: 1rem;
+    
+    .title {
+      .titleText {
+        font-size: 1.75rem;
+        font-weight: 700;
+      }
+    }
+  }
+  
+  // Card improvements for mobile
+  .mainContent {
+    .recentOrdersCard,
+    .quickActionsCard,
+    .accountCard {
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+    }
+    
+    .recentOrdersCard {
+      .cardHeader {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+        text-align: center;
+        
+        .viewAllButton {
+          padding: 0.75rem 1.5rem;
+          border-radius: 12px;
+          font-weight: 600;
+          text-transform: none;
+        }
+      }
+      
+      .ordersList {
+        .orderItem {
+          padding: 1rem 0;
+          border-radius: 12px;
+          
+          &:not(:last-child) {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+          }
+        }
+      }
+    }
+    
+    .quickActionsCard {
+      .actionsGrid {
+        gap: 0.75rem;
+      }
+    }
+  }
+  
+  // Touch-friendly buttons
+  button {
+    min-height: 44px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-transform: none;
+  }
+  
+  // Improved spacing
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    .title {
+      .titleText {
+        font-size: 1.75rem;
+      }
+    }
+  }
+  
+  .statsGrid {
+    .statCard {
+      .statContent {
+        padding: 1rem;
+        
+        .statIcon {
+          font-size: 2rem;
+        }
+        
+        .statValue {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+  
+  .mainContent {
+    .recentOrdersCard {
+      .cardHeader {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+        
+        .viewAllButton {
+          align-self: center;
+        }
+      }
+    }
+    
+    .quickActionsCard {
+      .actionsGrid {
+        .actionItem {
+          .actionContent {
+            .actionIcon {
+              width: 35px;
+              height: 35px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    .title {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.5rem;
+      
+      .titleIcon {
+        margin-right: 0;
+      }
+      
+      .titleText {
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+    }
+  }
+  
+  .statsGrid {
+    gap: 0.75rem;
+    
+    .statCard {
+      .statContent {
+        padding: 0.875rem;
+        
+        .statIcon {
+          font-size: 1.75rem;
+        }
+        
+        .statValue {
+          font-size: 1.25rem;
+          font-weight: 700;
+        }
+        
+        .statLabel {
+          font-size: 0.7rem;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  
+  // Extra small screens optimizations
+  .mainContent {
+    .quickActionsCard {
+      .actionsGrid {
+        .actionItem {
+          padding: 0.875rem;
+          
+          .actionContent {
+            .actionIcon {
+              width: 32px;
+              height: 32px;
+            }
+            
+            .actionText {
+              .actionTitle {
+                font-size: 0.8rem;
+              }
+              
+              .actionDescription {
+                font-size: 0.7rem;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    .accountCard {
+      .accountInfo {
+        .infoItem {
+          .infoLeft {
+            .infoText {
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

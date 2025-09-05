@@ -1,88 +1,18 @@
 'use client';
 
 import { Box, Container, Typography } from '@mui/material';
-import { useTheme } from '@/hooks/useTheme';
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { useTranslations } from 'next-intl';
 import styles from './catalogue.module.scss';
 import Grid from '@mui/material/Grid2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductCard from '@/components/ProductCard';
-
-// Mock data pour les produits
-const mockProducts = [
-  {
-    id: 1,
-    title: "FORMATION COMPLÈTE VO3",
-    slug: "formation-complete-vo3",
-    category: "E-Books & Guides",
-    price: "14.000 CFA",
-    image: "/veo3-768x432.jpg",
-    gradientFrom: "#6017e7",
-    gradientTo: "#c320f9",
-    displayText: "Licence incluse",
-    features: ["Licence incluse", "Licence incluse", "Licence incluse"]
-  },
-  {
-    id: 2,
-    title: "FORMATION COMPLETE PREMIERE PRO",
-    slug: "formation-complete-premiere-pro",
-    category: "Formations",
-    price: "14.000 CFA",
-    image: "/Premiere-pro-768x432.jpg",
-    gradientFrom: "#6017e7",
-    gradientTo: "#c320f9",
-    displayText: "Licence incluse",
-    features: ["Licence incluse", "Licence incluse", "Licence incluse"]
-  },
-  {
-    id: 3,
-    title: "INTEGRER L'IA DANS SA VIE QUOTIDIENNE",
-    slug: "integrer-l-ia-dans-sa-vie-quotidienne",
-    category: "IA",
-    price: "9.000 CFA",
-    image: "/ia-vie-quotidienne-768x432.jpg",
-    gradientFrom: "#6017e7",
-    gradientTo: "#c320f9",
-    displayText: "Licence incluse",
-    features: ["Licence incluse", "Licence incluse", "Licence incluse"]
-  },
-  {
-    id: 4,
-    title: "PACK TEMPLATES PREMIUM",
-    slug: "pack-templates-premium",
-    category: "Template",
-    price: "12.000 CFA",
-    image: "/template-pack.jpg",
-    gradientFrom: "#6017e7",
-    gradientTo: "#c320f9",
-    displayText: "50+ Templates",
-    features: ["Licence incluse", "Licence incluse", "Licence incluse"]
-  },
-  {
-    id: 5,
-    title: "GUIDE BUSINESS DIGITAL",
-    slug: "guide-business-digital",
-    category: "Business",
-    price: "8.000 CFA",
-    image: "/business-guide.jpg",
-    gradientFrom: "#6017e7",
-    gradientTo: "#c320f9",
-    displayText: "Guide complet",
-    features: ["Licence incluse", "Licence incluse", "Licence incluse"]
-  },
-  {
-    id: 6,
-    title: "OUTILS DESIGN PREMIUM",
-    slug: "outils-design-premium",
-    category: "Design graphique",
-    price: "15.000 CFA",
-    image: "/design-tools.jpg",
-    gradientFrom: "#6017e7",
-    gradientTo: "#c320f9",
-    displayText: "Suite complète",
-    features: ["Licence incluse", "Licence incluse", "Licence incluse"]
-  }
-];
+import { useProductStore } from '@/contexts/ProductStore';
+import { useCommonStore } from '@/contexts/CommonContext';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 const categoryKeys = [
   "all",
@@ -101,71 +31,166 @@ const categoryKeys = [
 ];
 
 export default function CataloguePage({ params }: { params: { locale: string } }) {
+  const { allProducts, getAllProduct } = useProductStore()
+  const { allCategories } = useCommonStore();
   const { locale } = params;
-  const { theme } = useTheme();
   const t = useTranslations('Catalogue');
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [filteredProducts, setFilteredProducts] = useState(mockProducts);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 9;
 
-  const handleCategoryFilter = (categoryKey: string) => {
-    setSelectedCategory(categoryKey);
-    if (categoryKey === "all") {
-      setFilteredProducts(mockProducts);
-    } else {
-      const categoryName = t(`categories.${categoryKey}`);
-      setFilteredProducts(mockProducts.filter(product => product.category === categoryName));
+  useEffect(() => {
+    getAllProduct()
+  }, [])
+
+  const filteredProducts = selectedCategory === "all" ? allProducts 
+  : allProducts.filter(product => product?.category === selectedCategory);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+  // Reset to page 1 when category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of products section
+    const productsSection = document.querySelector(`.${styles.productsSection}`);
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
   };
 
   return (
     <div className={styles.cataloguePage}>
-      {/* Main Content */}
+      {/* Hero Section */}
       <Container maxWidth="lg">
-          <Box className={styles.heroContent} sx={{mb: 6}}>
-            <Typography className={'rafly-sub'}>{t('subtitle')}</Typography>
-            <Typography variant="h1" 
-              className="rafly-title"
-              sx={{
-                mx: 'auto',
-                my: 3
-              }}
-            >
-              {t('title')}
-            </Typography>
-          </Box>
-        <div className={styles.catalogueContent}>
-          {/* Sidebar with Categories */}
-          <div className={styles.sidebar}>
-            <div className={styles.categoriesSection}>
-              <h3 className={styles.categoriesTitle}>{t('categoriesTitle')}</h3>
-              <div className={styles.categoryFilters}>
-                {categoryKeys.map((categoryKey) => (
-                  <button
-                    key={categoryKey}
-                    className={`${styles.categoryButton} ${
-                      selectedCategory === categoryKey ? styles.active : ''
-                    }`}
-                    onClick={() => handleCategoryFilter(categoryKey)}
-                  >
-                    {t(`categories.${categoryKey}`)}
-                  </button>
+        <Box className={styles.heroContent} sx={{mb: 6}}>
+          <Typography className={'rafly-sub'}>{t('subtitle')}</Typography>
+          <Typography variant="h1" 
+            className="rafly-title"
+            sx={{
+              mx: 'auto',
+              my: 3
+            }}
+          >
+            {t('title')}
+          </Typography>
+        </Box>
+      </Container>
+
+      {/* Sticky Category Filters */}
+      <div className={styles.categoriesSticky}>
+        <Container maxWidth="lg">
+          <div className={styles.categoriesHorizontal}>
+            <h3 className={styles.categoriesTitle}>{t('categoriesTitle')}</h3>
+            <div className={styles.categoryFiltersContainer}>
+              <div className="swiper-button-prev-custom">
+                <ArrowBackIos />
+              </div>
+              <button
+                className={`${styles.categoryButton} ${
+                  selectedCategory === 'all' ? styles.active : ''
+                }`}
+                onClick={() => setSelectedCategory('all')}
+              >
+                Tout
+              </button>
+              <Swiper
+                modules={[Navigation]}
+                spaceBetween={16}
+                slidesPerView="auto"
+                navigation={{
+                  nextEl: '.swiper-button-next-custom',
+                  prevEl: '.swiper-button-prev-custom',
+                }}
+                className={styles.categorySwiper}
+              >
+                {allCategories.map((category: any) => (
+                  <SwiperSlide key={category?._id} className={styles.categorySlide}>
+                    
+                    <button
+                      className={`${styles.categoryButton} ${
+                        selectedCategory === category?.nameFr ? styles.active : ''
+                      }`}
+                      onClick={() => setSelectedCategory(category?.nameFr)}
+                    >
+                      {locale === 'fr' ? category?.nameFr : category?.nameEn}
+                    </button>
+                  </SwiperSlide>
                 ))}
+              </Swiper>
+              <div className="swiper-button-next-custom">
+                <ArrowForwardIos />
               </div>
             </div>
           </div>
+        </Container>
+      </div>
 
+      {/* Main Content */}
+      <Container maxWidth="lg">
+        <div className={styles.catalogueContent}>
           {/* Products Grid */}
           <div className={styles.productsSection}>
             <Grid container spacing={5}>
-              {filteredProducts.map((product) => (
-                <Grid size={{ xs: 12, sm: 6, lg: 6 }} key={product.id}>
+              {currentProducts.map((product) => (
+                <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={product._id}>
                   <ProductCard
-                    slug={product.slug}
-                    title={product.title}
-                    category={product.category}
-                    price={product.price}
-                    displayText={product.displayText}
-                    features={product.features}
+                    product={product}
                     locale={locale}
                   />
                 </Grid>
@@ -173,23 +198,43 @@ export default function CataloguePage({ params }: { params: { locale: string } }
             </Grid>
 
             {/* Pagination */}
-            <div className={styles.pagination}>
-              <button className={styles.paginationButton}>
-                <span>←</span>
-              </button>
-              <button className={`${styles.paginationButton} ${styles.active}`}>
-                1
-              </button>
-              <button className={styles.paginationButton}>
-                2
-              </button>
-              <button className={styles.paginationButton}>
-                3
-              </button>
-              <button className={styles.paginationButton}>
-                <span>→</span>
-              </button>
-            </div>
+            {totalPages > 1 && (
+              <div className={styles.pagination}>
+                <button 
+                  className={styles.paginationButton}
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                >
+                  <span>←</span>
+                </button>
+                
+                {getPageNumbers().map((page, index) => (
+                  page === '...' ? (
+                    <span key={`ellipsis-${index}`} className={styles.paginationEllipsis}>
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      className={`${styles.paginationButton} ${
+                        currentPage === page ? styles.active : ''
+                      }`}
+                      onClick={() => handlePageChange(page as number)}
+                    >
+                      {page}
+                    </button>
+                  )
+                ))}
+                
+                <button 
+                  className={styles.paginationButton}
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  <span>→</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </Container>

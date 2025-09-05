@@ -19,7 +19,7 @@ interface CommonStoreContext {
   faqs: any[];
   stats: any;
   siteSettings: any;
-  fetchCategories: () => Promise<ApiResponse<any>>;
+  fetchCategories: () => void;
   fetchSiteSettings: () => Promise<ApiResponse<any>>;
   contactUs: (data: any) => Promise<ApiResponse<any>>;
   addReview: (data: any) => Promise<ApiResponse<any>>;
@@ -36,7 +36,7 @@ interface CommonStoreContext {
 const CommonStore = createContext<CommonStoreContext>({
   fetchAnnonces: async () => ({ data: [], status: 500 }),
   fetchNotifications: async () => ({ data: [], status: 500 }),
-  fetchCategories: async () => ({ data: [], status: 500 }),
+  fetchCategories: async () => {},
   fetchSiteSettings: async () => ({ data: null, status: 500 }),
   allCategories: [],
   allCategories2: [],
@@ -91,26 +91,10 @@ export const CommonProvider = ({ children }: CommonProviderProps) => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(`${API_URL}categories`);
-      const order = [
-        "Hébergements",
-        "Transports",
-        "Restaurations",
-        "Électroménagers",
-        "Événementiels",
-        "Meubles",
-      ];
-      const sortedCategories = [...response.data]
-        .filter(category => order.includes(category.name))
-        .sort((a, b) => {
-          const indexA = order.indexOf(a.name);
-          const indexB = order.indexOf(b.name);
-          return indexA - indexB;
-        });
-      setAllCategories(sortedCategories);
-      setAllCategories2(response.data);
-      return {data: sortedCategories, status: response.status };
+      setAllCategories(response.data);
+      console.log(response.data)
     } catch (err) {
-      return {data: [], status: handleAxiosError(err) || 500};
+      console.log(err)
     } 
   };
 
@@ -218,15 +202,14 @@ export const CommonProvider = ({ children }: CommonProviderProps) => {
   };
 
   useEffect(() => {
+    fetchCategories()
     const initData = async () => {
       try {
         const [categoriesRes, localisationRes, faqsRes, siteSettingsRes] = await Promise.all([
           fetchCategories(), getAllLocalisation(), fetchFaqs(), fetchSiteSettings()
         ]);
         
-        if (categoriesRes.status === 200) {
-          setAllCategories(categoriesRes.data);
-        }
+       
         if (localisationRes.status === 200) {
           setAllLocalisation(localisationRes.data);
         }
@@ -236,6 +219,8 @@ export const CommonProvider = ({ children }: CommonProviderProps) => {
         if (siteSettingsRes.status === 200) {
           setSiteSettings(siteSettingsRes.data);
         }
+
+        
       } catch (error) {
         console.error('Error initializing data:', error);
       }

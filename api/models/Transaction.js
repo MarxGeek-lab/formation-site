@@ -30,13 +30,7 @@ const TransactionSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['CARD', 'MOBILE'],
-    required: true
-  },
-  mobileProvider: {
-    type: String,
-    enum: ['MTN', 'MOOV', 'CELTIIS'],
-    required: true
+    default: 'Monero'
   },
   type: {
     type: String,

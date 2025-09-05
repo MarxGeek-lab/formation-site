@@ -1,0 +1,463 @@
+.profileContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  
+  // Mobile-first approach
+  @media (max-width: 600px) {
+    background: #f8fafc;
+    padding: 0;
+  }
+}
+
+.header {
+  margin-bottom: 2rem;
+  
+  @media (max-width: 600px) {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .backButton {
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateX(-2px);
+    }
+    
+    @media (max-width: 600px) {
+      border-radius: 12px;
+      min-height: 44px;
+      font-weight: 600;
+      text-transform: none;
+      margin-bottom: 1.5rem;
+    }
+  }
+  
+  .titleSection {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+    
+    .profileIcon {
+      margin-right: 1rem;
+      color: #1976d2;
+      
+      @media (max-width: 600px) {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+    }
+    
+    .title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #2c3e50;
+      
+      @media (max-width: 600px) {
+        font-size: 1.75rem;
+        font-weight: 700;
+      }
+    }
+  }
+  
+  .subtitle {
+    color: #6c757d;
+    
+    @media (max-width: 600px) {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.profileCard {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media (max-width: 600px) {
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+  
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .cardTitle {
+      font-size: 1.25rem;
+      font-weight: 600;
+      
+      @media (max-width: 600px) {
+        font-size: 1.125rem;
+        font-weight: 700;
+      }
+    }
+  }
+  
+  .avatarSection {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    .avatar {
+      margin-right: 1.5rem;
+      border: 3px solid;
+      border-color: #1976d2;
+      
+      @media (max-width: 600px) {
+        margin-right: 0;
+      }
+    }
+    
+    .userInfo {
+      flex: 1;
+      
+      .userName {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.25rem;
+        
+        @media (max-width: 600px) {
+          justify-content: center;
+        }
+        
+        .name {
+          font-size: 1.5rem;
+          font-weight: 600;
+          
+          @media (max-width: 600px) {
+            font-size: 1.25rem;
+            font-weight: 700;
+          }
+        }
+        
+        .verifiedIcon {
+          color: #4caf50;
+        }
+      }
+      
+      .memberSince {
+        color: #6c757d;
+        
+        @media (max-width: 600px) {
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+}
+
+.formFields {
+  .textField {
+    margin-bottom: 1rem;
+    
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+      
+      @media (max-width: 600px) {
+        border-radius: 12px;
+      }
+    }
+  }
+}
+
+.editActions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  
+  @media (max-width: 600px) {
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .actionButton {
+    font-weight: 600;
+    text-transform: none;
+    
+    @media (max-width: 600px) {
+      border-radius: 12px;
+      min-height: 44px;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.statsGrid {
+  .statCard {
+    text-align: center;
+    
+    .statValue {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      
+      @media (max-width: 600px) {
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+    }
+    
+    .statLabel {
+      color: #6c757d;
+      font-size: 0.875rem;
+      
+      @media (max-width: 600px) {
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.addressList,
+.paymentList {
+  padding: 0;
+  
+  .listItem {
+    padding: 1rem 0;
+    
+    @media (max-width: 600px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .listIcon {
+      min-width: 56px;
+      
+      @media (max-width: 600px) {
+        min-width: auto;
+      }
+    }
+    
+    .listContent {
+      flex: 1;
+      
+      .primaryText {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.25rem;
+        
+        .itemName {
+          font-size: 1.125rem;
+          font-weight: 600;
+          
+          @media (max-width: 600px) {
+            font-size: 1rem;
+          }
+        }
+        
+        .chip {
+          font-size: 0.75rem;
+          
+          @media (max-width: 600px) {
+            font-size: 0.7rem;
+          }
+        }
+      }
+      
+      .secondaryText {
+        color: #6c757d;
+        
+        @media (max-width: 600px) {
+          font-size: 0.875rem;
+        }
+      }
+    }
+    
+    .itemActions {
+      display: flex;
+      gap: 0.5rem;
+      
+      @media (max-width: 600px) {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+      }
+      
+      .actionButton {
+        font-size: 0.875rem;
+        
+        @media (max-width: 600px) {
+          border-radius: 12px;
+          min-height: 36px;
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+.preferencesCard {
+  .preferencesList {
+    padding: 0;
+    
+    .preferenceItem {
+      padding: 0.75rem 0;
+      
+      .preferenceIcon {
+        min-width: 40px;
+      }
+      
+      .preferenceText {
+        flex: 1;
+        
+        .preferenceLabel {
+          font-size: 1rem;
+          
+          @media (max-width: 600px) {
+            font-size: 0.875rem;
+          }
+        }
+      }
+      
+      .preferenceSwitch {
+        .MuiSwitch-root {
+          @media (max-width: 600px) {
+            transform: scale(0.9);
+          }
+        }
+      }
+    }
+  }
+}
+
+.loadingState {
+  text-align: center;
+  padding: 3rem;
+  
+  .loadingText {
+    font-size: 1.125rem;
+    color: #6c757d;
+  }
+}
+
+.errorState {
+  text-align: center;
+  padding: 3rem;
+  
+  .errorText {
+    font-size: 1.125rem;
+    color: #d32f2f;
+  }
+}
+
+// Mobile-first responsive design
+@media (max-width: 600px) {
+  // Global mobile styles
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  // Touch-friendly buttons
+  button {
+    min-height: 44px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-transform: none;
+  }
+  
+  // Improved spacing
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  // Card improvements
+  .card {
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  
+  // Form improvements
+  .MuiTextField-root {
+    .MuiOutlinedInput-root {
+      border-radius: 12px;
+    }
+  }
+  
+  // Switch improvements
+  .MuiSwitch-root {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    .titleSection {
+      .title {
+        font-size: 1.5rem;
+      }
+    }
+  }
+  
+  .profileCard {
+    .avatarSection {
+      .userInfo {
+        .userName {
+          .name {
+            font-size: 1.125rem;
+          }
+        }
+      }
+    }
+  }
+  
+  .statsGrid {
+    .statCard {
+      .statValue {
+        font-size: 1.25rem;
+      }
+      
+      .statLabel {
+        font-size: 0.7rem;
+      }
+    }
+  }
+}

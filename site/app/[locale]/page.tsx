@@ -10,7 +10,6 @@ import MysteryProductSection from "@/components/MysteryProductSection";
 import { Box, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useTranslations } from 'next-intl';
-
 import styles from './page.module.scss';
 
 import banniere from '@/assets/images/BANNIERE-1920px-600px.jpg';
@@ -18,15 +17,16 @@ import users from '@/assets/images/Frame-12-1.png'
 import vector1 from '@/assets/images/Vector.png'
 import vector2 from '@/assets/images/Vector-1.png'
 import { useRouter } from "next/navigation";
+import { useProductStore } from "@/contexts/GlobalContext";
 import { useTheme } from "@/hooks/useTheme";
 
 export default function Home({ params }: { params: { locale: string } }) {
+  const { locale } = params;
   const { theme } = useTheme();
+  const { allProducts } = useProductStore();
   const router = useRouter();
-  const t = useTranslations('Home');
-
-  const { locale } = params;  
-  
+  const t = useTranslations('Home');  
+  console.log(allProducts);
   return (
     <Box sx={{
       px: {xs: 0, sm: 6},
@@ -57,7 +57,7 @@ export default function Home({ params }: { params: { locale: string } }) {
           <div style={{
             position: 'absolute',
             top: '-20%',
-            right: '-18%',
+            right: '-10%',
             width: '50%',
             height: '500px',
             backgroundImage: `url(${vector2.src})`,
@@ -243,39 +243,14 @@ export default function Home({ params }: { params: { locale: string } }) {
           
           <Grid container spacing={3}>
             {/* Product Card 1 */}
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-              <ProductCard
-                title={t('ecommerceTraining')}
-                slug="formation-ecommerce"
-                category={t('business')}
-                price={t('ecommercePrice')}
-                displayText={t('ecommerceDisplayText')}
-                features={[t('conversionTechniques'), t('digitalMarketing'), t('storeManagement')]}
-                locale={locale}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-              <ProductCard
-                title={t('designTemplatesPack')}
-                slug="pack-templates-design"
-                category={t('design')}
-                price={t('templatesPrice')}
-                displayText={t('templatesDisplayText')}
-                features={[t('fiftyTemplates'), t('variousFormats'), t('customizable')]}
-                locale={locale}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-              <ProductCard
-                title={t('photoshopLuts')}
-                category={t('graphicDesign')}
-                price={t('lutsPrice')}
-                displayText={t('lutsDisplayText')}
-                features={[t('readyToUseLuts'), t('editableFiles'), t('installationGuide')]}
-                slug="10-luts-photoshop"
-                locale={locale}
-              />
-            </Grid>
+            {allProducts.slice(0, 6).map((product) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product._id}>
+                <ProductCard
+                  product={product}
+                  locale={locale}
+                />
+              </Grid>
+            ))}
           </Grid>
         </Container>
 

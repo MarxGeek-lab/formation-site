@@ -3,20 +3,25 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useTheme } from "../hooks/useTheme";
-import { Box, Container } from "@mui/material";
+import { Box, Container, Badge } from "@mui/material";
+import { ShoppingCart } from "@mui/icons-material";
 import { useTranslations } from 'next-intl';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useCart } from '@/contexts/CartContext';
 
 import styles from './Header/Header.module.scss';
 
 import logo from '@/assets/images/logo-1.webp'; 
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/contexts/GlobalContext";
 
 export default function Header({ locale }: { locale: string }) {
+  const { user } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, toggleTheme, mounted } = useTheme();
   const router = useRouter();
   const t = useTranslations('Header');
+  const { cart, toggleCart } = useCart();
 
   console.log(locale);
 
@@ -66,10 +71,21 @@ export default function Header({ locale }: { locale: string }) {
             </a>
           </nav>
 
-          {/* Language Switcher, Theme Toggle & CTA Button */}
+          {/* Language Switcher, Cart, Theme Toggle & CTA Button */}
           <Box className="hidden lg:flex items-center space-x-3">
             {/* Language Switcher */}
             <LanguageSwitcher />
+            
+            {/* Cart Icon */}
+            <button 
+              onClick={toggleCart}
+              className={styles.cartButton}
+              aria-label="Panier"
+            >
+              <Badge badgeContent={cart.totalItems} color="primary">
+                <ShoppingCart />
+              </Badge>
+            </button>
             
             {/* Theme Toggle Button */}
             {/* {mounted && (
@@ -94,7 +110,13 @@ export default function Header({ locale }: { locale: string }) {
             
             {/* CTA Button */}
             <button className={styles.ctaButton2} 
-              onClick={() => router.push(`/${locale}/catalogue`)}>
+              onClick={() => {
+                if (user) {
+                  router.push(`/${locale}/dashboard`);
+                } else {
+                  router.push(`/${locale}/auth/login`);
+                }
+              }}>
               Mon Compte
             </button>
             <button className={styles.ctaButton} 
@@ -104,6 +126,22 @@ export default function Header({ locale }: { locale: string }) {
           </Box>
 
           {/* Mobile menu button */}
+           {/* Language Switcher & Cart for Mobile */}
+          <Box className="lg:hidden flex items-center space-x-3">
+            <LanguageSwitcher />
+            
+            {/* Cart Icon Mobile */}
+            <button 
+              onClick={toggleCart}
+              className={styles.cartButton}
+              aria-label="Panier"
+            >
+              <Badge badgeContent={cart.totalItems} color="primary">
+                <ShoppingCart />
+              </Badge>
+            </button>
+          </Box>
+          
           <button
             className={`lg:hidden ${styles.mobileMenuButton}`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -122,6 +160,7 @@ export default function Header({ locale }: { locale: string }) {
         </Box>
 
         {/* Mobile Navigation */}
+       
         {isMobileMenuOpen && (
           <nav className={`md:hidden ${styles.mobileNav}`}>
             <div className={styles.mobileNavLinks}>

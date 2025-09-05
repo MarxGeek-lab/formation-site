@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import React, { type ReactNode, useContext, useState, createContext } from "react";
+import React, { type ReactNode, useContext, useState, createContext, useEffect } from "react";
 import { API_URL } from "../settings/constant";
 import { handleAxiosError } from "../utils/errorHandlers";
 import axiosInstanceUser from "../config/axiosConfig";
@@ -8,7 +8,8 @@ import axiosInstanceUser from "../config/axiosConfig";
 
 interface ProductContextType {
     property: Property | null;
-    getAllProduct: () => Promise<{ data: any, status: number }>;
+    allProducts: any[];
+    getAllProduct: () => void;
     getProductById: (id: string) => Promise<{ data: any, status: number }>;
     getProductsByUser: (userId: string) => Promise<{ data: any[], status: number }>;
     getProductsByCategory: (categoryId: string) => Promise<{ data: any[], status: number }>;
@@ -57,7 +58,8 @@ interface Property {
 
 export const ProductStore = createContext<ProductContextType>({
     property: null,
-    getAllProduct: async () => ({ data: { productsWithSubcategories: [], productsFeatured: [], productsPromotion: [] }, status: 500 }),
+    allProducts: [],
+    getAllProduct: () => {},
     getProductById: async () => ({ data: null, status: 500 }),
     getProductsByUser: async () => ({ data: [], status: 500 }),
     getProductsByCategory: async () => ({ data: [], status: 500 }),
@@ -72,18 +74,15 @@ export const useProductStore = (): ProductContextType => useContext(ProductStore
 
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
     const [property, setProperty] = useState<Property | null>(null);
+    const [allProducts, setAllProducts] = useState<Property[]>([]);
 
     // Récupérer toutes les propriétés
-    const getAllProduct = async (): Promise<{ data: any, status: number }> => {
+    const getAllProduct = async () => {
         try {
             const response = await axios.get(`${API_URL}products`);
-            return { data: { 
-                productsWithSubcategories: response.data.productsNoFeaturedPromotion, 
-                productsFeatured: response.data.productsFeatured,
-                productsPromotion: response.data.productsPromotion 
-            }, status: response.status };
+            setAllProducts(response.data);
         } catch (error) {
-            return { data: { productsWithSubcategories: [], productsFeatured: [], productsPromotion: [] }, status: handleAxiosError(error) };
+            console.log(error);
         }
     };
 
@@ -188,9 +187,14 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
             return { data: [], status: handleAxiosError(error) };
         }
     }
+
+    useEffect(() => {
+        getAllProduct();
+    }, []);
                 
     const data = { 
         property, 
+        allProducts,
         getAllProduct, 
         getProductById, 
         getProductsByUser, 

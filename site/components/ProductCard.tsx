@@ -5,49 +5,86 @@ import { useTheme } from "../hooks/useTheme";
 import styles from './ProductCard.module.scss';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { generateSlug } from "@/utils/utils";
+import { Box, Typography } from "@mui/material";
+import { AddShoppingCart } from "@mui/icons-material";
+import { useCart } from '@/contexts/CartContext';
+import { useNotification } from '@/contexts/NotificationContext';
 
 interface ProductCardProps {
-  title: string;
-  category: string;
-  price: string;
-  features: string[];
-  image?: any;
-  slug?: string;
-  displayText: string;
+  product: any;
   locale: string;
 }
 
 export default function ProductCard({ 
-  title, 
-  category, 
-  price, 
-  features, 
-  image, 
-  slug, 
-  displayText,
+  product, 
   locale 
 }: ProductCardProps) {
-  const { theme } = useTheme();
   const router = useRouter();
   const t = useTranslations('Home');
+  const { addToCart } = useCart();
+  const { addNotification } = useNotification();
 
   const handleClick = () => {
-    if (slug) {
+    if (product.name) {
+      const slug = generateSlug(product.name);
       router.push(`/${locale}/produit/${slug}`);
     }
   };
 
-  return (
-    <div className={styles.productCard}>
-      <div className={styles.imageContainer}>
-        {image ? (
-          <Image
-            src={image}
-            alt={title}
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const finalPrice = product?.pricePromo && product?.pricePromo !== 0 ? product.pricePromo : product.price;
+    
+    addToCart({
+      id: product._id,
+      name: product.name,
+      price: finalPrice,
+      image: product?.photos?.[0] || '',
+      category: product.category
+    });
+
+    // Show notification
+    addNotification({
+      type: 'success',
+      message: 'Produit ajouté au panier',
+      productName: product.name,
+      productImage: product?.photos?.[0] || '',
+      duration: 4000
+    });
+  };
+
+  const renderImage = () => {
+    if (product?.photos[0]) {
+      if (product?.photos[0].startsWith('http://localhost:5000/')) {
+        return (
+          <img
+            src={product?.photos[0]?.replace('http://localhost:5000/', 'https://api.rafly.me/')}
+            alt={product?.name}
             width={300}
             height={200}
             className={styles.productImage}
           />
+        )
+      } else {
+        return (
+          <img
+            src={product?.photos[0]}
+            alt={product?.name}
+            width={300}
+            height={200}
+            className={styles.productImage}
+          />
+        )
+      }
+    }
+  }
+
+  return (
+    <div className={styles.productCard}>
+      <div className={styles.imageContainer}>
+        {product?.photos?.length > 0 ? (
+          renderImage()
         ) : (
           <div className={styles.imagePlaceholder}>
             <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
@@ -60,30 +97,51 @@ export default function ProductCard({
           <button className={styles.buyNowButton} onClick={handleClick}>
             {t('buyNow')}
           </button>
+          <button className={styles.addToCartButton} onClick={handleAddToCart}>
+            <AddShoppingCart />
+          </button>
         </div>
       </div>
       
       <div className={styles.content}>
-        <h3 className={styles.title}>{title}</h3>
-        <p className={styles.category}>{category}</p>
+        <h3 className={styles.title}>{product?.name}</h3>
+        <p className={styles.category}>{product?.category}</p>
         
         <div className={styles.priceSection}>
-          <div className={styles.priceContainer}>
-            <span className={styles.price}>{price}</span>
-          </div>
+          {product?.pricePromo && product?.pricePromo !== 0 ? (
+            <Box className={styles.priceContainer}
+              sx={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+              <Typography className={styles.price}>{product?.pricePromo} FCFA</Typography>
+              <Typography sx={{
+                textDecoration: 'line-through',
+                color: 'red',
+                whiteSpace: 'nowrap',
+                fontSize: 13
+                }}>{product?.price} FCFA</Typography>
+            </Box>
+          ) : (
+            <Box className={styles.priceContainer}>
+              <span className={styles.price}>{product?.price} FCFA</span>
+            </Box>
+          )}
           <div className={styles.features}>
             <div className={styles.feature}>
               <svg className={styles.checkIcon} viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
-              <span>{displayText}</span>
+              <span>Licence incluse</span>
             </div>
           </div>
         </div>
         
-        <button className={styles.accessButton} onClick={handleClick}>
-          {t('accessProduct')}
-        </button>
+        <div className={styles.buttonGroup}>
+          <button className={styles.accessButton} onClick={handleClick}>
+            {t('accessProduct')}
+          </button>
+          <button className={styles.addToCartButtonBottom} onClick={handleAddToCart}>
+            <AddShoppingCart />
+          </button>
+        </div>
       </div>
     </div>
   );

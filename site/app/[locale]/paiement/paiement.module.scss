@@ -30,7 +30,7 @@
     padding: 12px 16px;
     border: 1px solid var(--primary-light);
     border-radius: 8px;
-    background-color: var(--primary-light);
+    background-color: var(--primary-subtle);
     color: white;
     font-size: 1rem;
     transition: border-color 0.3s ease;
@@ -53,7 +53,7 @@
     padding: 12px 16px;
     border: 1px solid var(--primary-light);
     border-radius: 8px;
-    background-color: var(--primary-light);
+    background-color: var(--primary-subtle) !important;
     color: white;
     font-size: 1rem;
     transition: border-color 0.3s ease;
@@ -222,7 +222,6 @@
 }
 
 .promoMessage {
-  background: var(--primary-light) !important;
   padding: 1rem 1.5rem;
   display: flex;
   align-items: center;

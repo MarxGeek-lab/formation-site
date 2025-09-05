@@ -15,12 +15,8 @@ exports.createOrder = async (req, res) => {
       customer,
       items,
       shippingAddress,
-      paymentMethod,
-      mobileProvider,
       note,
       totalAmount,
-      shippingMethod,
-      taxe,
       subscribeNewsletter,
     } = req.body;
 
@@ -70,13 +66,8 @@ exports.createOrder = async (req, res) => {
     const order = new Order({
       customer,
       items: productItems,
-      shippingAddress: shippingAddres,
-      paymentMethod: paymentMethod.toUpperCase(),
-      ...(mobileProvider && { mobileProvider: mobileProvider.toUpperCase() }),
       totalAmount,
-      note,
-      shippingMethod,
-      taxe,
+      description: note,
     });
 
     const savedOrder = await order.save();
@@ -100,8 +91,8 @@ exports.createOrder = async (req, res) => {
     };
 
     const emailService = new EmailService();
-    emailService.setSubject(`Nouvelle commande sur STORE`);
-    emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+    emailService.setSubject(`Nouvelle commande sur Rafly`);
+    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
     emailService.addTo(user.email);
     emailService.setHtml(generateTemplateHtml("templates/notificationOrderCustomer.html", templateData));
     await emailService.send();
