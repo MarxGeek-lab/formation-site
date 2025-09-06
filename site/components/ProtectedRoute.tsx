@@ -13,7 +13,8 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ 
   children, 
   requireAuth = true, 
-  redirectTo = '/auth/login' 
+  redirectTo = '/fr/connexion' ,
+  // params: { locale }
 }: ProtectedRouteProps) => {
   const { user, token } = useAuthStore();
   const router = useRouter();
@@ -34,7 +35,7 @@ const ProtectedRoute = ({
       
       if (!requireAuth && isAuthenticated) {
         // Si l'utilisateur est connecté et essaie d'accéder à une page d'auth
-        router.push('/dashboard');
+        router.push('/fr/dashboard');
         return;
       }
       

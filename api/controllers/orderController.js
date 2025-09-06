@@ -6,7 +6,7 @@ const User = require('../models/User');
 const EmailService = require('../services/emailService');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
 const generatePDF = require('../services/generateTicket');
-const { getGreeting } = require('../utils/helpers');
+const { getGreeting, generateVerificationCode } = require('../utils/helpers');
 
 // Créer une commande
 exports.createOrder = async (req, res) => {
@@ -20,20 +20,19 @@ exports.createOrder = async (req, res) => {
       city,
       district,
       address,
-      lastName,
-      firstName,
+      fullName,
       note,
       totalAmount,
-      subscribeNewsletter,
     } = req.body;
 
     console.log(req.body)
+    let customer_=customer;
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'La commande ne peut pas être vide.' });
     }
 
-    if (!customer) {
-      const user = await User.findOne({ email: shippingAddress.email });
+    const user = await User.findOne({ email: email });
+    if (!customer_) {
 
       if (!user) {
         // Génération d'un code d'activation pour le compte
@@ -46,7 +45,7 @@ exports.createOrder = async (req, res) => {
           city,
           district,
           address,
-          name: firstName + ' ' + lastName,
+          name: fullName,
           otp,
         });
         await user.save();
@@ -62,9 +61,8 @@ exports.createOrder = async (req, res) => {
         emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
         await emailService.send(); // Envoi de l'email
       } else {
-        customer = user;
+        customer_ = user?._id;
       }
-
     }
 
     const productItems = []
@@ -81,7 +79,7 @@ exports.createOrder = async (req, res) => {
     }
 
     const order = new Order({
-      customer,
+      customer: customer_,
       items: productItems,
       totalAmount,
       description: note,

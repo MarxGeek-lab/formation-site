@@ -17,6 +17,7 @@ import users from '@/assets/images/Frame-12-1.png'
 import vector1 from '@/assets/images/Vector.png'
 import vector2 from '@/assets/images/Vector-1.png'
 import ellipse from '@/assets/images/ellipse.png';
+import ellipse7 from '@/assets/images/ellipse7.png';
 
 import { useRouter } from "next/navigation";
 import { useProductStore } from "@/contexts/GlobalContext";
@@ -276,7 +277,24 @@ export default function Home({ params }: { params: { locale: string } }) {
           </Container>
 
         {/* Products Section */}
-          <Container maxWidth="lg">
+          <Container maxWidth="lg"
+          sx={{
+            position: 'relative',
+            // backgroundImage: 
+          }}
+          >
+             {/* <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '40%',
+              backgroundImage: `url(${ellipse7.src})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'left center',
+              backgroundRepeat: 'no-repeat',
+              opacity: 0.8
+            }} /> */}
             <div className="text-center mb-12">
               <span className="rafly-sub">{t('productsSubtitle')}</span>
               <Typography 
@@ -301,6 +319,17 @@ export default function Home({ params }: { params: { locale: string } }) {
                 </Grid>
               ))}
             </Grid>
+            <button className={styles.primaryButton}
+              onClick={() => router.push('/catalogue')}>
+              <span>{t('exploreCatalog')}</span>
+              <Box className={styles.iconWrapper} sx={{
+                borderRadius: '50%',
+              }}>
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </Box>
+            </button>
           </Container>
 
         {/* Mystery Product Section */}

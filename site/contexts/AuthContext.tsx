@@ -169,18 +169,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setToken(decoded);
         console.log(decoded)
         
-        // Gestion du Remember Me pour le stockage du token
-        if (formData.rememberMe) {
-          // Remember Me activé : stockage persistant (localStorage)
-          localStorage.setItem("accessToken", data.accessToken);
-          // Supprimer du sessionStorage si il existe
-          sessionStorage.removeItem("accessToken");
-        } else {
-          // Remember Me désactivé : stockage temporaire (sessionStorage)
-          sessionStorage.setItem("accessToken", data.accessToken);
-          // Supprimer du localStorage si il existe
-          localStorage.removeItem("accessToken");
-        }
+        localStorage.setItem("accessToken", data.accessToken);
         
         // Synchroniser avec les cookies pour le middleware
         syncTokenToCookies();
@@ -207,8 +196,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const tokenCookie = cookies.find(cookie => 
       cookie.trim().startsWith('accessToken=')
     );
-    token = String(tokenCookie)
 
+    if (token === null || token === undefined) {
+      token = String(tokenCookie)
+    }
+console.log(token)
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
@@ -229,8 +221,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         // Token invalide, nettoyer le stockage
         console.error('Token invalide:', error);
-        localStorage.removeItem("accessToken");
-        sessionStorage.removeItem("accessToken");
+        // localStorage.removeItem("accessToken");
+        // sessionStorage.removeItem("accessToken");
         clearTokenFromStorage();
       }
     }

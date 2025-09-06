@@ -6,6 +6,7 @@ import { API_URL } from "@/settings/constant";
 
 const PromoContext = createContext({
   applyPromoCode: async (formData) => ({data: null, status: 500}),
+  markPromoAsUsed: async (formData) => ({data: null, status: 500}),
 });
 
 export const usePromoCodeStore = () => useContext(PromoContext);
@@ -20,9 +21,19 @@ export const PromoCodeProvider = ({ children }) => {
     }
   };
 
+  const markPromoAsUsed = async (formData) => {
+    try {
+      const res = await axios.post(`${API_URL}promoCodes/mark-as-used`, formData);
+      return {data: res.data, status: res.status}
+    } catch (error) {
+      return {data: null, status: handleAxiosError(error)}
+    }
+  };
+
   return (
     <PromoContext.Provider value={{
       applyPromoCode,
+      markPromoAsUsed,
     }}>
       {children}
     </PromoContext.Provider>

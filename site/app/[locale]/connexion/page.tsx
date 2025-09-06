@@ -64,15 +64,15 @@ export default function ConnexionPage({ params }: { params: { locale: string } }
           console.log(status)
 
           if (status === 200) {
-              window.location.href = "/";
+              window.location.href = `/${locale}/dashboard`;
           } else if (status === 429) {
-              showToast(t('Auth.toasts.tooManyAttempts'), "error");
+              showToast(t('toasts.tooManyAttempts'), "error");
           } else {
-              showToast(t('Auth.toasts.invalidCredentials'), "error");
+              showToast(t('toasts.invalidCredentials'), "error");
           }
       }
     } catch (err) {
-      showToast(t('Auth.toasts.generalError'), "error");
+      showToast(t('toasts.generalError'), "error");
     } finally {
       hideLoader()
     }

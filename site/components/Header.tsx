@@ -119,7 +119,7 @@ export default function Header({ locale }: { locale: string }) {
                 if (user) {
                   router.push(`/${locale}/dashboard`);
                 } else {
-                  router.push(`/${locale}/auth/login`);
+                  router.push(`/${locale}/connexion`);
                 }
               }}>
               Mon Compte

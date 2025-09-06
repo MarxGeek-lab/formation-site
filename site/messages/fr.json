@@ -57,7 +57,8 @@
     "editableFiles": "Fichiers modifiables",
     "installationGuide": "Guide d'installation",
     "buyNow": "Acheter Maintenant",
-    "accessProduct": "Accéder au produit"
+    "accessProduct": "Accéder au produit",
+    "exploreCatalog": "Explorer le catalogue"
   },
   "MysteryProduct": {
     "subtitle": "Mystère",

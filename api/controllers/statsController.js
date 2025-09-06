@@ -123,6 +123,41 @@ const statsController = {
     }
   },
 
+  async getStatsByBuyer(req, res) {
+    try {
+      const userId = req.params.id;
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+
+      const ordersCount = await Order.find({ customer: userId });
+      const orderPending = await Order.countDocuments({ customer: userId, status: "pending" });
+      const orderConfirmed = await Order.countDocuments({ customer: userId, status: "confirmed" });
+      const orderShipped = await Order.countDocuments({ customer: userId, status: "shipped" });
+      const orderDelivered = await Order.countDocuments({ customer: userId, status: "delivered" });
+      const orderCancelled = await Order.countDocuments({ customer: userId, status: "cancelled" });
+
+      const salesRevenue = await Order.find({ customer: userId, status: "completed" });
+      const totalSalesRevenue = salesRevenue.reduce((total, order) => {
+        return total + order.payments.reduce((paymentTotal, payment) => {
+          return payment.transaction.status === "success" && payment.transaction.type === "payment" ? paymentTotal + payment.transaction.amount : paymentTotal;
+        }, 0);
+      }, 0);
+
+      res.status(200).json({
+        ordersCount,
+        orderPending,
+        orderConfirmed,
+        orderShipped,
+        orderDelivered,
+        orderCancelled,
+        expense: totalSalesRevenue,
+      })
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
   async getStats(req, res) {
     try {
       const productsCount = await Product.countDocuments({ isDeleted: false });

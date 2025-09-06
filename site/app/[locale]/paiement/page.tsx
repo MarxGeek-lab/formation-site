@@ -22,7 +22,7 @@ import { tree } from 'next/dist/build/templates/app-page';
 
 export default function PaiementPage({ params }: { params: { locale: string } }) {
   const { user } = useAuthStore();
-  const { applyPromoCode } = usePromoCodeStore();
+  const { applyPromoCode, markPromoAsUsed } = usePromoCodeStore();
   const { createOrder } = useOrderStore();
   const { SubmitPayment, getStatusPayment } = usePaymentStore();
   const { locale } = params;
@@ -130,16 +130,14 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     if (validateForm()) {
       const orderData = {
         items: cart.items,
-        shippingAddress: {
-          fullName: formData.firstName + ' ' + formData.lastName,
-          address: formData.address,
-          city: formData.city,
-          postalCode: formData.postalCode,
-          country: formData.country,
-          phone: formData.phone,
-          district: formData.district,
-          email: formData.email,
-        },
+        fullName: formData.firstName + ' ' + formData.lastName,
+        address: formData.address,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        country: formData.country,
+        phone: formData.phone,
+        district: formData.district,
+        email: formData.email,
         paymentMethod: formData.paymentMethod,
         totalAmount: calculateTotal(),
         customer: user?._id,
@@ -228,6 +226,10 @@ export default function PaiementPage({ params }: { params: { locale: string } })
           setShowSuccessModal(true)
           setTitleMessage('Paiement effectué')
           setMessage('Votre commande a été traitée avec succès et le paiement a été effectué avec succès');
+          
+          if (formData.promoCode) {
+            await markPromoAsUseds()
+          }
         } else {
           setShowErrorModal(true)
           setTitleMessage('Paiement echoué')
@@ -236,8 +238,18 @@ export default function PaiementPage({ params }: { params: { locale: string } })
       } catch (error) {
         console.log(error)
       }
+    } 
+  }
+
+  const markPromoAsUseds = async () => {
+    try {
+      const { data, status } = await markPromoAsUsed({
+        code: formData.promoCode,
+      })
+      console.log("apply code == ", data, status)
+    } catch (error) {
+      console.log(error)
     }
-    
   }
 
   const applyPromoCodes = async () => {
@@ -866,7 +878,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
             <Button
               onClick={() => {
                 setShowErrorModal(false)
-                router.push(`/${locale}/dashboard`)
+                // router.push(`/${locale}/dashboard`)
               }}
               variant='outlined'
               size="large"

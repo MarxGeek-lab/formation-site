@@ -115,7 +115,7 @@
   top: 2rem;
   
   .checkoutButton {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+    background: var(--primary) !important;
     border-radius: 8px !important;
     text-transform: none !important;
     box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3) !important;

@@ -9,7 +9,7 @@ router.post('/create', paymentController.createTransaction);
 
 router.get('/owner', authAdmin, paymentController.getPaymentsBySeller);
 
-router.put('/status', authAdmin, paymentController.getStatusPayment);
+router.put('/status', paymentController.getStatusPayment);
 
 router.get('/:id', authAdmin, paymentController.getPaymentsById);
 router.put('/update-status/:id', auth, paymentController.updateTransactionStatus);
