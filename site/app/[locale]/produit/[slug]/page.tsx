@@ -3,14 +3,16 @@
 import { Box, Container, Typography, Chip, Button, Card, CardContent, FormControlLabel, Radio, RadioGroup, Checkbox, FormGroup } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import Image from 'next/image';
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import styles from './product.module.scss';
 import ProductCard from '@/components/ProductCard';
 
 import LUTsPhotoshop from '@/assets/images/veo3-768x432.jpg';
 import icon from '@/assets/images/icon.webp'
+import { useProductStore } from '@/contexts/ProductStore';
+import { useCart } from '@/contexts/CartContext';
 
 // Mock data pour les produits
 const productsData = {
@@ -66,51 +68,22 @@ const productsData = {
   }
 };
 
-// Mock data pour les produits similaires
-const relatedProducts = [
-  {
-    id: 2,
-    title: 'MASTERPACK +200 LUTS CINÉ',
-    image: LUTsPhotoshop,
-    category: 'Design graphique',
-    price: '14 000 CFA',
-    displayText: 'Pack complet de LUTs cinématographiques',
-    features: ['200+ LUTs professionnels', 'Styles cinématographiques', 'Compatibilité universelle'],
-    slug: 'masterpack-200-luts-cine'
-  },
-  {
-    id: 3,
-    title: 'PACK DE +25.000 EFFETS SONORES PRO',
-    image: LUTsPhotoshop,
-    category: 'Outils premium',
-    price: '9 000 CFA',
-    displayText: 'Collection d\'effets sonores professionnels',
-    features: ['25 000+ effets sonores', 'Qualité studio', 'Formats multiples'],
-    slug: 'pack-25000-effets-sonores'
-  },
-  {
-    id: 4,
-    title: '100.000 RESSOURCES DE MONTAGE VIDÉO',
-    image: LUTsPhotoshop,
-    category: 'Outils premium',
-    price: '9 000 CFA',
-    displayText: 'Ressources complètes pour montage vidéo',
-    features: ['100 000+ ressources', 'Transitions et effets', 'Templates inclus'],
-    slug: '100000-ressources-montage-video'
-  }
-];
 
 export default function ProductPage({ params }: { params: { locale: string; slug: string } }) {
+  const { product, getProductById, allProducts } = useProductStore();
+  const { addToCart } = useCart();
   const { locale, slug } = params;
   const router = useRouter();
   const t = useTranslations('Product');
-  
-  const product = productsData[slug as keyof typeof productsData];
   
   const [selectedOptions, setSelectedOptions] = useState<{[key: string]: any}>({
     visual: 'without-visual',
     support: []
   });
+
+  useEffect(() => {
+    getProductById(slug);
+  }, [slug]);
 
   if (!product) {
     return (
@@ -125,6 +98,28 @@ export default function ProductPage({ params }: { params: { locale: string; slug
     );
   }
 
+  const relatedProducts = allProducts.filter((item: any) => item?.category === product?.category);
+
+  const options = [
+    {
+      id: 'visual',
+      type: 'radio',
+      title: 'Option de Visuel de Publicité',
+      choices: [
+        { id: 'with-visual', label: 'Avec Visuel de Publicité', price: 2500, description: 'Commander un visuel de publicité pour votre produit' },
+        { id: 'without-visual', label: 'Sans Visuel de Publicité', price: 0, description: 'Acheter le produit uniquement sans visuel de publicité', selected: true }
+      ]
+    },
+    {
+      id: 'support',
+      type: 'checkbox',
+      title: 'Options supplémentaires',
+      choices: [
+        { id: 'accompagnement', label: 'Accompagnement personnalisé 1 mois', price: 15000, description: 'Obtenez un accompagnement personnalisé d\'une durée de 1 mois avec nos experts !' }
+      ]
+    }
+  ]
+
   const handleOptionChange = (optionId: string, value: any) => {
     setSelectedOptions(prev => ({
       ...prev,
@@ -133,28 +128,29 @@ export default function ProductPage({ params }: { params: { locale: string; slug
   };
 
   const calculateTotal = () => {
-    let total = product.price;
+    let total = product?.price || 0;
     
     // Ajouter le prix de l'option visuel
-    const visualOption = product.options[0].choices.find(choice => choice.id === selectedOptions.visual);
+    const visualOption = options?.[0]?.choices?.find((choice: any) => choice.id === selectedOptions.visual);
     if (visualOption) {
       total += visualOption.price;
     }
     
     // Ajouter les prix des options supplémentaires
-    selectedOptions.support.forEach((supportId: string) => {
-      const supportOption = product.options[1].choices.find(choice => choice.id === supportId);
+    selectedOptions.support.forEach((supportId: any) => {
+      const supportOption = options?.[1]?.choices?.find((choice: any) => choice.id === supportId);
       if (supportOption) {
         total += supportOption.price;
       }
     });
     
-    return total;
+    return total || 0;
   };
 
   const formatPrice = (price: number) => {
-    return `${price.toLocaleString('fr-FR')} ${product.currency}`;
+    return `${price.toLocaleString('fr-FR')} FCFA`;
   };
+  console.log("product == ", product);
 
   return (
     <Box sx={{ 
@@ -165,12 +161,12 @@ export default function ProductPage({ params }: { params: { locale: string; slug
       <Container maxWidth="lg">
         <Grid container spacing={6}>
           {/* Image et description */}
-          <Grid size={{ xs: 12, md: 8 }}>
+          <Grid size={{ xs: 12, md: 7 }}>
             {/* Image produit */}
             <Box className={styles.productImage}>
-              <Image
-                src={product.image}
-                alt={product.title}
+              <img
+                src={product?.photos?.[0]}
+                alt={product?.name}
                 width={640}
                 height={360}
                 className={styles.image}
@@ -183,17 +179,17 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                 {t('productPresentation')}
               </Typography>
               <Typography paragraph sx={{ mb: 3 }}>
-                {product.description.presentation}
+                {product?.description?.presentation}
               </Typography>
               <Typography paragraph sx={{ mb: 4 }}>
-                {product.description.opportunity}
+                {product?.description?.opportunity}
               </Typography>
 
               <Typography variant="h4" className={styles.sectionTitle}>
                 {t('whyGoldenOpportunity')}
               </Typography>
               <Box component="ul" className={styles.benefitsList}>
-                {product.description.benefits.map((benefit, index) => (
+                {product?.description?.benefits?.map((benefit: string, index: number) => (
                   <Box component="li" key={index} sx={{ mb: 1 }}>
                     <Typography>{benefit}</Typography>
                   </Box>
@@ -204,7 +200,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                 {t('targetAudience')}
               </Typography>
               <Box component="ul" className={styles.targetList}>
-                {product.description.target.map((target, index) => (
+                {product?.description?.target?.map((target: string, index: number) => (
                   <Box component="li" key={index} sx={{ mb: 1 }}>
                     <Typography>{target}</Typography>
                   </Box>
@@ -215,7 +211,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                 {t('includedInPack')}
               </Typography>
               <Box component="ul" className={styles.includesList}>
-                {product.description.includes.map((item, index) => (
+                {product?.description?.includes?.map((item: string, index: number) => (
                   <Box component="li" key={index} sx={{ mb: 1 }}>
                     <Typography>{item}</Typography>
                   </Box>
@@ -234,7 +230,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
           </Grid>
 
           {/* Sidebar commande */}
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <Box className={styles.orderSidebar}>
               <Card className={styles.orderCard}>
                 <CardContent>
@@ -245,14 +241,15 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                     </Box>
                     <Box>
                       <Typography variant="h3" className={styles.price}>
-                        {formatPrice(calculateTotal())}
+                        {formatPrice(calculateTotal() || 0)}
                       </Typography>
                     </Box>
                   </Box>
 
                   {/* Options */}
                   <Box className={styles.optionsSection}>
-                    {product.options.map((option) => (
+                    
+                    {options?.map((option: any) => (
                       <Box key={option.id} className={styles.optionGroup}>
                         <Typography variant="h6" className={styles.optionTitle}>
                           {option.id === 'visual' ? t('visualAdvertisingOption') : t('additionalOptions')}
@@ -263,7 +260,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                             value={selectedOptions[option.id]}
                             onChange={(e) => handleOptionChange(option.id, e.target.value)}
                           >
-                            {option.choices.map((choice) => (
+                            {option.choices?.map((choice: any) => (
                               <Box key={choice.id} className={styles.optionChoice}>
                                 <FormControlLabel
                                   value={choice.id}
@@ -271,14 +268,14 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                                   label={
                                     <Box>
                                       <Box className={styles.choiceHeader}>
-                                        <Typography>
+                                        <Typography className={styles.choiceTitle}>
                                           {choice.id === 'with-visual' ? t('withVisual') : 
                                            choice.id === 'without-visual' ? t('withoutVisual') :
                                            choice.label}
                                         </Typography>
                                         {choice.price > 0 && (
                                           <Typography variant="body2" className={styles.choicePrice}>
-                                            +{formatPrice(choice.price)}
+                                            ( +{formatPrice(choice.price)} )
                                           </Typography>
                                         )}
                                       </Box>
@@ -297,7 +294,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
 
                         {option.type === 'checkbox' && (
                           <FormGroup>
-                            {option.choices.map((choice) => (
+                            {option.choices?.map((choice: any) => (
                               <Box key={choice.id} className={styles.optionChoice}>
                                 <FormControlLabel
                                   control={
@@ -315,11 +312,11 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                                   label={
                                     <Box>
                                       <Box className={styles.choiceHeader}>
-                                        <Typography>
+                                        <Typography className={styles.choiceTitle}>
                                           {choice.id === 'accompagnement' ? t('personalizedSupport') : choice.label}
                                         </Typography>
                                         <Typography variant="body2" className={styles.choicePrice}>
-                                          +{formatPrice(choice.price)}
+                                          ( +{formatPrice(choice.price)} )
                                         </Typography>
                                       </Box>
                                       <Typography variant="body2" className={styles.choiceDescription}>
@@ -336,6 +333,20 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                     ))}
                   </Box>
 
+                  <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    my: '1rem',
+                  }}>
+                    <Typography variant="h6" className={styles.optionTitle}>
+                      Total
+                    </Typography>
+                    <Typography variant="h6" className={styles.optionTitle}>
+                      {formatPrice(calculateTotal() || 0)}
+                    </Typography>
+                  </Box>
+
                   {/* Bouton d'achat */}
                   <Button
                     variant="contained"
@@ -343,16 +354,18 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                     size="large"
                     className={styles.buyButton}
                     onClick={() => {
-                      // Redirection vers la page de paiement avec les données du produit
-                      const checkoutData = {
-                        product: product.id,
-                        title: product.title,
-                        price: calculateTotal(),
-                        options: selectedOptions
+                      // Ajouter le produit au panier avec les options sélectionnées
+                      const cartItem = {
+                        id: product?._id,
+                        name: product?.name,
+                        price: product?.price || 0,
+                        image: product?.photos?.[0] || '',
+                        category: product?.category || '',
+                        options: selectedOptions,
+                        totalPrice: calculateTotal()
                       };
                       
-                      // Stocker les données dans le localStorage pour les récupérer sur la page paiement
-                      localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
+                      addToCart(cartItem);
                       
                       // Rediriger vers la page paiement
                       router.push(`/${locale}/paiement`);
@@ -399,7 +412,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
 
         {/* Section Produits Similaires */}
         <Box sx={{ mt: 8 }}>
-          <Container maxWidth="lg">
+          {/* <Container maxWidth="lg"> */}
             <Box sx={{ mb: 6, textAlign: 'center' }}>
               <Typography variant="h3" sx={{ 
                 fontSize: '2rem',
@@ -417,7 +430,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
               </Typography>
             </Box>
 
-            {/* <Grid container spacing={4}>
+            <Grid container spacing={3}>
               {relatedProducts.map((relatedProduct) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={relatedProduct.id}>
                   <ProductCard
@@ -426,8 +439,8 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                   />
                 </Grid>
               ))}
-            </Grid> */}
-          </Container>
+            </Grid>
+          {/* </Container> */}
         </Box>
       </Container>
     </Box>

@@ -16,12 +16,13 @@ import styles from './paiement.module.scss';
 import icon_monero from '@/assets/images/icon_monero.svg'
 import Image from 'next/image';
 import { hideLoader, showLoader } from '@/components/Loader/loaderService';
-import { useAuthStore, useOrderStore, usePaymentStore } from '@/contexts/GlobalContext';
+import { useAuthStore, useOrderStore, usePaymentStore, usePromoCodeStore } from '@/contexts/GlobalContext';
 import { useRouter } from 'next/navigation';
 import { tree } from 'next/dist/build/templates/app-page';
 
 export default function PaiementPage({ params }: { params: { locale: string } }) {
   const { user } = useAuthStore();
+  const { applyPromoCode } = usePromoCodeStore();
   const { createOrder } = useOrderStore();
   const { SubmitPayment, getStatusPayment } = usePaymentStore();
   const { locale } = params;
@@ -45,6 +46,9 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     
   });
   const [showPromoInput, setShowPromoInput] = useState(false);
+  const [promoDiscount, setPromoDiscount] = useState(0);
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [promoMessage, setPromoMessage] = useState('');
   const [message, setMessage] = useState('');
   const [titleMessage, setTitleMessage] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -55,13 +59,14 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   useEffect(() => {
     if (cart.items && cart.items.length > 0) {
       // Utiliser les données du panier du contexte
-      const formattedItems = cart.items.map(item => ({
+      const formattedItems = cart.items.map((item: any) => ({
         id: item.id,
         title: item.name,
-        price: item.price,
+        price: item?.totalPrice || item.price,
         quantity: item.quantity || 1,
         image: item.image,
-        category: item.category
+        category: item.category,
+        options: item.options,
       }));
       setCartItems(formattedItems);
     } else {
@@ -72,9 +77,9 @@ export default function PaiementPage({ params }: { params: { locale: string } })
         setCartItems([{
           id: data.product,
           title: data.title,
-          price: data.price,
+          price: data?.totalPrice || data.price,
           quantity: 1,
-          options: data.options
+          options: data?.options
         }]);
       } else {
         // Données par défaut si pas de checkout data
@@ -83,7 +88,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
             id: 1,
             title: 'FORMATION COMPLÈTE PREMIERE PRO',
             price: 45000,
-            quantity: 1
+            quantity: 1,
+            options: null
           }
         ]);
       }
@@ -120,7 +126,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     return Object.keys(newErrors).length === 0;
   };
 
-   const handleSubmit = async () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
       const orderData = {
         items: cart.items,
@@ -143,7 +149,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   
       try {
         const { data, status } = await createOrder(orderData)
-        console.log(data)
 
         if (status === 201) {
           hideLoader()
@@ -163,7 +168,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   };
 
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return subtotal - promoDiscount;
   };
 
   const formatPrice = (price: number) => {
@@ -200,9 +206,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     const urlParams = new URLSearchParams(url);
     const orderId = urlParams.get('orderId');
     const paymentId = urlParams.get('paymentId');
-    console.log("retry orderId = ", orderId);
-    console.log("retry orderId = ", urlParams.get('orderId'));
-    console.log("retry paymentId = ", paymentId);
+
     if (paymentId) {
       await payment(paymentId, 'paymentId');
     }
@@ -234,6 +238,41 @@ export default function PaiementPage({ params }: { params: { locale: string } })
       }
     }
     
+  }
+
+  const applyPromoCodes = async () => {
+    if (!formData.promoCode.trim()) {
+      setPromoMessage('Veuillez entrer un code promo');
+      return;
+    }
+
+    try {
+      const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+      
+      const { data, status } = await applyPromoCode({
+        code: formData.promoCode,
+        purchaseAmount: subtotal,
+      })
+      const data2: any = data;
+      if (status === 200 && data2) {
+        // Appliquer la réduction
+        setPromoDiscount(data2?.discount || 0);
+        setPromoApplied(true);
+        setPromoMessage(`Code promo appliqué ! Réduction de ${data2?.discount.toLocaleString('fr-FR')} FCFA`);
+        
+        // Optionnel: masquer le champ de saisie après application
+        setShowPromoInput(false);
+      } else {
+        setPromoMessage('Code promo invalide ou expiré');
+        setPromoApplied(false);
+        setPromoDiscount(0);
+      }
+    } catch (error) {
+      console.log(error)
+      setPromoMessage('Erreur lors de l\'application du code promo');
+      setPromoApplied(false);
+      setPromoDiscount(0);
+    }
   }
 
   useEffect(() => {
@@ -290,15 +329,55 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                   type="text" 
                   placeholder={t('enterPromoCode')}
                   className={styles.promoInput}
+                  value={formData.promoCode}
+                  onChange={(e) => setFormData({ ...formData, promoCode: e.target.value })}
                 />
                 <Button 
                   variant="contained"
                   className={styles.applyPromoButton}
+                  onClick={applyPromoCodes}
                 >
                   {t('applyPromoCode')}
                 </Button>
               </div>
             </Box>
+
+            {/* Message du code promo */}
+            {promoMessage && (
+              <Box sx={{ mt: 2, mb: 2 }}>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    color: promoApplied ? 'var(--success)' : 'var(--destructive)',
+                    textAlign: 'center',
+                    padding: '0.5rem',
+                    backgroundColor: promoApplied ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                    borderRadius: '4px',
+                    border: `1px solid ${promoApplied ? 'var(--success)' : 'var(--destructive)'}`,
+                  }}
+                >
+                  {promoMessage}
+                </Typography>
+                {promoApplied && (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                    <Button 
+                      variant="text" 
+                      size="small"
+                      onClick={() => {
+                        setPromoDiscount(0);
+                        setPromoApplied(false);
+                        setPromoMessage('');
+                        setFormData({ ...formData, promoCode: '' });
+                        setShowPromoInput(true);
+                      }}
+                      sx={{ color: 'var(--muted-foreground)' }}
+                    >
+                      Supprimer le code promo
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+            )}
           </CardContent>
         </Card>
 
@@ -515,7 +594,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                                   return (
                                     <Typography key={key} variant="caption" sx={{ 
                                       display: 'block',
-                                      color: 'var(--muted-foreground)',
+                                      color: 'white',
                                       fontSize: '0.75rem'
                                     }}>
                                       • {t('visualIncluded')}
@@ -526,7 +605,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                                   return value.map((support: string) => (
                                     <Typography key={support} variant="caption" sx={{ 
                                       display: 'block',
-                                      color: 'var(--muted-foreground)',
+                                      color: 'white',
                                       fontSize: '0.75rem'
                                     }}>
                                       • {support === 'accompagnement' ? t('personalizedSupport1Month') : support}
@@ -557,8 +636,20 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                 <Box className={styles.orderTotal}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                     <Typography variant="body1">{t('subtotal')}:</Typography>
-                    <Typography variant="body1">{formatPrice(calculateTotal())}</Typography>
+                    <Typography variant="body1">{formatPrice(cartItems.reduce((total, item) => total + (item.price * item.quantity), 0))}</Typography>
                   </Box>
+                  
+                  {promoApplied && promoDiscount > 0 && (
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                      <Typography variant="body1" sx={{ color: 'var(--success)' }}>
+                        Réduction ({formData.promoCode}):
+                      </Typography>
+                      <Typography variant="body1" sx={{ color: 'var(--success)' }}>
+                        -{formatPrice(promoDiscount)}
+                      </Typography>
+                    </Box>
+                  )}
+                  
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('total')}:</Typography>
                     <Typography variant="h6" sx={{ fontWeight: 700, color: 'var(--primary)' }}>

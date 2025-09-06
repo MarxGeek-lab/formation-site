@@ -10,7 +10,8 @@
     "menuToggle": "Menu Toggle",
     "switchToTheme": "Switch to {theme} theme",
     "darkMode": "Dark mode",
-    "lightMode": "Light mode"
+    "lightMode": "Light mode",
+    "cart": "Cart"
   },
   "Home": {
     "heroSubtitle": "Designed for resellers, creators and e-merchants",

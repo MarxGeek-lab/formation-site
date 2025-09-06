@@ -54,20 +54,25 @@ export default function Header({ locale }: { locale: string }) {
             {/* <a href={`/${locale}/catalogue`} className={styles.navLink}>
               {t('catalogue')}
             </a> */}
-            <a href={`/${locale}/a-propos`} className={styles.navLink}>
-              {t('about')}
-            </a>
+            
             <a href={`/${locale}#tarification`} className={styles.navLink}>
               {t('pricing')}
             </a>
             <a href={`/${locale}/affiliation`} className={styles.navLink}>
               {t('affiliation')}
             </a>
+           
+            <a href={`/${locale}#produit-mystere`} className={styles.navLink}>
+              {t('mysteryProduct')}
+            </a>
             <a href={`/${locale}/support`} className={styles.navLink}>
               {t('support')}
             </a>
-            <a href={`/${locale}#produit-mystere`} className={styles.navLink}>
-              {t('mysteryProduct')}
+            <a href={`/${locale}/a-propos`} className={styles.navLink}>
+              {t('about')}
+            </a>
+            <a href={`/${locale}/panier`} className={styles.navLink}>
+              {t('cart')}
             </a>
           </nav>
 
@@ -77,7 +82,7 @@ export default function Header({ locale }: { locale: string }) {
             <LanguageSwitcher />
             
             {/* Cart Icon */}
-            <button 
+            {/* <button 
               onClick={toggleCart}
               className={styles.cartButton}
               aria-label="Panier"
@@ -86,7 +91,7 @@ export default function Header({ locale }: { locale: string }) {
                 <ShoppingCart />
               </Badge>
             </button>
-            
+             */}
             {/* Theme Toggle Button */}
             {/* {mounted && (
               <button
@@ -131,7 +136,7 @@ export default function Header({ locale }: { locale: string }) {
             <LanguageSwitcher />
             
             {/* Cart Icon Mobile */}
-            <button 
+            {/* <button 
               onClick={toggleCart}
               className={styles.cartButton}
               aria-label="Panier"
@@ -139,7 +144,7 @@ export default function Header({ locale }: { locale: string }) {
               <Badge badgeContent={cart.totalItems} color="primary">
                 <ShoppingCart />
               </Badge>
-            </button>
+            </button> */}
           </Box>
           
           <button
@@ -164,23 +169,23 @@ export default function Header({ locale }: { locale: string }) {
         {isMobileMenuOpen && (
           <nav className={`md:hidden ${styles.mobileNav}`}>
             <div className={styles.mobileNavLinks}>
-              <a href={`/${locale}/catalogue`} className={styles.mobileNavLink}>
-                {t('catalogue')}
-              </a>
-              <a href={`/${locale}/a-propos`} className={styles.mobileNavLink}>
-                {t('about')}
-              </a>
               <a href={`/${locale}#tarification`} className={styles.mobileNavLink}>
                 {t('pricing')}
               </a>
               <a href={`/${locale}/affiliation`} className={styles.mobileNavLink}>
                 {t('affiliation')}
               </a>
+              <a href={`/${locale}#produit-mystere`} className={styles.mobileNavLink}>
+                {t('mysteryProduct')}
+              </a>
               <a href={`/${locale}/support`} className={styles.mobileNavLink}>
                 {t('support')}
               </a>
-              <a href={`/${locale}#produit-mystere`} className={styles.mobileNavLink}>
-                {t('mysteryProduct')}
+              <a href={`/${locale}/a-propos`} className={styles.mobileNavLink}>
+                {t('about')}
+              </a>
+              <a href={`/${locale}/panier`} className={styles.mobileNavLink}>
+                {t('cart')}
               </a>
               {/* Theme Toggle Mobile */}
               {/* {mounted && (

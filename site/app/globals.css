@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: "Poppins";
-  src: url("../assets/fonts/Poppins-Regular.ttf");
+  font-family: "Nunito Sans";
+  src: url("../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC\,opsz\,wdth\,wght.ttf");
 }
 :root {
   /* Rafly Colors - Extracted from post-6.css */
@@ -70,9 +70,21 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Poppins", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+
+  /* Génération d'étoiles en dégradés radiaux */
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.493) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.493) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.493) 2px, transparent 2px);
+  background-size: 200px 200px, 300px 300px, 500px 500px; 
+  background-position: 0 0, 50px 100px, 100px 200px;
 }
+
+
 
 /* Rafly specific styles - Following post-6.css structure */
 h1, h2, h3, h4, h5, h6 {
@@ -107,7 +119,7 @@ h1, h2, h3, h4, h5, h6 {
 
 p {
   color: var(--primary-text) !important;
-  font-size: 14px !important;
+  font-size: 16px !important;
 }
 
 /* Override headings for light backgrounds */
@@ -172,15 +184,15 @@ p {
 }
 
 .rafly-title {
-  font-size: 40px !important;
+  font-size: 56 !important;
   font-weight: bold !important;
   text-align: left;
   color: var(--foreground);
   font-family: 'Nunito', sans-serif;
   line-height: 52px !important;
-  background: -webkit-linear-gradient(50deg, #5E3AFC, #ECEFFF);
+  /* background: -webkit-linear-gradient(50deg, #5E3AFC, #ECEFFF);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent; */
   width: fit-content !important;
   margin: auto;
   margin-bottom: 1.5rem !important;

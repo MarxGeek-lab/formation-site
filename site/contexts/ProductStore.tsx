@@ -7,7 +7,7 @@ import axiosInstanceUser from "../config/axiosConfig";
 
 
 interface ProductContextType {
-    property: Property | null;
+    product: any;
     allProducts: any[];
     getAllProduct: () => void;
     getProductById: (id: string) => Promise<{ data: any, status: number }>;
@@ -57,7 +57,7 @@ interface Property {
 }
 
 export const ProductStore = createContext<ProductContextType>({
-    property: null,
+    product: null,
     allProducts: [],
     getAllProduct: () => {},
     getProductById: async () => ({ data: null, status: 500 }),
@@ -73,7 +73,7 @@ export const ProductStore = createContext<ProductContextType>({
 export const useProductStore = (): ProductContextType => useContext(ProductStore);
 
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
-    const [property, setProperty] = useState<Property | null>(null);
+    const [product, setProduct] = useState<Property | null>(null);
     const [allProducts, setAllProducts] = useState<Property[]>([]);
 
     // Récupérer toutes les propriétés
@@ -90,6 +90,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     const getProductById = async (id: string): Promise<{ data: any, status: number }> => {
         try {
             const response = await axiosInstanceUser.get(`${API_URL}products/${id}`);
+            setProduct(response.data);
             return { data: response.data, status: response.status };
         } catch (error) {
             return { data: null, status: 500 };
@@ -193,7 +194,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     }, []);
                 
     const data = { 
-        property, 
+        product, 
         allProducts,
         getAllProduct, 
         getProductById, 

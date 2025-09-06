@@ -50,6 +50,8 @@ createPromoCode: async (req, res) => {
       if (!promo) {
         return res.status(404).json({ message: "Code promo invalide" });
       }
+
+      console.log(promo)
   
       // Vérifications
       if (promo.expiresAt < new Date()) {
@@ -71,7 +73,11 @@ createPromoCode: async (req, res) => {
       }
   
       const finalAmount = purchaseAmount - discount;
-  
+      console.log({
+        message: "Code promo appliqué avec succès",
+        discount,
+        finalAmount
+      })
       res.json({
         message: "Code promo appliqué avec succès",
         discount,

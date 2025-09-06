@@ -80,6 +80,9 @@ const ProductSchema = new mongoose.Schema({
       ref: 'Review'
     }
   }],
+
+  isvisual: { type: Boolean, default: true },
+  visualPrice: { type: Number, default: 2500 },
   
   // Métadonnées
   isDeleted: { type: Boolean, default: false },

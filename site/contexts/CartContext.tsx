@@ -132,7 +132,12 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     }
     
     case 'CLEAR_CART':
-      return initialState;
+      return {
+        items: [],
+        totalItems: 0,
+        totalPrice: 0,
+        isOpen: false,
+      };
     
     case 'TOGGLE_CART':
       return {

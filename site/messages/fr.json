@@ -10,7 +10,8 @@
     "menuToggle": "Menu Toggle",
     "switchToTheme": "Passer au thème {theme}",
     "darkMode": "Mode sombre",
-    "lightMode": "Mode clair"
+    "lightMode": "Mode clair",
+    "cart": "Panier"
   },
   "Home": {
     "heroSubtitle": "Pensés pour les revendeurs, créateurs et e-commerçants",

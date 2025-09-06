@@ -115,14 +115,14 @@
   
   .optionGroup {
     margin-bottom: 2rem;
-    background: var(--primary-light);
+    background: rgb(233, 233, 233);
     padding: 1rem;
     border-radius: 12px;
     
     .optionTitle {
       font-size: 1.1rem !important;
       font-weight: 600 !important;
-      color: var(--foreground) !important;
+      color: var(--primary) !important;
       margin-bottom: 1rem !important;
     }
     
@@ -130,7 +130,7 @@
       border: 1px solid var(--border);
       border-radius: 0.5rem;
       margin-bottom: 0.75rem;
-      padding: 1rem;
+      padding: 0.8rem;
       transition: all 0.3s ease;
       
       &:hover {
@@ -145,13 +145,18 @@
         margin-bottom: 0.25rem;
         
         .choicePrice {
-          color: var(--primary);
+          color: var(--primary) !important;
           font-weight: 600;
+          white-space: nowrap !important;
+        }
+
+        .choiceTitle {
+          color: var(--primary) !important;
         }
       }
       
       .choiceDescription {
-        color: var(--muted-foreground);
+        color: rgb(39, 39, 39) !important;
         font-size: 0.875rem;
       }
     }

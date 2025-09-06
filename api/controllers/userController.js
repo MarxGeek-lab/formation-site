@@ -37,16 +37,16 @@ const userController = {
       });
       
       // Préparation des données pour le service d'email
-      // const link = `${origin}/activer-mon-compte`;
-      // const emailData = { fullname: name, otp };
+      const link = `${origin}/activer-mon-compte`;
+      const emailData = { fullname: name, otp };
 
-      // // Configuration de l'email à envoyer
-      // const emailService = new EmailService();
-      // emailService.setSubject("Activation de votre compte sur STORE");
-      // emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
-      // emailService.addTo(email);
-      // emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
-      // await emailService.send(); // Envoi de l'email
+      // Configuration de l'email à envoyer
+      const emailService = new EmailService();
+      emailService.setSubject("Activation de votre compte sur STORE");
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      emailService.addTo(email);
+      emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
+      await emailService.send(); // Envoi de l'email
 
       // Sauvegarder l'utilisateur dans la base de données
       await newUser.save();

@@ -14,7 +14,14 @@ exports.createOrder = async (req, res) => {
     const {
       customer,
       items,
-      shippingAddress,
+      email, 
+      phoneNumber,
+      country,
+      city,
+      district,
+      address,
+      lastName,
+      firstName,
       note,
       totalAmount,
       subscribeNewsletter,
@@ -25,30 +32,40 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ message: 'La commande ne peut pas être vide.' });
     }
 
-     // Save adress
-     const user = await User.findOne({ _id: customer });
-     if (!user) {
-       return res.status(404).json({ message: 'Utilisateur introuvable' });
-     }
+    if (!customer) {
+      const user = await User.findOne({ email: shippingAddress.email });
 
-     let shippingAddres = shippingAddress;
+      if (!user) {
+        // Génération d'un code d'activation pour le compte
+        const otp = generateVerificationCode();
 
-     let exists = user.addressShipping.some(address =>
-       address.city === shippingAddress?.city &&
-       address.district === shippingAddress?.district &&
-       address.country === shippingAddress?.country &&
-       address.phone === shippingAddress?.phone &&
-       address.address === shippingAddress?.address &&
-       address.lastName === shippingAddress?.lastName &&
-       address.firstName === shippingAddress?.firstName &&
-       address.email === shippingAddress?.email
-     );
-     
-     if (!exists) {
-       user.addressShipping.push(shippingAddres);
-       user.subscribeNewsletter = subscribeNewsletter;
-       await user.save();
-     }
+        const user = new User({
+          email,
+          phoneNumber,
+          country,
+          city,
+          district,
+          address,
+          name: firstName + ' ' + lastName,
+          otp,
+        });
+        await user.save();
+
+        const link = `${origin}/activer-mon-compte`;
+        const emailData = { fullname: user?.name, otp, link };
+        
+        // Configuration de l'email à envoyer
+        const emailService = new EmailService();
+        emailService.setSubject("Activation de votre compte sur Rafly");
+        emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+        emailService.addTo(email);
+        emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
+        await emailService.send(); // Envoi de l'email
+      } else {
+        customer = user;
+      }
+
+    }
 
     const productItems = []
     for(const item of items){

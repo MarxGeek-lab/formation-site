@@ -28,7 +28,7 @@ export default function ProductCard({
   const handleClick = () => {
     if (product.name) {
       const slug = generateSlug(product.name);
-      router.push(`/${locale}/produit/${slug}`);
+      router.push(`/${locale}/produit/${product._id}`);
     }
   };
 
@@ -93,14 +93,14 @@ export default function ProductCard({
             </svg>
           </div>
         )}
-        <div className={styles.hoverOverlay}>
+        {/* <div className={styles.hoverOverlay}>
           <button className={styles.buyNowButton} onClick={handleClick}>
             {t('buyNow')}
           </button>
           <button className={styles.addToCartButton} onClick={handleAddToCart}>
             <AddShoppingCart />
           </button>
-        </div>
+        </div> */}
       </div>
       
       <div className={styles.content}>

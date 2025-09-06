@@ -6,6 +6,7 @@ import { ProductProvider } from "./ProductStore";
 import { RentalProvider } from "./RentalStore";
 import { PaymentProvider } from "./PaymentStore";
 import { CommonProvider } from "./CommonContext";
+import { PromoCodeProvider } from "./PromoContext";
 
 export const GlobalProvider = ({children}: {children: ReactNode}) => {
     return (
@@ -16,7 +17,9 @@ export const GlobalProvider = ({children}: {children: ReactNode}) => {
                     <RentalProvider>
                         <PaymentProvider>
                             <CommonProvider>
+                                <PromoCodeProvider>
                                 {children}
+                                </PromoCodeProvider>
                             </CommonProvider>
                         </PaymentProvider>
                     </RentalProvider>
@@ -34,3 +37,4 @@ export { useProductStore } from "./ProductStore";
 export { useRentalStore } from "./RentalStore"; 
 export { usePaymentStore } from './PaymentStore';
 export { useCommonStore } from './CommonContext';
+export { usePromoCodeStore } from './PromoContext';
