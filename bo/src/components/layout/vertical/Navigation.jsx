@@ -97,9 +97,6 @@ const Navigation = props => {
       customStyles={navigationCustomStyles(verticalNavOptions, theme)}
       collapsedWidth={71}
       backgroundColor='var(--mui-palette-background-paper)'
-      // eslint-disable-next-line lines-around-comment
-      // The following condition adds the data-dark attribute to the VerticalNav component
-      // when semiDark is enabled and the mode or systemMode is light
       {...(isSemiDark &&
         !isDark && {
           'data-dark': ''
@@ -114,13 +111,8 @@ const Navigation = props => {
         pl: 6,
         mb: 2,
         backgroundColor: primaryColorConfig[0].main,
-        '&:hover': {
-          backgroundColor: 'var(--mui-palette-action-hover)',
-        }
       }}>
-        <Typography mr={4}>
-          <i className='tabler-dashboard' style={{ color: 'white' }}></i>  
-        </Typography>
+        <img src={API_URL_ROOT+'icon.webp'} alt="" width={30} height={30} />
         <Typography variant='subtitle1' color='white' whiteSpace={'nowrap'}>Tableau de bord</Typography>
       </Box>
       {/* Nav Header including Logo & nav toggle icons  */}

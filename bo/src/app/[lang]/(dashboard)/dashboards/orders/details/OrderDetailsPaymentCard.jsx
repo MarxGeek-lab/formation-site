@@ -67,13 +67,13 @@ const OrderPayment = ({orderData}) => {
     () => [
       columnHelper.accessor('amount', {
         header: 'Montant',
-        cell: ({ row }) => <Typography>{`${formatAmount(row.original?.amount || 0)}`} FCFA</Typography>
+        cell: ({ row }) => <Typography variant='body2'>{`${formatAmount(row.original?.amount || 0)}`} FCFA</Typography>
       }),
       columnHelper.accessor('paymentMethod', {
         header: 'Méthode de paiement',
         cell: ({ row }) => (
           <div className='flex items-center gap-3'>
-            <Typography color='text.primary' className='font-medium'>
+            <Typography variant='body2' color='text.primary' className='font-medium'>
               {row.original?.transaction?.paymentMethod === 'MOBILE' ? row.original?.transaction?.mobileProvider : row.original?.transaction?.paymentMethod}
             </Typography>
           </div>
@@ -81,11 +81,11 @@ const OrderPayment = ({orderData}) => {
       }),
       columnHelper.accessor('paymentDate', {
         header: 'Date',
-        cell: ({ row }) => <Typography>{`${dayjs(row.original?.paymentDate).format('DD/MM/YYYY')}`}</Typography>
+        cell: ({ row }) => <Typography variant='body2'>{`${dayjs(row.original?.paymentDate).format('DD/MM/YYYY')}`}</Typography>
       }),
       columnHelper.accessor('type', {
         header: 'Type',
-        cell: ({ row }) => <Typography>{`${row.original?.type}`}</Typography>
+        cell: ({ row }) => <Typography variant='body2'>{`${row.original?.type}`}</Typography>
       }),
        columnHelper.accessor('action', {
         header: 'Action',
@@ -148,6 +148,11 @@ const OrderPayment = ({orderData}) => {
                           'cursor-pointer select-none': header.column.getCanSort()
                         })}
                         onClick={header.column.getToggleSortingHandler()}
+                        style={{
+                          cursor: 'pointer',
+                          fontWeight: 'bold',
+                          fontSize: '12px',
+                        }}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                         {{

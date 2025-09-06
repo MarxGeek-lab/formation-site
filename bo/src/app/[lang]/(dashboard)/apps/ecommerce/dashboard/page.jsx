@@ -59,9 +59,9 @@ const EcommerceDashboard = async () => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid size={{ xs: 12, xl: 8 }}>
+      {/* <Grid size={{ xs: 12, xl: 8 }}>
         <RevenueReport />
-      </Grid>
+      </Grid> */}
       <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
         <EarningReports />
       </Grid>

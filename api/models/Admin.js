@@ -19,8 +19,10 @@ const AdminSchema = new mongoose.Schema({
   permissions: [{
     type: String,
     enum: [
-      "Tous les accès", "Gérer les propriétés","Gérer les utilisateurs","Voir les statistiques","Voir les locations",
-  "Gérer le contenu","Gérer les administrateurs", "Gérer les supports", "Gérer les paramètres"
+      "all", "dashboard","users","statistics","orders",
+      "categories","settings","subscriptions","payments",
+      "newsletter","reviews", "admin", "customers", "add_products",
+      "view_products", "codePromo"
     ]
   }],
   isActive: { 

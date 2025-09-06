@@ -13,6 +13,7 @@ const Notifications = require('../../models/Notifications');
 
 const SiteSettings = require('../../models/Settings');
 const Order = require('../../models/Order');
+const Category = require('../../models/Categories');
 
 require('dotenv').config();
 
@@ -151,7 +152,7 @@ const adminController = {
       admin.name = name || admin.name;
       admin.role = role || admin.role;
       admin.phoneNumber = phoneNumber || admin.phoneNumber;
-      admin.permissions = permissions || admin.permissions;
+      admin.permissions = permissions.length > 0 ? permissions : admin.permissions;
 
       await admin.save();
 
@@ -389,26 +390,87 @@ const adminController = {
    */
 
   getAllProducts: async (req, res) => {
-    try {
-      const products = await Product.find()
-                .sort({ createdAt: -1 });
-
-      res.json(products);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Server error', error });
-    }
-  },
+     try {
+       let query = { 
+         isDeleted: false, 
+         productStatus: 'active'
+       };
+ 
+       // Si l'utilisateur est super_admin, il voit tous les produits
+       if (req?.user?.role === 'super_admin') {
+         // Pas de filtre supplémentaire, on garde la query de base
+       }
+       // Si l'utilisateur est admin, il ne voit que ses produits assignés
+       else if (req?.user?.role === 'admin') {
+         const adminId = req?.user?._id;
+         query.assignedAdminId = adminId;
+       } else {
+         // Si le rôle n'est ni super_admin ni admin
+         return res.status(403).json({ 
+           success: false,
+           message: "Accès non autorisé" 
+         });
+       }
+ 
+       const products = await Product.find(query)
+       .populate('subscriptionId')
+       .populate('assignedAdminId')
+       .sort({ createdAt: -1 });
+ 
+       const productsWithSubcategories = await Promise.all(products.map(async (product) => {
+         const category = await Category.findOne({ name: product.category });
+         return {
+           ...product.toObject(),
+         };
+       }));
+ 
+       return res.status(200).json(productsWithSubcategories);
+     } catch (error) {
+       console.error(error);
+       return res.status(500).json({ 
+         success: false,
+         message: 'Erreur serveur', 
+         error: error.message 
+       });
+     }
+   },
 
   /**
    * Orders
    */
   async getAllOrders(req, res) {
     try {
-      const orders = await Order.find()
-        .populate('customer')
-        .populate('payments.transaction')
-        .sort({ createdAt: -1 });
+      let orders;
+
+      // Si l'utilisateur est super_admin, il voit toutes les commandes
+      if (req?.user?.role === 'super_admin') {
+        orders = await Order.find()
+          .populate('customer')
+          .populate('payments.transaction')
+          .sort({ createdAt: -1 });
+      }
+      // Si l'utilisateur est admin, il ne voit que les commandes contenant ses produits
+      else if (req?.user?.role === 'admin') {
+        const adminId = req?.user?._id;
+        
+        // Récupérer les produits assignés à cet admin
+        const adminProducts = await Product.find({ assignedAdminId: adminId }).select('_id');
+        const productIds = adminProducts.map(product => product._id);
+
+        // Récupérer les commandes contenant les produits de cet admin
+        orders = await Order.find({
+          'items.product': { $in: productIds }
+        })
+          .populate('customer')
+          .populate('payments.transaction')
+          .sort({ createdAt: -1 });
+      } else {
+        // Si le rôle n'est ni super_admin ni admin
+        return res.status(403).json({ 
+          success: false,
+          message: "Accès non autorisé" 
+        });
+      }
 
       res.json(orders);
     } catch (error) {

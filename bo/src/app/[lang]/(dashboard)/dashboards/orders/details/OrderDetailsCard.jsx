@@ -68,9 +68,8 @@ const OrderTable = ({orderData}) => {
         header: 'Produit',
         cell: ({ row }) => (
           <div className='flex items-center gap-3'>
-            {/* <img src={row.original.productImage} alt={row.original.productName} height={34} className='rounded' /> */}
             <div className='flex flex-col items-start'>
-              <Typography color='text.primary' className='font-medium'>
+              <Typography variant='body2' color='text.primary' className='font-'>
                 {row.original?.product?.name}
               </Typography>
             </div>
@@ -79,18 +78,17 @@ const OrderTable = ({orderData}) => {
       }),
       columnHelper.accessor('price', {
         header: 'Montant',
-        cell: ({ row }) => <Typography>{`${formatAmount(row.original?.price || 0)}`} FCFA</Typography>
+        cell: ({ row }) => <Typography variant='body2'>{`${formatAmount(row.original?.price || 0)}`} FCFA</Typography>
       }),
       columnHelper.accessor('quantity', {
         header: 'Quantité',
-        cell: ({ row }) => <Typography>{`${row.original?.quantity}`}</Typography>
+        cell: ({ row }) => <Typography variant='body2'>{`${row.original?.quantity}`}</Typography>
       }),
       columnHelper.accessor('total', {
         header: 'Total',
-        cell: ({ row }) => <Typography>{`${formatAmount(row.original?.quantity * row.original?.price || 0)}`} FCFA</Typography>
+        cell: ({ row }) => <Typography variant='body2'>{`${formatAmount(row.original?.quantity * row.original?.price || 0)}`} FCFA</Typography>
       })
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
@@ -139,6 +137,11 @@ const OrderTable = ({orderData}) => {
                           'cursor-pointer select-none': header.column.getCanSort()
                         })}
                         onClick={header.column.getToggleSortingHandler()}
+                        style={{
+                          cursor: 'pointer',
+                          fontWeight: 'bold',
+                          fontSize: '12px',
+                        }}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                         {{
@@ -195,7 +198,7 @@ const OrderDetailsCard = ({orderData}) => {
               Statut :
             </Typography>
           <Chip
-            variant='tonal'
+            variant='filled'
             label={statusLocObj[orderData?.status || '']?.text}
             color={statusLocObj[orderData?.status || '']?.color}
             size='small'
@@ -206,7 +209,7 @@ const OrderDetailsCard = ({orderData}) => {
             Statut de paiement :
           </Typography>
           <Chip
-            variant='tonal'
+            variant='filled'
             label={statusPayObj[orderData?.paymentStatus || '']?.text}
             color={statusPayObj[orderData?.paymentStatus || '']?.color}
             size='small'
@@ -219,34 +222,10 @@ const OrderDetailsCard = ({orderData}) => {
         <Box className='flex flex-col gap-2'>
           <div className='flex items-center gap-12'>
             <Typography color='text.primary' className='min-is-[100px]'>
-              Sous total :
+              Total :
             </Typography>
             <Typography color='text.primary' className='font-medium'>
               {formatAmount(orderData?.items.reduce((total, item) => total + item.price * item.quantity, 0))} FCFA
-            </Typography>
-          </div>
-          <div className='flex items-center gap-12'>
-            <Typography color='text.primary' className='min-is-[100px]'>
-              Livraison:
-            </Typography>
-            <Typography color='text.primary' className='font-medium'>
-              {orderData.shippingMethod?.fee === 0 ? 'Gratuit' : formatAmount(orderData?.shippingMethod?.fee || 0)+' FCFA'}
-            </Typography>
-          </div>
-          <div className='flex items-center gap-12'>
-            <Typography color='text.primary' className='min-is-[100px]'>
-              Taxe:
-            </Typography>
-            <Typography color='text.primary' className='font-medium'>
-              {formatAmount(orderData?.totalAmount * orderData?.taxe / 100)} FCFA
-            </Typography>
-          </div>
-          <div className='flex items-center gap-12'>
-            <Typography color='text.primary' className='font-medium min-is-[100px]'>
-              Total:
-            </Typography>
-            <Typography color='text.primary' className='font-medium'>
-              {orderData?.totalAmount} FCFA
             </Typography>
           </div>
         </Box>

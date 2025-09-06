@@ -5,7 +5,7 @@ const auth = require('../middleware/authenticateToken')
 const statsController = require('../controllers/statsController');
 
 router.get('/owner', auth, statsController.getStatsByOwner);
+router.get('/revenue', auth, statsController.getRevenueStats);
 
-router.get('/balance/owner', auth, statsController.getBalanceOwner);
 
 module.exports = router;

@@ -300,9 +300,22 @@ export const categories2 = [
 ];
 
 export const permissionsArray2 = [ 
-  "Tous les accès", "Gérer les produits","Gérer les utilisateurs","Voir les statistiques","Gérer les commandes",
-  "Gérer les catégories", "Gérer les paramètres", "Gérer les abonnements", "Gérer les paiements",
-  "Gérer la newsletter", "Gérer les avis"
+  { value: 'dashboard', label: 'Vue générale' },
+  { value: 'all', label: 'Tous les accès' },
+  { value: 'view_products', label: 'Voir les produits' },
+  { value: 'add_products', label: 'Ajouter des produits' },
+  { value: 'users', label: 'Gérer les utilisateurs' },
+  { value: 'customer', label: 'Gérer les clients' },
+  { value: 'statistics', label: 'Voir les statistiques' },
+  { value: 'orders', label: 'Gérer les commandes' },
+  { value: 'categories', label: 'Gérer les catégories' },
+  { value: 'settings', label: 'Gérer les paramètres' },
+  { value: 'subscriptions', label: 'Gérer les abonnements' },
+  { value: 'payments', label: 'Gérer les paiements' },
+  { value: 'newsletter', label: 'Gérer la newsletter' },
+  { value: 'reviews', label: 'Gérer les avis' },
+  { value: 'codePromo', label: 'Gérer les codes promo' },
+  { value: 'admin', label: 'Gérer les administrateurs' },
 ];
 
 export const colors = {

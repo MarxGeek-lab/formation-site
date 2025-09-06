@@ -101,7 +101,7 @@ const columnHelper = createColumnHelper()
 
 const ProductListTable = ({ productData }) => {
   // States
-  const { deleteProperty, updateStatusProduct } = usePropertyStore();
+  const { deleteProduct, updateStatusProduct } = usePropertyStore();
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState(data)
@@ -145,7 +145,7 @@ const ProductListTable = ({ productData }) => {
           return (
             <div className='flex flex-col gap-1'>
               <Typography variant='body2'>
-                {!row.original.isSubscriptionBased ? formatAmount(row.original?.price) + 'FCFA'
+                {!row.original.isSubscriptionBased ? formatAmount(row.original?.price || 0) + 'FCFA'
                 : row.original?.subscriptionId?.title} 
               </Typography>
             </div>
@@ -158,7 +158,7 @@ const ProductListTable = ({ productData }) => {
           return (
             <div className='flex flex-col gap-1'>
               <Typography variant='body2'>
-                {!row.original.isSubscriptionBased ? formatAmount(row.original?.pricePromo || row.original?.price) + ' FCFA' 
+                {!row.original.isSubscriptionBased ? formatAmount(row.original?.pricePromo || row.original?.price || 0) + ' FCFA' 
                 : row.original?.subscriptionId?.title}
               </Typography>
             </div>
@@ -190,10 +190,11 @@ const ProductListTable = ({ productData }) => {
         cell: ({ row }) => (
           <div className='flex items-center'>
             <IconButton onClick={() => handleActiveOrInactive(row.original._id) }>
-              <i className='tabler-' color={{color: COLORS.primary}} />
+              <i className={`tabler-${row.original?.productStatus === 'active' ? 'eye-off' : 'eye'}`} style={{color: row.original?.productStatus === 'active' ? '#f44336' : '#4caf50'}} />
             </IconButton>
+            
             <IconButton onClick={() => window.location.href = `/${locale}/dashboards/products/details/${row.original._id}`}>
-              <i className='tabler-eye' color={{color: COLORS.primary}} />
+              <i className='tabler-info-circle' style={{color: COLORS.primary}} />
             </IconButton>
             <IconButton onClick={() => window.location.href = `/${locale}/dashboards/product-add?id=${row.original._id}`}>
               <i className='tabler-edit' style={{color: COLORS.warning}} />
@@ -248,7 +249,7 @@ const ProductListTable = ({ productData }) => {
         showLoader();
 
         try {
-            const res = await deleteProperty(id);
+            const res = await deleteProduct(id);
             hideLoader();
             if (res) {
                 if (res === 200) {
@@ -277,11 +278,10 @@ const ProductListTable = ({ productData }) => {
             hideLoader();
             if (res) {
                 if (res === 200) {
-                    sessionStorage.removeItem("_productId");
-                    showToast("Le statut a été modifié !", "success", 5000);
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 3000);
+                  showToast("Le statut a été modifié !", "success", 5000);
+                  setTimeout(() => {
+                      window.location.reload();
+                  }, 3000);
                 } else {
                     showToast("Erreur Inconnue! Veuillez réessayer", "error", 5000);
                 }

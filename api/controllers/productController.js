@@ -112,16 +112,15 @@ const productController = {
     try {
       // Récupération des fichiers
       const photos = req.files['images']?.map((file) => process.env.API_URL+file.filename) || [];
-      const saleDocument = req.files['saleDocument']?.[0] ? process.env.API_URL+req.files['saleDocument'][0].filename : null;
-      const demoVideo = req.files['demoVideo']?.[0] ? process.env.API_URL+req.files['demoVideo'][0].filename : null;
+      const pdf = req.files['pdf']?.[0] ? process.env.API_URL+req.files['pdf'][0].filename : null;
+      const videos = req.files['videos']?.[0] ? process.env.API_URL+req.files['videos'][0].filename : null;
 console.log(req.body)
-
       const {
         name, description, category, productType,
         isSubscriptionBased, subscriptionId, assignedAdminId,
         price, wholesalePrice, productStatus,
-        characteristics, photos2,demoVideo2,
-        saleDocument2,
+        characteristics, images2, videos2,
+        pdf2,
       } = req.body;
   
       const productId = req.params.id;
@@ -136,7 +135,7 @@ console.log(req.body)
       }
 
       // Gestion des images supprimées
-      const existingPhotos = photos2 ? JSON.parse(photos2) : [];
+      const existingPhotos = images2 ? JSON.parse(images2) : [];
       const difference = product.photos.filter(item => !existingPhotos.includes(item));
 
       // Suppression des images obsolètes
@@ -153,8 +152,8 @@ console.log(req.body)
       const newPhotos = [...existingPhotos, ...photos];
       
       // Gestion des fichiers PDF et vidéos
-      const finalSaleDocument = saleDocument2 || product.saleDocument;
-      const finalDemoVideo = demoVideo2 || product.demoVideo;
+      const finalPdf = pdf || pdf2 || product.pdf;
+      const finalVideos = videos || videos2 || product.videos;
 
       // Mettre à jour les champs du produit
       product.name = name || product.name;
@@ -169,12 +168,12 @@ console.log(req.body)
       if (assignedAdminId !== undefined) product.assignedAdminId = assignedAdminId;
       
       // Fichiers
-      if (finalSaleDocument) product.saleDocument = finalSaleDocument;
-      if (finalDemoVideo) product.demoVideo = finalDemoVideo;
+      if (finalPdf) product.saleDocument = finalPdf;
+      if (finalVideos) product.demoVideo = finalVideos;
       
       // Prix et finance
-      if (price !== undefined) product.price = price;
-      if (wholesalePrice !== undefined) product.pricePromo = wholesalePrice;
+      product.price = price ? Number(price) : product.price;
+      product.pricePromo = wholesalePrice ? Number(wholesalePrice) : product.pricePromo;
 
       if (productStatus !== undefined) product.productStatus = productStatus;
 
@@ -183,7 +182,7 @@ console.log(req.body)
         product.characteristics = JSON.parse(characteristics);
       }
 
-      if (isSubscriptionBased) {
+      if (isSubscriptionBased === 'true') {
         product.price = null;
         product.pricePromo = null;
       }
@@ -248,8 +247,10 @@ console.log(req.body)
     try {
       const products = await Product.find({ 
         isDeleted: false, 
+        productStatus: 'active'
       })
       .populate('subscriptionId')
+      .populate('assignedAdminId')
       .sort({ createdAt: -1 });
 
       const productsWithSubcategories = await Promise.all(products.map(async (product) => {
@@ -276,6 +277,7 @@ console.log(req.body)
       const productId = req.params.id;
       const product = await Product.findById(productId)
             .populate('subscriptionId')
+            .populate('assignedAdminId')
         // .populate({
         //   path: 'reviews.review',
         //   populate: { path: 'user' }  
@@ -429,12 +431,7 @@ console.log(req.body)
   // Mettre à jour le statut d'un produit
   updateProductStatus: async (req, res) => {
     try {
-      const { productStatus } = req.body;
-      const product = await Product.findByIdAndUpdate(
-        req.params.id,
-        { productStatus },
-        { new: true }
-      );
+      const product = await Product.findById(req.params.id);
 
       if (!product) {
         return res.status(404).json({
@@ -442,6 +439,14 @@ console.log(req.body)
           message: 'Produit non trouvé'
         });
       }
+
+      if (product.productStatus === 'active') {
+        product.productStatus = 'inactive';
+      } else {
+        product.productStatus = 'active';
+      }
+
+      await product.save();
 
       res.status(200).json({
         success: true,

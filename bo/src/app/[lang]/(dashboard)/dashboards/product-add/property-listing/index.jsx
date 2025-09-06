@@ -190,9 +190,7 @@ const PropertyListingWizard = () => {
       }
 
       if (selectedFiles2.length > 0) {
-        for (const file of selectedFiles2) {
-          formData.append("images", file);
-        }
+        formData.append("images2", JSON.stringify(selectedFiles2));
       }
       
       // Images existantes pour la modification
@@ -200,9 +198,16 @@ const PropertyListingWizard = () => {
         formData.append("pdf", selectedFilesSale);
       }
 
-    
-      if (setSelectedVideo) {
-        formData.append("videos", setSelectedVideo);
+      if (selectedFilesSale2) {
+        formData.append("pdf2", selectedFilesSale2);
+      }
+
+      if (selectedVideo) {
+        formData.append("videos", selectedVideo);
+      }
+
+      if (selectedVideo2) {
+        formData.append("videos2", selectedVideo2);
       }
 
       // show load
@@ -260,6 +265,8 @@ const PropertyListingWizard = () => {
                 !(typeof value === "object" && Object.keys(value).length === 0);
         }
 
+        console.log(data)
+
         if (data && typeof data === "object" && Object.keys(data).length > 0) {
           setProduct(data);
           
@@ -284,7 +291,7 @@ const PropertyListingWizard = () => {
           if (isValid(data.assignedAdminId)) setAssignedAdminId(data.assignedAdminId);
           
           // Images du produit
-          if (isValid(data.photos)) {
+          if (data.photos?.length > 0) {
             setSelectedFiles2(data.photos);
           }
           

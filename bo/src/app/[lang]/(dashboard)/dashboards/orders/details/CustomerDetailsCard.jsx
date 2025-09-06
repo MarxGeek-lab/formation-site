@@ -22,28 +22,7 @@ const getAvatar = params => {
   }
 }
 
-// Vars
-const userData = {
-  firstName: 'Gabrielle',
-  lastName: 'Feyer',
-  userName: '@gabriellefeyer',
-  billingEmail: 'gfeyer0@nyu.edu',
-  status: 'active',
-  role: 'Customer',
-  taxId: 'Tax-8894',
-  contact: '+1 (234) 464-0600',
-  language: ['English'],
-  country: 'France',
-  useAsBillingAddress: true
-}
-
 const CustomerDetails = ({ orderData }) => {
-  // Vars
-  const typographyProps = (children, color, className) => ({
-    children,
-    color,
-    className
-  })
 
   return (
     <Card>
@@ -65,8 +44,12 @@ const CustomerDetails = ({ orderData }) => {
             </Typography>
           </div>
           <Typography>E-mail: {orderData?.email}</Typography>
-          <Typography>Téléphone: {orderData?.phoneCode+orderData?.phoneNumber} </Typography>
-          <Typography>Adresse: {[orderData?.address || '', orderData?.city || '', orderData?.country || ''].join(', ')} </Typography>
+          {orderData?.phoneNumber && (
+            <Typography>Téléphone: {orderData?.phoneNumber} </Typography>
+          )}
+          {(orderData?.address || orderData?.city || orderData?.country) && (
+            <Typography>Adresse: {[orderData?.address || '', orderData?.city || '', orderData?.country || ''].join(', ')} </Typography>
+          )}
         </div>
       </CardContent>
     </Card>

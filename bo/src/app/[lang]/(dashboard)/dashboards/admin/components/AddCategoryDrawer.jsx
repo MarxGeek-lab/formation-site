@@ -15,7 +15,7 @@ import { useAdminStore, useAuthStore } from '@/contexts/GlobalContext'
 import { showToast } from '@/components/ToastNotification/ToastNotification'
 import { hideLoader, showLoader } from '@/components/Loader/loaderService'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import { Chip } from '@mui/material'
+import { Chip, MenuItem } from '@mui/material'
 import { permissionsArray2 } from '@/data/constant'
 
 const AddCategoryDrawer = props => {
@@ -29,6 +29,7 @@ const AddCategoryDrawer = props => {
   const [file, setFile] = useState(null)
   const [category, setCategory] = useState('')
   const [name, setName] = useState('')
+  const [role, setRole] = useState('')
   const [permissions, setPermissions] = useState([])
   const [email, setEmail] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
@@ -49,9 +50,9 @@ const AddCategoryDrawer = props => {
   // Handle Form Submit
   const handleFormSubmit = async data => {
 
-    if (name && email) {
+    if (name && email && permissions.length > 0 && role) {
       const newData = {
-        name, email, phoneNumber, permissions, admin: user?._id
+        name, email, phoneNumber, permissions, admin: user?._id, role
       }
 
       showLoader();
@@ -64,7 +65,6 @@ const AddCategoryDrawer = props => {
           res = await createAdmin(newData);
         }
         hideLoader();
-        console.log(res);
 
         if (res === 201) {
           handleReset();
@@ -84,6 +84,8 @@ const AddCategoryDrawer = props => {
       } catch (error) {
         console.log(error)
       }
+    } else {
+      showToast('Veuillez remplir tous les champs', 'error', 5000);
     }
   }
 
@@ -102,9 +104,10 @@ const AddCategoryDrawer = props => {
       setEmail(adminData?.email);
       setPhoneNumber(adminData?.phoneNumber);
       setPermissions(adminData?.permissions);
+      setRole(adminData?.role);
     }
   },[adminData]);
-
+console.log(permissions)
   return (
     <Drawer
       open={open}
@@ -146,39 +149,48 @@ const AddCategoryDrawer = props => {
             onChange={e => setPhoneNumber(e.target.value)}
             placeholder='...'
           /> 
-       {/*  <Grid size={{ xs: 12 }}>
-          <CustomAutocomplete
-            fullWidth
-            multiple
-            value={permissions}
-            onChange={(event, value) => setPermissions(value)} // Évite les valeurs vides
-            options={permissionsArray2}
-            getOptionLabel={(option) => option || ""}
-            renderInput={(params) => <CustomTextField {...params} label="Permissions" />}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip label={option} size="small" {...getTagProps({ index })} key={index} />
-              ))
-            }
-          />
-        </Grid> */}
 
           <Grid size={{ xs: 12, md: 6 }}>
             <CustomAutocomplete
               fullWidth
               multiple
-              value={permissions}
-              onChange={(event, value) => setPermissions(value)} // Évite les valeurs vides
+              value={permissionsArray2.filter(p => permissions.includes(p.value))}
+              onChange={(event, value) => setPermissions(value.map(item => item.value))}
               options={permissionsArray2}
-              getOptionLabel={(option) => option}
-              renderInput={(params) => <CustomTextField {...params} label="Type d'événement" />}
+              getOptionLabel={(option) => option.label}
+              isOptionEqualToValue={(option, value) => option.value === value.value}
+              renderInput={(params) => <CustomTextField {...params} label="Permissions" />}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
-                  <Chip label={option} size="small" {...getTagProps({ index })} key={index} />
+                  <Chip 
+                    label={option.label} 
+                    size="small" 
+                    {...getTagProps({ index })} 
+                    key={index} 
+                  />
                 ))
               }
             />
           </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <CustomTextField
+              select
+              fullWidth
+              value={role || ''}
+              onChange={(e) =>  setRole(e.target.value)}
+              label="Administrateur responsable"
+            >
+              <MenuItem value="">Aucun</MenuItem>
+              <MenuItem value="super_admin">
+                Super admin
+              </MenuItem>
+              <MenuItem value="admin">
+                Admin
+              </MenuItem>
+            </CustomTextField>
+          </Grid>
+          
           <div className='flex items-center gap-4'>
             <Button variant='contained' onClick={handleFormSubmit}>
               {adminData ? 'Enrégistrer':'Ajouter'}

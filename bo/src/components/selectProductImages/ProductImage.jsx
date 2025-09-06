@@ -53,7 +53,7 @@ const ProductImage = ({ setSelectedFiles, selectedFiles, selectedFiles2, setSele
 
   const renderFilePreview = file => {
     if (file.type.startsWith('image')) {
-      return <img width={50} height={50} alt={file.name} src={URL.createObjectURL(file)} />
+      return <img width={200} alt={file.name} src={URL.createObjectURL(file)} />
     } else {
       return <i className='tabler-file-description' />
     }
@@ -118,8 +118,8 @@ const ProductImage = ({ setSelectedFiles, selectedFiles, selectedFiles2, setSele
       <Card>
       <CardHeader
         title={
-          <Typography component="span">
-            Images de la propriété <Typography component="span" color="error" variant=''>*</Typography>
+          <Typography variant="h5">
+            Images <Typography component="span" color="error" variant=''>*</Typography>
           </Typography>
         }
         subheader="La première image téléchargée sera définie comme image principale."
@@ -127,7 +127,7 @@ const ProductImage = ({ setSelectedFiles, selectedFiles, selectedFiles2, setSele
       />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
-              Veuillez télécharger au maximum 5 images de haute qualité pour une meilleure présentation. <br />
+              Veuillez télécharger une image de haute qualité pour une meilleure présentation. <br />
               📌 Taille idéale : <strong>1200x800 px</strong> | Poids max : <strong>2 Mo</strong> | Formats acceptés : <strong>JPEG, PNG, WebP</strong>.
             </Typography>
           </CardContent>

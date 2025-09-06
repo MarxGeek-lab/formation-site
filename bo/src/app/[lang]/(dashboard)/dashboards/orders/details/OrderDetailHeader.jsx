@@ -1,11 +1,8 @@
 // MUI Imports
 import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
 
 // Component Imports
-import ConfirmationDialog from '@components/dialogs/confirmation-dialog'
-import OpenDialogOnElementClick from '@components/dialogs/OpenDialogOnElementClick'
 import dayjs from 'dayjs'
 import { useCustomerStore, useOrderStore } from '@/contexts/GlobalContext'
 import { useState } from 'react'
@@ -153,7 +150,7 @@ const OrderDetailHeader = ({ orderData, order }) => {
             Annuler la commande
           </Button>
         )}
-        {['confirmed', 'shipped', 'delivered', 'cancelled', 'pending'].includes(orderData?.status) && (
+        {/* {['confirmed', 'shipped', 'delivered', 'cancelled', 'pending'].includes(orderData?.status) && (
           <>
           <Button variant='contained' color='primary'
             onClick={handleConfirmInvoice}>
@@ -164,7 +161,7 @@ const OrderDetailHeader = ({ orderData, order }) => {
             Voir la facture
           </Button>
           </>
-        )}
+        )} */}
       </div>
       <Dialog open={openReminder} fullWidth>
         <DialogTitle>Lancer une rappel au client</DialogTitle>

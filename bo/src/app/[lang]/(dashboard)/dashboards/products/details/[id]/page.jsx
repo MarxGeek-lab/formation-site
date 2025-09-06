@@ -71,6 +71,7 @@ const OrderDetailsPage = () => {
       </Grid>
       <Grid size={{ xs: 12, md: 4 }}>
         <Box sx={{ width: '100%', maxWidth: 600, mx: 'auto' }}>
+        {product.photos?.length > 1 ? (
           <Slider {...settings}>
             {product.photos.map((img, index) => (
               <Box key={index} sx={{width: '100%'}}>
@@ -79,6 +80,13 @@ const OrderDetailsPage = () => {
               </Box>
             ))}
           </Slider>
+        ):(
+          <Box sx={{width: '100%'}}>
+              <img src={product.photos[0]} alt={`Slide`} style={{ 
+            width: '100%', height: '300px', objectFit: 'contain', borderRadius: 2 }}  />
+        </Box>
+        )}
+         
         </Box>
       </Grid>
     </Grid>

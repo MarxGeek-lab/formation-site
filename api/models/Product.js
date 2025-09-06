@@ -60,7 +60,7 @@ const ProductSchema = new mongoose.Schema({
   // Gestion administrative
   assignedAdminId: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User' // Référence vers un utilisateur admin
+    ref: 'Admin' // Référence vers un utilisateur admin
   },
 
   // Gestion par les administrateurs

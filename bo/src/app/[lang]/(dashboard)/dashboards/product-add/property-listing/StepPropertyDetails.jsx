@@ -147,7 +147,7 @@ const StepPropertyDetails = ({
   selectedVideo2,
 
 }) => {
-  const { allCategories } = useAdminStore();
+  const { allCategories, allAdmin, getAllAdmin } = useAdminStore();
   const { subscriptionPlans, fetchSubscription } = useSubscriptionContext();
   const [showCustomService, setShowCustomService] = useState(false);
 
@@ -167,7 +167,17 @@ const StepPropertyDetails = ({
       onUpdate: ({ editor }) => {
         setDescription(editor.getHTML() || description); // Récupère le contenu en HTML
       },
-    })
+  })
+
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    setCategory(value);
+    setSubCategory('');
+    setCustomCategory('');
+    if (value !== 'Autres') {
+      setCustomService('');
+    }
+  };
 
   useEffect(() => {
     if (category) {
@@ -186,19 +196,10 @@ const StepPropertyDetails = ({
 
   useEffect(() => {
     fetchSubscription();
+    getAllAdmin();
   }, []);
 
-  const handleCategoryChange = (e) => {
-    const value = e.target.value;
-    setCategory(value);
-    setSubCategory('');
-    setCustomCategory('');
-    if (value !== 'Autres') {
-      setCustomService('');
-    }
-  };
-
-
+console.log("allAdmin == ", allAdmin)
   return (
     <Grid container spacing={6}>
       {/* Section 1: Informations de base */}
@@ -411,19 +412,12 @@ const StepPropertyDetails = ({
           helperText="Optionnel"
         >
           <MenuItem value="">Aucun</MenuItem>
-          {availableAdmins?.map((admin) => (
+          {allAdmin?.map((admin) => (
             <MenuItem key={admin._id} value={admin._id}>
-              {admin.firstName} {admin.lastName}
+              {admin?.name} - {admin?.email}
             </MenuItem>
           ))}
         </CustomTextField>
-      </Grid>
-
-      {/* Section 5: Images */}
-      <Grid size={{ xs: 12 }}>
-        <Typography variant="h4" className="mb-4 mt-6">
-          Images du produit
-        </Typography>
       </Grid>
 
       <Grid size={{ xs: 12 }}>
@@ -442,7 +436,7 @@ const StepPropertyDetails = ({
           selectedFiles2={selectedFilesSale2}
           textBtn="Importer un fichier PDF de vente"
           type='pdf'
-          title={'Fichier PDF de vente'}
+          title={'Fichier PDF à télécharger'}
         />
       </Grid>
 

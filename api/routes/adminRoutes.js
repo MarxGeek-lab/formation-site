@@ -13,7 +13,7 @@ router.get('/category', auth, categoryController.getAllCategoriesByAdmin);
 router.post('/category', auth, categoryController.createCategory);
 
 router.get('/products', auth, adminController.getAllProducts);
-// router.get('/orders', auth, adminController.getAllOrders);
+router.get('/orders', auth, adminController.getAllOrders);
 
 // // Récupérere tout les utilisateurs
 // router.get('/users', auth, adminController.getUsers);

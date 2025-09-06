@@ -36,7 +36,8 @@ app.use("/templates", express.static("templates"));
 app.use("/", express.static("uploads"));
 app.use("/", express.static("uploads/products"));
 app.use("/", express.static("uploads/documents"));
-app.use("/", express.static("uploads/video"));
+app.use("/", express.static("uploads/videos"));
+app.use("/", express.static("uploads/logo"));
 
 // Initialize cron jobs
 // initReservationCron();

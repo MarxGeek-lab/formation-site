@@ -16,7 +16,7 @@ import CustomAvatar from '@core/components/mui/Avatar'
 import AppKeenSlider from '@/libs/styles/AppKeenSlider'
 
 const Slides = ({ data }) => {
-  if (data.length === 1) {
+  if (data && data.length === 1) {
     return (
       <div>
         <img src={data[0].image} alt="Annonce" className="w-full md:h-[300px] h-auto rounded-lg shadow-md" />
@@ -26,7 +26,7 @@ const Slides = ({ data }) => {
 
   return (
     <>
-      {data.map((item, index) => (
+      {data?.map((item, index) => (
         <div key={index} className="keen-slider__slide">
           <img src={item.image} alt={`Annonce ${index + 1}`} className="w-full md:h-[300px] h-auto rounded-lg shadow-md" />
         </div>

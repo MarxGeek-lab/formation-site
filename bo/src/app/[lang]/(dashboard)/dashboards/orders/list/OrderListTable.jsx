@@ -137,7 +137,7 @@ const OrderListTable = ({ orderData, showHeader }) => {
           <div className='flex items-center gap-4' style={{ width: '180px' }}>
             {getAvatar({ avatar: row.original?.customer?.picture, name: row.original?.customer?.name })}
             <div className='flex flex-col'>
-              <Typography className='font-medium' color='text.primary'>
+              <Typography variant='body2' className='font-medium' color='text.primary'>
                 {row.original?.customer?.name}
               </Typography>
               {/* <Typography variant='body2'>{row.original?.customer?.email}</Typography> */}
@@ -178,7 +178,7 @@ const OrderListTable = ({ orderData, showHeader }) => {
         cell: ({ row }) => (
         <Chip
             label={ordersStatus[row.original?.status]?.text}
-            variant='tonal'
+            variant='filled'
             color={ordersStatus[row.original?.status]?.color}
             size='small'
           /> 
@@ -187,7 +187,7 @@ const OrderListTable = ({ orderData, showHeader }) => {
       columnHelper.accessor('createdAt', {
         header: 'Date de Création',
         cell: ({ row }) => (
-          <Typography>
+          <Typography variant='body2'>
             {dayjs(row.original?.createdAt).format('DD/MM/YYYY HH:mm:ss')} 
           </Typography>
         )

@@ -34,7 +34,7 @@ export const PropertyProvider = ({ children }) => {
 
   const getAllProducts = async () => {
     try {
-      const response = await axios.get(`${API_URL}products`);
+      const response = await api.get(`admin/products`);
       setAllProducts(response.data);
       return { data: response.data, status: response.status };
     } catch (error) {
@@ -88,6 +88,15 @@ export const PropertyProvider = ({ children }) => {
         property,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
+      return response.status;
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  const updateStatusProduct = async (id) => {
+    try {
+      const response = await api.put(`products/status/${id}`);
       return response.status;
     } catch (error) {
       return handleAxiosError(error);
@@ -185,6 +194,7 @@ export const PropertyProvider = ({ children }) => {
     getProductById,
     createProduct,
     updateProduct,
+    updateStatusProduct,
     deleteProduct,
     getProductsByUser,
     getProductsByCategory,

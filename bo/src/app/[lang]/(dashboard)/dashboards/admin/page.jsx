@@ -14,7 +14,6 @@ const eCommerceProductsCategory = () => {
       try {
         const { data } = await getAllAdmin();
         setAllAdmin(data)
-        console.log("data == ", data);
       } catch (error) {
         console.log(error);
       }

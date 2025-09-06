@@ -45,6 +45,7 @@ import { showToast } from '@/components/ToastNotification/ToastNotification'
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
 import SearchIcon from '@mui/icons-material/Search'
+import { permissionsArray2 } from '@/data/constant'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -131,7 +132,21 @@ const ProductCategoryTable = ({ fetchAdmin, allAdmin }) => {
           </div>
         )
       }),
-      columnHelper.accessor('date', {
+      columnHelper.accessor('email', {
+        header: 'Email',
+        cell: ({ row }) => (
+          <div className='flex flex-col gap-1'>
+           <Typography variant='body2' color='text.primary'>
+            {row.original?.name}
+          </Typography>
+          <Typography variant='body2' color='text.primary'>
+            {row.original?.email}
+          </Typography>
+          </div>
+         
+        )
+      }),
+      columnHelper.accessor('createdAt', {
         header: 'Ajouter le',
         cell: ({ row }) => (
           <Typography variant='body2' color='text.primary'>
@@ -139,7 +154,7 @@ const ProductCategoryTable = ({ fetchAdmin, allAdmin }) => {
           </Typography>
         )
       }),
-      columnHelper.accessor('lastlogin', {
+      columnHelper.accessor('lastLogin', {
         header: 'dernière connexion',
         cell: ({ row }) => (
           <Typography variant='body2' color='text.primary'>
@@ -153,7 +168,7 @@ const ProductCategoryTable = ({ fetchAdmin, allAdmin }) => {
           <div className='flex flex-col gap-1'>
             {row.original?.permissions?.map(item => (
               <Chip 
-                label={item}
+                label={permissionsArray2.find(p => p.value === item)?.label}
                 color='secondary'
                 variant='tonal'
               />

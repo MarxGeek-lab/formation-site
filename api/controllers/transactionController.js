@@ -407,12 +407,47 @@ const transactionController = {
 
   async getPaymentsBySeller(req, res) {
     try {
-      const transaction = await Transaction.find()
-        .populate('order')
-        .populate('customer')
-        .sort({ createdAt: -1 });
+      let transactions;
 
-      res.json(transaction);
+      // Si l'utilisateur est super_admin, il voit toutes les transactions
+      if (req?.user?.role === 'super_admin') {
+        transactions = await Transaction.find()
+          .populate('order')
+          .populate('customer')
+          .sort({ createdAt: -1 });
+      }
+      // Si l'utilisateur est admin, il ne voit que les transactions liées à ses produits
+      else if (req?.user?.role === 'admin') {
+        const adminId = req?.user?._id;
+        
+        // Récupérer les produits assignés à cet admin
+        const Product = require('../models/Product');
+        const adminProducts = await Product.find({ assignedAdminId: adminId }).select('_id');
+        const productIds = adminProducts.map(product => product._id);
+
+        // Récupérer les commandes contenant les produits de cet admin
+        const Order = require('../models/Order');
+        const adminOrders = await Order.find({
+          'items.product': { $in: productIds }
+        }).select('_id');
+        const orderIds = adminOrders.map(order => order._id);
+
+        // Récupérer les transactions liées à ces commandes
+        transactions = await Transaction.find({
+          order: { $in: orderIds }
+        })
+          .populate('order')
+          .populate('customer')
+          .sort({ createdAt: -1 });
+      } else {
+        // Si le rôle n'est ni super_admin ni admin
+        return res.status(403).json({ 
+          success: false,
+          message: "Accès non autorisé" 
+        });
+      }
+
+      res.json(transactions);
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: error.message });

@@ -1,10 +1,10 @@
 // Primary color config object
 const primaryColorConfig = [
   {
-    name: 'primary-4',
-    light: '#F0718D',
-    main: '#EB3D63',
-    dark: '#AC2D48'
+    name: 'primary-2',
+    light: '#4EB0B1',
+    main: '#5F3AFC',
+    dark: '#096B6C'
   },
   {
     name: 'primary-5',

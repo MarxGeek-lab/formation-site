@@ -132,21 +132,18 @@ const PropertyDetailsCard = ({ product }) => {
           </div>
           <div className='flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-5'>
             <Typography color='text.primary' className='min-is-[100px]'>
-              Nombre de commentaires:
-            </Typography>
-            <Chip
-              label={product?.reviews?.length || 0}
-              variant='tonal'
-              color={'secondary'}
-              size='medium'
-            /> 
-          </div>
-          <div className='flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-5'>
-            <Typography color='text.primary' className='min-is-[100px]'>
               Date de création:
             </Typography>
             <Typography color='text.primary' className='font-medium'>
               {dayjs(product?.createdAt).format('DD/MM/YYYY HH:mm:ss')}
+            </Typography>
+          </div>
+          <div className='flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-5'>
+            <Typography color='text.primary' className='min-is-[100px]'>
+              Attribué à:
+            </Typography>
+            <Typography color='text.primary' className='font-medium'>
+              {product?.assignedAdminId?.name} - {product?.assignedAdminId?.email}
             </Typography>
           </div>
         </CardContent>

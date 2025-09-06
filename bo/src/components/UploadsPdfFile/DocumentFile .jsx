@@ -116,14 +116,14 @@ const UploadPDFFile = ({
   return (
     <Dropzone>
       <Card>
-      <CardHeader
-        title={
-          <Typography component="span">
-            {title ?? "Documents de la propriété"} <Typography component="span" color="error" variant=''>*</Typography>
-          </Typography>
-        }
-        sx={{ '& .MuiCardHeader-action': { alignSelf: 'center' }, color: '#1976d2' }}
-      />
+        <CardHeader
+          title={
+            <Typography component="span">
+              {title ?? "Documents de la propriété"} <Typography component="span" color="error" variant=''>*</Typography>
+            </Typography>
+          }
+          sx={{ '& .MuiCardHeader-action': { alignSelf: 'center' }, color: '#1976d2' }}
+        />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
               {text ?? "Veuillez télécharger les documents attestant le propriété."}

@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // Next Imports
 import dynamic from 'next/dynamic'
@@ -20,22 +20,23 @@ import { useTheme } from '@mui/material/styles'
 // Styled Component Imports
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
+// API Imports
+import api from '@/configs/api'
+
 // Vars
-const yearOptions = [new Date().getFullYear() - 1, new Date().getFullYear() - 2, new Date().getFullYear() - 3]
-
-const barSeries = [
-  { name: 'Earning', data: [252, 203, 152, 173, 235, 299, 235, 252, 106] },
-  { name: 'Expense', data: [-128, -157, -190, -163, -89, -51, -89, -136, -190] }
-]
-
-const lineSeries = [
-  { name: 'Last Month', data: [20, 10, 30, 16, 24, 5, 30, 23, 28, 5, 30] },
-  { name: 'This Month', data: [50, 40, 60, 46, 54, 35, 70, 53, 58, 35, 60] }
-]
+const yearOptions = [new Date().getFullYear() + 1, new Date().getFullYear() + 2, new Date().getFullYear() + 3]
 
 const RevenueReport = () => {
   // States
   const [anchorEl, setAnchorEl] = useState(null)
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+  const [revenueData, setRevenueData] = useState({
+    months: [],
+    monthlyRevenue: [],
+    totalRevenue: 0,
+    currentYear: new Date().getFullYear()
+  })
+  const [loading, setLoading] = useState(true)
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -44,6 +45,29 @@ const RevenueReport = () => {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  const handleYearSelect = (year) => {
+    setSelectedYear(year)
+    setAnchorEl(null)
+    fetchRevenueData(year)
+  }
+
+  // Fetch revenue data
+  const fetchRevenueData = async (year = selectedYear) => {
+    try {
+      setLoading(true)
+      const response = await api.get(`/stats/revenue?year=${year}`)
+      setRevenueData(response.data)
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données de revenus:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchRevenueData()
+  }, [])
 
   // Hooks
   const theme = useTheme()
@@ -63,7 +87,7 @@ const RevenueReport = () => {
       width: 6,
       colors: ['var(--mui-palette-background-paper)']
     },
-    colors: ['var(--mui-palette-primary-main)', 'var(--mui-palette-warning-main)'],
+    colors: ['var(--mui-palette-primary-main)'],
     legend: {
       offsetY: -4,
       offsetX: -35,
@@ -114,7 +138,7 @@ const RevenueReport = () => {
       axisTicks: { show: false },
       crosshairs: { opacity: 0 },
       axisBorder: { show: false },
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+      categories: revenueData.months,
       labels: {
         style: {
           colors: disabledText,
@@ -236,9 +260,21 @@ const RevenueReport = () => {
     <Card>
       <Grid container>
         <Grid size={{ xs: 12, sm: 8 }} className='border-r'>
-          <CardHeader title='Revenue Report' />
+          <CardHeader title='Rapport des Revenus' />
           <CardContent>
-            <AppReactApexCharts type='bar' height={320} width='100%' series={barSeries} options={barOptions} />
+            {loading ? (
+              <div className='flex justify-center items-center h-80'>
+                <Typography>Chargement des données...</Typography>
+              </div>
+            ) : (
+              <AppReactApexCharts 
+                type='bar' 
+                height={320} 
+                width='100%' 
+                series={[{ name: 'Revenus', data: revenueData.monthlyRevenue }]} 
+                options={barOptions} 
+              />
+            )}
           </CardContent>
         </Grid>
         <Grid size={{ xs: 12, sm: 4 }}>
@@ -249,7 +285,7 @@ const RevenueReport = () => {
               onClick={handleClick}
               endIcon={<i className='tabler-chevron-down text-xl' />}
             >
-              {new Date().getFullYear()}
+              {selectedYear}
             </Button>
             <Menu
               keepMounted
@@ -259,20 +295,21 @@ const RevenueReport = () => {
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
+              <MenuItem onClick={() => handleYearSelect(new Date().getFullYear())}>
+                {new Date().getFullYear()}
+              </MenuItem>
               {yearOptions.map(year => (
-                <MenuItem key={year} onClick={handleClose}>
+                <MenuItem key={year} onClick={() => handleYearSelect(year)}>
                   {year}
                 </MenuItem>
               ))}
             </Menu>
             <div className='flex flex-col items-center'>
-              <Typography variant='h3'>$25,825</Typography>
+              <Typography variant='h3'>{revenueData.totalRevenue.toLocaleString()} FCFA</Typography>
               <Typography>
-                <span className='font-medium text-textPrimary'>Budget: </span>56,800
+                <span className='font-medium text-textPrimary'>Revenus totaux {revenueData.currentYear}</span>
               </Typography>
             </div>
-            <AppReactApexCharts type='line' height={80} width='100%' series={lineSeries} options={lineOptions} />
-            <Button variant='contained'>Increase Budget</Button>
           </CardContent>
         </Grid>
       </Grid>

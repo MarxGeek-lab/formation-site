@@ -9,6 +9,7 @@ import { useAuthStore, useOrderStore, useStatsStore } from '@/contexts/GlobalCon
 import { useSearchParams } from 'next/navigation';
 import { Typography } from '@mui/material';
 import OrderListTable from '../orders/list/OrderListTable';
+import RevenueReport from '@/views/apps/ecommerce/dashboard/RevenueReport';
 
 const DashboardCRM = () => {
   // Vars
@@ -29,24 +30,24 @@ const DashboardCRM = () => {
       gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
     },
     {
-      title: 'Produits en Stock',
+      title: 'Total Produits',
       stats: statss?.productsCount || 0,
       trendNumber: -8.7,
       avatarIcon: 'tabler-package',
       gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)'
     },
     {
-      title: 'Utilisateurs Inscrits',
-      stats: statss?.usersCount || 0,
+      title: 'Revenues',
+      stats: statss?.saleRevenues || 0,
       trendNumber: 4.3,
-      avatarIcon: 'tabler-users',
+      avatarIcon: 'tabler-wallet',
       gradient: 'linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)'
     },
     {
-      title: 'Visiteurs',
-      stats: statss?.userVisitCount || 0,
+      title: 'Total utilisateur',
+      stats: statss?.usersCount || 0,
       trendNumber: 2.5,
-      avatarIcon: 'tabler-eye',
+      avatarIcon: 'tabler-users',
       gradient: 'linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%)'
     }
   ]
@@ -87,7 +88,6 @@ const DashboardCRM = () => {
     if (user) {
       try {
         const { data, status } = await getStatsByOwner();
-        console.log(data)
         if (data) {
           setStats(data);
         }
@@ -126,18 +126,16 @@ const DashboardCRM = () => {
           </Typography>
         <LogisticsStatisticsCard data={stats1} />
       </Grid>
-      {/* <Grid size={{ xs: 12 }}>
-        <Typography variant="h5" sx={{ mb: 5 }}>
-          Statistiques commandes
-        </Typography>
-        <LogisticsStatisticsCard data={ordersStats} />
-      </Grid> */}
+      <Grid size={{ xs: 12, xl: 8 }}>
+        <RevenueReport />
+      </Grid>
       <Grid size={{ xs: 12 }}>
         <Typography variant="h5" sx={{ mb: 5 }}>
           Dernières Commandes
         </Typography>
         <OrderListTable orderData={orders?.slice(0, 5)} showHeader={false} />
       </Grid>
+
     </Grid>
   )
 }

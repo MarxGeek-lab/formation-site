@@ -1,26 +1,67 @@
 const Customers = require("../models/Customers");
 const Order = require("../models/Order");
-const Rental = require("../models/Rental");
-const Reservation = require("../models/Reservation");
 const Transaction = require("../models/Transaction");
 const User = require("../models/User");
 
 const customerController = {
     getCustomerByOwner: async (req, res) => {
         try {
-            const customers = await User.find({});
+            let customers;
+            let customersWithOrders;
 
-            // Récupérer le nombre de réservations pour chaque client
-            const customersWithOrders = await Promise.all(customers.map(async (customer) => {
-                const ordersCount = await Order.countDocuments({
-                    customer: customer._id,
-                });
+            // Si l'utilisateur est super_admin, il voit tous les clients
+            if (req?.user?.role === 'super_admin') {
+                customers = await User.find({});
+
+                // Récupérer le nombre de commandes pour chaque client
+                customersWithOrders = await Promise.all(customers.map(async (customer) => {
+                    const ordersCount = await Order.countDocuments({
+                        customer: customer._id,
+                    });
+                    
+                    return {
+                        ...customer.toObject(),
+                        ordersCount: ordersCount
+                    };
+                }));
+            }
+            // Si l'utilisateur est admin, il ne voit que les clients ayant commandé ses produits
+            else if (req?.user?.role === 'admin') {
+                const adminId = req?.user?._id;
                 
-                return {
-                    ...customer.toObject(),
-                    ordersCount: ordersCount
-                };
-            }));
+                // Récupérer les produits assignés à cet admin
+                const Product = require('../models/Product');
+                const adminProducts = await Product.find({ assignedAdminId: adminId }).select('_id');
+                const productIds = adminProducts.map(product => product._id);
+
+                // Récupérer les commandes contenant les produits de cet admin
+                const adminOrders = await Order.find({
+                    'items.product': { $in: productIds }
+                }).populate('customer');
+
+                // Extraire les clients uniques de ces commandes
+                const customerIds = [...new Set(adminOrders.map(order => order.customer._id.toString()))];
+                customers = await User.find({ _id: { $in: customerIds } });
+
+                // Récupérer le nombre de commandes pour chaque client (seulement celles contenant les produits de l'admin)
+                customersWithOrders = await Promise.all(customers.map(async (customer) => {
+                    const ordersCount = await Order.countDocuments({
+                        customer: customer._id,
+                        'items.product': { $in: productIds }
+                    });
+                    
+                    return {
+                        ...customer.toObject(),
+                        ordersCount: ordersCount
+                    };
+                }));
+            } else {
+                // Si le rôle n'est ni super_admin ni admin
+                return res.status(403).json({ 
+                    success: false,
+                    message: "Accès non autorisé" 
+                });
+            }
             
             return res.status(200).json(customersWithOrders);
         } catch (error) {
@@ -79,32 +120,6 @@ const customerController = {
             return res.status(500).json({ message: "Erreur serveur", error });
         }
     },
-
-    getCustomerData: async (req, res) => {
-        try {
-            const { id, ownerId } = req.params;
-            console.log(req.params);
-    
-            // Vérifier si l'utilisateur existe
-            const customer = await User.findById(id);
-            if (!customer) {
-                return res.status(404).json({ message: "Client non trouvé." });
-            }
-            
-            const [rental, reservation] = await Promise.all([
-                Rental.find({ tenant: id, owner: ownerId }).populate('property'),
-                Reservation.find({ tenant: id, owner: ownerId }).populate('property'),
-            ])
-
-            const result = [...rental, ...reservation];
-            const sortedResult = result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-            return res.status(200).json(sortedResult);
-        } catch (error) {
-            console.error("Erreur lors de la récupération du client :", error);
-            return res.status(500).json({ message: "Erreur serveur", error });
-        }
-    }
 }
 
 module.exports = customerController;

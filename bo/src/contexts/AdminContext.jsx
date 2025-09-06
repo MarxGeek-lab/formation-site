@@ -35,6 +35,7 @@ const AdminStore = createContext({
     getGlobalStats: async () => ({ data: null, status: 500 }),
 
     // admin
+    allAdmin: [],
     getAllAdmin: async () => ({ data: [], status: 500 }),
     createAdmin: async () => 500,
     updateAdmin: async () => 500,
@@ -45,7 +46,6 @@ const AdminStore = createContext({
     signIn: async () => 500,
     forgotPassword: async () => 500,
     signOut: async () => 500,
-
 
     // withdrawals
     getAllWithdrawalsByAdmin: async () => ({ data: [], status: 500 }),
@@ -61,6 +61,7 @@ export const useAdminStore = () => useContext(AdminStore);
 
 export const AdminProvider = ({ children }) => {
     const [allCategories, setAllCategories] = useState([]);
+    const [allAdmin, setAllAdmin] = useState([]);
 
     const getAllUsers = async () => {
         try {
@@ -230,6 +231,7 @@ export const AdminProvider = ({ children }) => {
     const getAllAdmin = async () => {
       try {
           const response = await api.get(`admin`);
+          setAllAdmin(response.data);
           return { data: response.data, status: response.status };
       } catch (error) {
           return { data: [], status: handleAxiosError(error) };
@@ -375,6 +377,7 @@ export const AdminProvider = ({ children }) => {
     getGlobalStats,
 
     // admin
+    allAdmin,
     getAllAdmin,
     createAdmin,
     updateAdmin,

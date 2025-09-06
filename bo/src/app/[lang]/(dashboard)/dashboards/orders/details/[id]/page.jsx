@@ -5,10 +5,7 @@ import Grid from '@mui/material/Grid2'
 // Component Imports
 import OrderDetailHeader from '../OrderDetailHeader'
 import OrderDetailsCard from '../OrderDetailsCard'
-import ShippingActivity from '../ShippingActivityCard'
 import CustomerDetails from '../CustomerDetailsCard'
-import ShippingAddress from '../ShippingAddressCard'
-import BillingAddress from '../BillingAddressCard'
 import { useOrderStore } from '@/contexts/GlobalContext'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
@@ -59,12 +56,6 @@ const OrderDetails = () => {
         <Grid container spacing={6}>
           <Grid size={{ xs: 12 }}>
             <CustomerDetails orderData={orderData?.customer} />
-          </Grid>
-          <Grid size={{ xs: 12 }}>
-            <ShippingAddress orderData={orderData?.shippingAddress} />
-          </Grid>
-          <Grid size={{ xs: 12 }}>
-            {/* <BillingAddress /> */}
           </Grid>
         </Grid>
       </Grid>

@@ -9,6 +9,7 @@ import { API_URL, URL_SITE } from "@/settings";
 const AuthContext = createContext({
   user: null,
   token: null,
+  profile: null,
   signOut: () => {},
   getUserById: async () => ({ data: null, status: 500 }),
   updateUser: async () => 500,
@@ -27,6 +28,7 @@ export const useAuthStore = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [profile, setProfile] = useState(null);
 
   const updateUser = async (userId, formData) => {
     try {
@@ -78,6 +80,7 @@ export const AuthProvider = ({ children }) => {
          const decoded = jwtDecode(data.accessToken);
          setUser(decoded.user);
          setToken(decoded);
+         getUserById(decoded.user._id);
          localStorage.setItem("accessToken", data.accessToken);
        }
        return response.status;
@@ -89,7 +92,8 @@ export const AuthProvider = ({ children }) => {
 
   const getUserById = async (userId) => {
     try {
-      const response = await api.get(`users/${userId}`);
+      const response = await api.get(`admin/${userId}`);
+      setProfile(response.data);
       return { data: response.data, status: response.status };
     } catch (error) {
       return { data: null, status: handleAxiosError(error) };
@@ -116,6 +120,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={{
       user,
       token,
+      profile,
       signIn,
       getUserById,
       signOut,

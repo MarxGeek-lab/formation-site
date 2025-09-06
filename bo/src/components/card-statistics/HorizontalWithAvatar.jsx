@@ -12,14 +12,17 @@ const HorizontalWithAvatar = props => {
 
   return (
     <Card sx={{
-      background: gradient,
+      background: '#5F3AFC20', 
+      boxShadow: 'none',
+      border: '1px solid rgb(207, 207, 207)',
+      borderBottom: '2px solid #5F3AFC'
     }}>
-      <CardContent className=' h-[75px] flex items-center justify-between gap-2'>
+      <CardContent className=' h-[80px] flex items-center justify-between gap-2'>
         <div className='flex flex-col items-start gap-1'>
-          <Typography variant='h5' color='white'>{stats}</Typography>
-          <Typography variant='body2' color='white' whiteSpace={'nowrap'}>{title}</Typography>
+          <Typography variant='h5'>{stats}</Typography>
+          <Typography variant='body2' whiteSpace={'nowrap'}>{title}</Typography>
         </div>
-        <CustomAvatar variant={avatarVariant} skin={avatarSkin} color={avatarColor} size={avatarSize}>
+        <CustomAvatar color='primary' variant='rounded' size={avatarSize}>
           <i className={avatarIcon} style={{ color: 'white' }} />
         </CustomAvatar>
       </CardContent>

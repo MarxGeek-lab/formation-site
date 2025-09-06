@@ -33,18 +33,37 @@ const HorizontalWithBorder = props => {
   const { title, avatarIcon, color, gradient, stats } = props
 
   return (
-    // <Card sx={{background: gradient, boxShadow: 'none'}} >
-      <CardContent className='flex flex-col gap-1' sx={{background: gradient, borderRadius: 1}}>
-        <div className='flex items-center gap-4' sx={{background: color}}>
-          <CustomAvatar color={'white'} variant='rounded'>
-            <i style={{color: 'white'}} className={classnames(avatarIcon, 'text-[28px]')} />
-          </CustomAvatar>
-          <Typography variant='h5' color='white'>{stats}</Typography>
+    <Card sx={{
+      background: '#5F3AFC20', 
+      boxShadow: 'none',
+      border: '1px solid rgb(207, 207, 207)',
+      borderBottom: '2px solid #5F3AFC'
+    }}>
+      <CardContent className=' h-[80px] flex items-center justify-between gap-2'>
+        <div className='flex flex-col items-start gap-1'>
+          <Typography variant='h5'>{stats}</Typography>
+          <Typography variant='body2' whiteSpace={'nowrap'}>{title}</Typography>
         </div>
-        <div className='flex flex-col gap-1'>
-          <Typography color='white'>{title}</Typography>
-        </div>
+        <CustomAvatar color='primary' variant='rounded' size={38}>
+          <i className={avatarIcon} style={{ color: 'white' }} />
+        </CustomAvatar>
       </CardContent>
+    </Card>
+    // <Card color={color} sx={{ 
+    //   background: '#5F3AFC20', 
+    //   boxShadow: 'none',
+    //   border: '1px solid rgb(207, 207, 207)',
+    //   borderBottom: '2px solid #5F3AFC'
+    // }}>
+    //   <CardContent className='flex flex-row align-center justify-between gap-1 h-[85px]'>
+    //     <div className='flex flex-col gap-0'>
+    //       <Typography variant='h5'>{stats}</Typography>
+    //       <Typography variant='body2' fontWeight={500}>{title}</Typography>
+    //     </div>
+    //     <CustomAvatar color='primary' variant='rounded' size={40}>
+    //         <i style={{color: 'white'}} className={classnames(avatarIcon, 'text-[20px]')} />
+    //       </CustomAvatar>
+    //   </CardContent>
     // </Card>
   )
 }
