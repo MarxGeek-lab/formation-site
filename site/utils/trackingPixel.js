@@ -1,5 +1,7 @@
 // Utilitaire pour le système de tracking pixel
 
+import { API_URL } from "@/settings/constant";
+
 // Générer un sessionId unique pour les utilisateurs non connectés
 export const generateSessionId = () => {
   if (typeof window !== 'undefined') {
@@ -40,7 +42,7 @@ export const getUserId = () => {
 };
 
 // URL de base pour l'API de tracking
-const TRACKING_API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const TRACKING_API_BASE = process.env.NEXT_PUBLIC_API_URL || API_URL || 'http://localhost:5000/api';
 
 // Fonction principale pour envoyer un événement de tracking
 export const trackEvent = (type, options = {}) => {
