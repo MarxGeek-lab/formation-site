@@ -9,6 +9,8 @@ const generatePDF = require('../services/generateTicket');
 const { getGreeting, generateVerificationCode } = require('../utils/helpers');
 const Cart = require('../models/Cart');
 
+require('dotenv').config();
+
 // Créer une commande
 exports.createOrder = async (req, res) => {
   try {
@@ -52,7 +54,7 @@ exports.createOrder = async (req, res) => {
         });
         await user.save();
 
-        const link = `${origin}/activer-mon-compte`;
+        const link = `${process.env.URL_APP}/activer-mon-compte`;
         const emailData = { fullname: user?.name, otp, link };
         
         // Configuration de l'email à envoyer
