@@ -65,9 +65,9 @@ export default function Header({ locale }: { locale: string }) {
             <a href={`/${locale}#produit-mystere`} className={styles.navLink}>
               {t('mysteryProduct')}
             </a>
-            <a href={`/${locale}/support`} className={styles.navLink}>
+            {/* <a href={`/${locale}/support`} className={styles.navLink}>
               {t('support')}
-            </a>
+            </a> */}
             <a href={`/${locale}/a-propos`} className={styles.navLink}>
               {t('about')}
             </a>

@@ -56,6 +56,7 @@ const convertBackendItemToFrontend = (backendItem: BackendCartItem): CartItem =>
   quantity: backendItem.quantity,
   image: backendItem.image,
   category: backendItem.category,
+  options: backendItem.options,
 });
 
 // Convertir les items frontend vers backend
@@ -66,6 +67,7 @@ const convertFrontendItemToBackend = (frontendItem: Omit<CartItem, 'quantity'>, 
   quantity,
   image: frontendItem.image,
   category: frontendItem.category,
+  options: frontendItem.options,
 });
 
 class CartApiService {
@@ -345,6 +347,8 @@ class CartApiService {
             price: localItem.price,
             image: localItem.image,
             category: localItem.category,
+            options: localItem.options,
+            totalPrice: localItem.totalPrice,
           });
           if (!backendCart) return null;
 

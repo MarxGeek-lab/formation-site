@@ -316,6 +316,8 @@ export const permissionsArray2 = [
   { value: 'reviews', label: 'Gérer les avis' },
   { value: 'codePromo', label: 'Gérer les codes promo' },
   { value: 'admin', label: 'Gérer les administrateurs' },
+  { value: 'tracking', label: 'Gérer les traçages' },
+  { value: 'cart', label: 'Gérer les paniers abandonnés' },
 ];
 
 export const colors = {

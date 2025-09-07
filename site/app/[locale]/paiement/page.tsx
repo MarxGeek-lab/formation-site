@@ -127,7 +127,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+console.log("cart == ", cart);
   const handleSubmit = async () => {
     if (validateForm()) {
       const orderData = {

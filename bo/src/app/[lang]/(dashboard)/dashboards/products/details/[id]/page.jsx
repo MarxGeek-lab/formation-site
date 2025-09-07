@@ -70,7 +70,7 @@ const OrderDetailsPage = () => {
         </Grid>
       </Grid>
       <Grid size={{ xs: 12, md: 4 }}>
-        <Box sx={{ width: '100%', maxWidth: 600, mx: 'auto' }}>
+        <Box sx={{ width: '100%', mx: 'auto' }}>
         {product.photos?.length > 1 ? (
           <Slider {...settings}>
             {product.photos.map((img, index) => (
@@ -87,6 +87,17 @@ const OrderDetailsPage = () => {
         </Box>
         )}
          
+        </Box>
+        <Box>
+          <video 
+            width="100%" 
+            height="300" 
+            controls 
+            style={{ borderRadius: '8px', border: '1px solid #ccc' }}
+          >
+            <source src={product?.demoVideo} type="video/mp4" />
+            Votre navigateur ne supporte pas la lecture vidéo.
+          </video>
         </Box>
       </Grid>
     </Grid>

@@ -107,7 +107,86 @@ const siteSettingsSchema = new mongoose.Schema({
       ]    
   },
   warranty: { type: Number, default: 30 },
-  taxe: { type: Number, default: 1.8}
+  taxe: { type: Number, default: 1.8},
+
+  // Configuration des relances de panier abandonné
+  cartReminderSettings: {
+    // Délais de relance (en heures)
+    firstReminderDelay: {
+      type: Number,
+      default: 24, // 24 heures après abandon
+      min: 1,
+      max: 168 // Maximum 1 semaine
+    },
+    
+    secondReminderDelay: {
+      type: Number,
+      default: 72, // 72 heures (3 jours) après abandon
+      min: 1,
+      max: 336 // Maximum 2 semaines
+    },
+    
+    thirdReminderDelay: {
+      type: Number,
+      default: 168, // 168 heures (1 semaine) après abandon
+      min: 1,
+      max: 720 // Maximum 1 mois
+    },
+    
+    // Configuration des types de relance
+    enableEmailReminders: {
+      type: Boolean,
+      default: true
+    },
+    
+    enableSmsReminders: {
+      type: Boolean,
+      default: false
+    },
+    
+    enablePushNotifications: {
+      type: Boolean,
+      default: false
+    },
+    
+    // Seuil d'abandon automatique (en heures)
+    abandonmentThreshold: {
+      type: Number,
+      default: 24, // Marquer comme abandonné après 24h d'inactivité
+      min: 1,
+      max: 168
+    },
+    
+    // Messages par défaut
+    defaultEmailSubject: {
+      type: String,
+      default: 'Votre panier vous attend - Finalisez votre commande !'
+    },
+    
+    defaultEmailMessage: {
+      type: String,
+      default: 'Vous avez laissé des articles dans votre panier. Finalisez votre commande maintenant pour ne pas les perdre !'
+    },
+    
+    defaultSmsMessage: {
+      type: String,
+      default: 'Votre panier vous attend ! Finalisez votre commande sur {site_url}'
+    },
+    
+    // Paramètres avancés
+    maxRemindersPerCart: {
+      type: Number,
+      default: 3, // Maximum 3 relances par panier
+      min: 1,
+      max: 10
+    },
+    
+    minCartValue: {
+      type: Number,
+      default: 0, // Valeur minimale du panier pour déclencher une relance
+      min: 0
+    }
+  }
   // Ajoutez d'autres paramètres selon vos besoins
 });
 

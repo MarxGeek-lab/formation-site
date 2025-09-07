@@ -14,6 +14,8 @@
     "cart": "Cart"
   },
   "Home": {
+    "close": "Close",
+    "videoDemo": "Demonstration video",
     "heroSubtitle": "Designed for resellers, creators and e-merchants",
     "heroTitle": "The #1 platform for reselling digital products",
     "heroDescription": "Access a selection of profitable digital products, validated by the market, with visuals and action plan included to sell from today.",
@@ -379,6 +381,9 @@
     }
   },
   "Product": {
+    "videoDemo": "Demonstration video",
+    "description": "📌 Description",
+    "advantages": "💡 Advantages",
     "productNotFound": "Product not found",
     "backToCatalogue": "Back to catalogue",
     "productPresentation": "📌 Product presentation",

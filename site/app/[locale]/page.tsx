@@ -320,7 +320,7 @@ export default function Home({ params }: { params: { locale: string } }) {
               ))}
             </Grid>
             <button className={styles.primaryButton}
-              onClick={() => router.push('/catalogue')}>
+              onClick={() => router.push(`${locale}/catalogue`)}>
               <span>{t('exploreCatalog')}</span>
               <Box className={styles.iconWrapper} sx={{
                 borderRadius: '50%',

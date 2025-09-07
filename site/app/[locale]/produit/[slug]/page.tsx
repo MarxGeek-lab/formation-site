@@ -9,66 +9,10 @@ import { useTranslations } from 'next-intl';
 import styles from './product.module.scss';
 import ProductCard from '@/components/ProductCard';
 
-import LUTsPhotoshop from '@/assets/images/veo3-768x432.jpg';
 import icon from '@/assets/images/icon.webp'
 import { useProductStore } from '@/contexts/ProductStore';
 import { useCart } from '@/contexts/CartContext';
 import { useTracking } from '@/utils/trackingPixel';
-
-// Mock data pour les produits
-const productsData = {
-  '10-luts-photoshop': {
-    id: 1,
-    title: '10 LUTS PHOTOSHOP',
-    price: 14000,
-    currency: 'CFA',
-    category: 'Design graphique',
-    subcategory: 'Outils premium',
-    image: LUTsPhotoshop,
-    description: {
-      presentation: 'Offrez à vos photos et créations un rendu professionnel grâce à ce pack exclusif de 10 LUTs Photoshop spécialement conçus pour la correction colorimétrique.',
-      opportunity: 'Ce pack a déjà été testé et validé par de nombreux créateurs, avec des résultats spectaculaires et une amélioration notable de la qualité visuelle de leurs projets.',
-      benefits: [
-        'Produit testé et approuvé : déjà utilisé par des professionnels avec des retours positifs',
-        'Niche très demandée : la retouche photo et le design visuel sont en pleine croissance',
-        'Valeur ajoutée forte : optimisation instantanée des images sans compétences avancées',
-        'Utilisation universelle : compatible avec divers styles et projets visuels'
-      ],
-      target: [
-        'Photographes amateurs et professionnels',
-        'Graphistes et designers',
-        'Créateurs de contenu (réseaux sociaux, YouTube, etc.)',
-        'Agences de communication et marketing'
-      ],
-      includes: [
-        '10 LUTs Photoshop prêts à l\'emploi',
-        'Fichiers 100% modifiables',
-        'Guide d\'installation rapide',
-        'Accès instantané après paiement'
-      ]
-    },
-    options: [
-      {
-        id: 'visual',
-        type: 'radio',
-        title: 'Option de Visuel de Publicité',
-        choices: [
-          { id: 'with-visual', label: 'Avec Visuel de Publicité', price: 2500, description: 'Commander un visuel de publicité pour votre produit' },
-          { id: 'without-visual', label: 'Sans Visuel de Publicité', price: 0, description: 'Acheter le produit uniquement sans visuel de publicité', selected: true }
-        ]
-      },
-      {
-        id: 'support',
-        type: 'checkbox',
-        title: 'Options supplémentaires',
-        choices: [
-          { id: 'accompagnement', label: 'Accompagnement personnalisé 1 mois', price: 15000, description: 'Obtenez un accompagnement personnalisé d\'une durée de 1 mois avec nos experts !' }
-        ]
-      }
-    ]
-  }
-};
-
 
 export default function ProductPage({ params }: { params: { locale: string; slug: string } }) {
   const { product, getProductById, allProducts } = useProductStore();
@@ -159,7 +103,6 @@ export default function ProductPage({ params }: { params: { locale: string; slug
   const formatPrice = (price: number) => {
     return `${price.toLocaleString('fr-FR')} FCFA`;
   };
-  console.log("product == ", product);
 
   return (
     <Box sx={{ 
@@ -185,26 +128,27 @@ export default function ProductPage({ params }: { params: { locale: string; slug
             {/* Description détaillée */}
             <Box className={styles.productDescription}>
               <Typography variant="h4" className={styles.sectionTitle}>
-                {t('productPresentation')}
+                {t('description')}
               </Typography>
-              <Typography paragraph sx={{ mb: 3 }}>
-                {product?.description?.presentation}
-              </Typography>
-              <Typography paragraph sx={{ mb: 4 }}>
-                {product?.description?.opportunity}
+              <Typography sx={{ mb: 3 }}>
+                <div dangerouslySetInnerHTML={{ __html: product?.description }} />
               </Typography>
 
-              <Typography variant="h4" className={styles.sectionTitle}>
-                {t('whyGoldenOpportunity')}
-              </Typography>
-              <Box component="ul" className={styles.benefitsList}>
-                {product?.description?.benefits?.map((benefit: string, index: number) => (
-                  <Box component="li" key={index} sx={{ mb: 1 }}>
-                    <Typography>{benefit}</Typography>
+              {product?.advantage?.length > 0 && (
+                <>  
+                  <Typography variant="h4" className={styles.sectionTitle}>
+                    {t('advantages')}
+                  </Typography>
+                  <Box component="ul" className={styles.benefitsList}>
+                    {product?.advantage?.map((benefit: string, index: number) => (
+                      <Box component="li" key={index} sx={{ mb: 1 }}>
+                        <Typography>{benefit}</Typography>
+                      </Box>
+                    ))}
                   </Box>
-                ))}
-              </Box>
-
+                </>
+              )}
+{/* 
               <Typography variant="h4" className={styles.sectionTitle}>
                 {t('targetAudience')}
               </Typography>
@@ -214,9 +158,9 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                     <Typography>{target}</Typography>
                   </Box>
                 ))}
-              </Box>
+              </Box> */}
 
-              <Typography variant="h4" className={styles.sectionTitle}>
+              {/* <Typography variant="h4" className={styles.sectionTitle}>
                 {t('includedInPack')}
               </Typography>
               <Box component="ul" className={styles.includesList}>
@@ -225,7 +169,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                     <Typography>{item}</Typography>
                   </Box>
                 ))}
-              </Box>
+              </Box> */}
 
               <Box className={styles.winningProduct}>
                 <Typography sx={{ fontWeight: 600 }}>
@@ -370,7 +314,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                       const cartItem = {
                         id: product?._id,
                         name: product?.name,
-                        price: product?.price || 0,
+                        price: calculateTotal() || 0,
                         image: product?.photos?.[0] || '',
                         category: product?.category || '',
                         options: selectedOptions,

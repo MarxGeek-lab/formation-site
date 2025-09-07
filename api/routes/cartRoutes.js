@@ -98,13 +98,56 @@ router.post('/convert', optionalAuth, CartController.convertCart);
 
 // Routes nécessitant une authentification
 
-// router.post('/associate', authenticateToken, CartController.associateWithUser);
+
+/**
+ * @route POST /api/cart/associate
+ * @desc Associer le panier à un utilisateur connecté
+ * @access Private (authentification requise)
+ */
+router.post('/associate', authenticateToken, CartController.associateWithUser);
 
 /**
  * @route GET /api/cart/stats
  * @desc Obtenir les statistiques des paniers (admin)
  * @access Private (authentification requise)
  */
-// router.get('/stats', authenticateToken, CartController.getCartStats);
+router.get('/stats', authenticateToken, CartController.getCartStats);
+
+// Routes admin pour la gestion des paniers
+
+/**
+ * @route GET /api/cart/admin/list
+ * @desc Lister tous les paniers (admin)
+ * @access Private (authentification requise)
+ */
+router.get('/admin/list', authenticateToken, CartController.getAdminCartList);
+
+/**
+ * @route PUT /api/cart/admin/:cartId/status
+ * @desc Mettre à jour le statut d'un panier (admin)
+ * @access Private (authentification requise)
+ */
+router.put('/admin/:cartId/status', authenticateToken, CartController.updateCartStatus);
+
+/**
+ * @route POST /api/cart/admin/:cartId/reminder
+ * @desc Configurer une relance pour panier abandonné (admin)
+ * @access Private (authentification requise)
+ */
+router.post('/admin/:cartId/reminder', authenticateToken, CartController.setupCartReminder);
+
+/**
+ * @route GET /api/cart/admin/reminders/pending
+ * @desc Obtenir les paniers nécessitant une relance (admin)
+ * @access Private (authentification requise)
+ */
+router.get('/admin/reminders/pending', authenticateToken, CartController.getPendingReminders);
+
+/**
+ * @route PUT /api/cart/admin/:cartId/reminder/sent
+ * @desc Marquer une relance comme envoyée (admin)
+ * @access Private (authentification requise)
+ */
+router.put('/admin/:cartId/reminder/sent', authenticateToken, CartController.markReminderSent);
 
 module.exports = router;

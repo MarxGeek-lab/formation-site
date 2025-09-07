@@ -423,6 +423,194 @@ class CartController {
       });
     }
   }
+
+  // Admin: Lister tous les paniers
+  static async getAdminCartList(req, res) {
+    try {
+      const { status, page = 1, limit = 50 } = req.query;
+      
+      const filter = {};
+      if (status) {
+        filter.status = status;
+      }
+
+      const carts = await Cart.find(filter)
+        .populate('userId', 'firstName lastName email')
+        .sort({ lastActivity: -1 })
+        .limit(limit * 1)
+        .skip((page - 1) * limit);
+
+      const total = await Cart.countDocuments(filter);
+
+      res.json({
+        success: true,
+        data: carts,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      });
+    } catch (error) {
+      console.error('Erreur récupération paniers admin:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erreur lors de la récupération des paniers'
+      });
+    }
+  }
+
+  // Admin: Mettre à jour le statut d'un panier
+  static async updateCartStatus(req, res) {
+    try {
+      const { cartId } = req.params;
+      const { status } = req.body;
+
+      if (!['active', 'abandoned', 'converted'].includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Statut invalide'
+        });
+      }
+
+      const cart = await Cart.findByIdAndUpdate(
+        cartId,
+        { 
+          status,
+          lastActivity: new Date()
+        },
+        { new: true }
+      ).populate('userId', 'firstName lastName email');
+
+      if (!cart) {
+        return res.status(404).json({
+          success: false,
+          message: 'Panier non trouvé'
+        });
+      }
+
+      res.json({
+        success: true,
+        data: cart
+      });
+    } catch (error) {
+      console.error('Erreur mise à jour statut panier:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erreur lors de la mise à jour du statut'
+      });
+    }
+  }
+
+  // Admin: Configurer une relance pour panier abandonné
+  static async setupCartReminder(req, res) {
+    try {
+      const { cartId } = req.params;
+      const { type, delay, message } = req.body;
+
+      const cart = await Cart.findById(cartId);
+      if (!cart) {
+        return res.status(404).json({
+          success: false,
+          message: 'Panier non trouvé'
+        });
+      }
+
+      if (cart.status !== 'abandoned') {
+        return res.status(400).json({
+          success: false,
+          message: 'Seuls les paniers abandonnés peuvent avoir des relances'
+        });
+      }
+
+      // Calculer la date d'envoi de la relance
+      const reminderDate = new Date();
+      reminderDate.setHours(reminderDate.getHours() + delay);
+
+      // Ajouter la configuration de relance au panier
+      cart.reminderConfig = {
+        type,
+        delay,
+        message,
+        scheduledDate: reminderDate,
+        sent: false,
+        createdAt: new Date()
+      };
+
+      await cart.save();
+
+      res.json({
+        success: true,
+        data: cart,
+        message: 'Relance configurée avec succès'
+      });
+    } catch (error) {
+      console.error('Erreur configuration relance:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erreur lors de la configuration de la relance'
+      });
+    }
+  }
+
+  // Admin: Obtenir les paniers nécessitant une relance
+  static async getPendingReminders(req, res) {
+    try {
+      const now = new Date();
+      
+      const carts = await Cart.find({
+        status: 'abandoned',
+        'reminderConfig.sent': false,
+        'reminderConfig.scheduledDate': { $lte: now }
+      }).populate('userId', 'firstName lastName email');
+
+      res.json({
+        success: true,
+        data: carts
+      });
+    } catch (error) {
+      console.error('Erreur récupération relances en attente:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erreur lors de la récupération des relances'
+      });
+    }
+  }
+
+  // Admin: Marquer une relance comme envoyée
+  static async markReminderSent(req, res) {
+    try {
+      const { cartId } = req.params;
+      
+      const cart = await Cart.findByIdAndUpdate(
+        cartId,
+        { 
+          'reminderConfig.sent': true,
+          'reminderConfig.sentAt': new Date()
+        },
+        { new: true }
+      );
+
+      if (!cart) {
+        return res.status(404).json({
+          success: false,
+          message: 'Panier non trouvé'
+        });
+      }
+
+      res.json({
+        success: true,
+        data: cart
+      });
+    } catch (error) {
+      console.error('Erreur marquage relance envoyée:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erreur lors du marquage de la relance'
+      });
+    }
+  }
 }
 
 module.exports = CartController;

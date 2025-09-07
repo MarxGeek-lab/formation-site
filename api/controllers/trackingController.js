@@ -42,6 +42,7 @@ class TrackingController {
   // Route pixel pour enregistrer les événements
   static async trackPixel(req, res) {
     try {
+      console.log(req.query);
       const { type, productId, orderId, sessionId, userId, value } = req.query;
 
       // Validation des paramètres requis
@@ -128,6 +129,7 @@ class TrackingController {
   // Associer les événements d'une session à un utilisateur
   static async associateSessionToUser(req, res) {
     try {
+      console.log("body session == ", req.body);
       const { sessionId, userId } = req.body;
 
       if (!sessionId || !userId) {

@@ -37,14 +37,6 @@ const Settings = ({ tabContentList }) => {
                 {tabContentList[activeTab]}
               </TabPanel>
             </Grid>
-           {/*  <Grid size={{ xs: 12 }}>
-              <div className='flex justify-end gap-4'>
-                <Button variant='tonal' color='secondary'>
-                  Discard
-                </Button>
-                <Button variant='contained'>Save Changes</Button>
-              </div>
-            </Grid> */}
           </Grid>
         </Grid>
       </Grid>

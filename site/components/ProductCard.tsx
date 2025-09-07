@@ -6,11 +6,13 @@ import styles from './ProductCard.module.scss';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { generateSlug } from "@/utils/utils";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { AddShoppingCart } from "@mui/icons-material";
 import { useCart } from '@/contexts/CartContext';
 import { useNotification } from '@/contexts/NotificationContext';
 import { useTracking } from '@/utils/trackingPixel';
+import { useState } from "react";
+import Link from "next/link";
 
 interface ProductCardProps {
   product: any;
@@ -26,6 +28,7 @@ export default function ProductCard({
   const { addToCart, cart } = useCart();
   const { addNotification } = useNotification();
   const { trackProductView, trackAddToCart } = useTracking();
+  const [openDemo, setOpenDemo] = useState(false);
 
   const handleClick = () => {
     if (product.name) {
@@ -101,19 +104,50 @@ export default function ProductCard({
 
   return (
     <div className={styles.productCard}>
-      <div className={styles.imageContainer}>
-        {product?.photos?.length > 0 ? (
-          renderImage()
-        ) : (
-          <div className={styles.imagePlaceholder}>
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <rect width="60" height="60" rx="12" fill="var(--primary)" fillOpacity="0.1"/>
-              <path d="M20 25L30 35L40 25" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-        )}
-      </div>
-      
+      {/* <Link href={`/${locale}/produit/${product._id}`}> */}
+        <div className={styles.imageContainer}>
+          {product?.photos?.length > 0 ? (
+            renderImage()
+          ) : (
+            <div className={styles.imagePlaceholder}>
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <rect width="60" height="60" rx="12" fill="var(--primary)" fillOpacity="0.1"/>
+                <path d="M20 25L30 35L40 25" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          )}
+
+          {product?.demoVideo && (
+            <Button
+              variant="contained"
+              sx={{
+                position: "absolute",
+                left: 8,
+                bottom: 8,
+                px: 1.5,
+                py: 0.5,
+                borderRadius: "10px",
+                fontWeight: "500",
+                textTransform: "none",
+                fontSize: "15px",
+                backgroundColor: "rgba(255, 255, 255, 0.7)", // noir transparent
+                color: "#333",
+                boxShadow: "0px 4px 10px rgba(0,0,0,0.3)",
+                backdropFilter: "blur(4px)", // effet verre dépoli subtil
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  boxShadow: "0px 6px 14px rgba(0,0,0,0.4)",
+                  transform: "translateY(-2px)"
+                },
+              }}
+              onClick={() => setOpenDemo(true)}
+            >
+              Demo
+            </Button>
+          )}
+        </div>
+      {/* </Link> */}
+
       <div className={styles.content}>
         <h3 className={styles.title}>{product?.name}</h3>
         <p className={styles.category}>{product?.category}</p>
@@ -162,6 +196,54 @@ export default function ProductCard({
           </button>
         </div>
       </div>
+      <Dialog
+  open={openDemo}
+  onClose={() => setOpenDemo(false)}
+  maxWidth="md" // limite la largeur
+  fullWidth
+  PaperProps={{
+    sx: {
+      background: "var(--background)",
+      borderRadius: "12px",
+      overflow: "hidden", // supprime le scroll interne
+    },
+  }}
+>
+  <DialogTitle>{t("videoDemo")}</DialogTitle>
+  <DialogContent
+    sx={{
+      p: 0, // pas de padding autour
+      overflow: "hidden", // empêche le scroll
+    }}
+  >
+    <Box
+      sx={{
+        width: "100%",
+        maxHeight: "70vh", // limite la hauteur à l’écran
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <video
+        controls
+        style={{
+          width: "100%",
+          height: "100%",
+          maxHeight: "70vh", // garde la vidéo responsive
+          objectFit: "contain", // pas de déformation
+          borderRadius: "8px",
+        }}
+      >
+        <source src={product?.demoVideo} type="video/mp4" />
+        {t("browserNotSupported")}
+      </video>
+    </Box>
+  </DialogContent>
+  <DialogActions>
+    <Button color="error" size="small" variant="contained" onClick={() => setOpenDemo(false)}>{t("close")}</Button>
+  </DialogActions>
+</Dialog>
+
     </div>
   );
 }

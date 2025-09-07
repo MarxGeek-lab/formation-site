@@ -144,6 +144,11 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             Suivi
           </MenuItem>
         )}
+        {(permissions?.includes('cart') || permissions?.includes('all')) && (
+          <MenuItem href={`/${locale}/dashboards/carts`} icon={<i className='tabler-shopping-cart' />}>
+            Paniers
+          </MenuItem>
+        )}
         {(permissions?.includes('newsletter') || permissions?.includes('all')) && (
           <MenuItem href={`/${locale}/dashboards/newsletter`} icon={<i className='tabler-mail' />}>
             Newsletters

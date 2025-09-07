@@ -12,7 +12,7 @@ const customersRoutes = require("./customerRoutes")
 const messagesRoutes = require("./messagesRoutes");
 const adminRoutes = require("./adminRoutes");
 const subscriptionRoutes = require("./subscriptionRoute");
-// const siteSettingsRoutes = require("./siteSettingsRoute");
+const siteSettingsRoutes = require("./siteSettingsRoute");
 const categoryRoutes = require("./categoryRoutes");
 // const commonRoutes = require("./commonRoutes")
 const orderRoutes = require("./orderRoutes")
@@ -32,11 +32,14 @@ router.use('/messages', messagesRoutes);
 
 router.use('/admin', adminRoutes);
 router.use('/subscription', subscriptionRoutes);
-// router.use('/settings', siteSettingsRoutes);
+router.use('/settings', siteSettingsRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/orders', orderRoutes);
 router.use('/promoCodes', promoCodeRoutes);
+
+// Routes pour le panier
 router.use('/cart', cartRoutes);
+
 router.use('/tracking', trackingRoutes);
 // router.use('/', commonRoutes);
 

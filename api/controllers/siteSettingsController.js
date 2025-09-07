@@ -32,13 +32,14 @@ exports.updateSiteSettings = async (req, res) => {
 
     const updateData = {
       ...req.body,
-      ...(shipping.length > 0 ? { shippingMethods: shipping } : {}),
       ...(logoUrl ? { logoUrl } : {}),
+      cartReminderSettings: JSON.parse(req.body.cartReminderSettings)
     };
 
     const updatedSettings = await SiteSettings.findOneAndUpdate(
       {}, // Sélectionne le premier document (ou crée-le s'il n'existe pas)
       updateData,
+      
       { new: true, runValidators: true, upsert: true } // Renvoie le document mis à jour, exécute les validateurs, crée si n'existe pas
     );
 

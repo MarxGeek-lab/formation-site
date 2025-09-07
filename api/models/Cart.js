@@ -28,7 +28,7 @@ const cartItemSchema = new mongoose.Schema({
   },
   options: {
     type: Map,
-    of: String,
+    of: mongoose.Schema.Types.Mixed,
     default: {}
   }
 });
@@ -77,19 +77,21 @@ const cartSchema = new mongoose.Schema({
     default: 'active'
   },
   
+  // Configuration de relance
+  reminderConfig: {
+    type: { type: String, enum: ['email', 'sms', 'notification'] },
+    delay: { type: Number }, // en heures
+    message: { type: String },
+    scheduledDate: { type: Date },
+    sent: { type: Boolean, default: false },
+    sentAt: { type: Date },
+    createdAt: { type: Date, default: Date.now }
+  },
+
   // Métadonnées
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  },
-  lastActivity: {
-    type: Date,
-    default: Date.now
-  },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  lastActivity: { type: Date, default: Date.now },
   convertedAt: {
     type: Date,
     default: null
