@@ -9,6 +9,7 @@ const app = express();
 const routes = require("./routes/index");
 const generatePDF = require("./services/generateTicket");
 const { initReservationCron } = require('./crons/reservationCron');
+const cartAbandonmentCron = require('./crons/cartAbandonmentCron');
 
 app.set('trust proxy', true); 
 
@@ -41,6 +42,7 @@ app.use("/", express.static("uploads/logo"));
 
 // Initialize cron jobs
 // initReservationCron();
+cartAbandonmentCron.start();
 
 // Gestion globale des erreurs 
 app.use(errorHandler);

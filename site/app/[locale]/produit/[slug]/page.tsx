@@ -13,6 +13,7 @@ import LUTsPhotoshop from '@/assets/images/veo3-768x432.jpg';
 import icon from '@/assets/images/icon.webp'
 import { useProductStore } from '@/contexts/ProductStore';
 import { useCart } from '@/contexts/CartContext';
+import { useTracking } from '@/utils/trackingPixel';
 
 // Mock data pour les produits
 const productsData = {
@@ -75,6 +76,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
   const { locale, slug } = params;
   const router = useRouter();
   const t = useTranslations('Product');
+  const { trackProductView, trackAddToCart } = useTracking();
   
   const [selectedOptions, setSelectedOptions] = useState<{[key: string]: any}>({
     visual: 'without-visual',
@@ -84,6 +86,13 @@ export default function ProductPage({ params }: { params: { locale: string; slug
   useEffect(() => {
     getProductById(slug);
   }, [slug]);
+
+  // Tracker la vue du produit quand le produit est chargé
+  useEffect(() => {
+    if (product?._id) {
+      trackProductView(product._id);
+    }
+  }, [product?._id, trackProductView]);
 
   if (!product) {
     return (
@@ -354,6 +363,9 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                     size="large"
                     className={styles.buyButton}
                     onClick={() => {
+                      // Tracker l'ajout au panier
+                      trackAddToCart(product?._id);
+                      
                       // Ajouter le produit au panier avec les options sélectionnées
                       const cartItem = {
                         id: product?._id,

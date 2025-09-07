@@ -19,6 +19,7 @@ import { hideLoader, showLoader } from '@/components/Loader/loaderService';
 import { useAuthStore, useOrderStore, usePaymentStore, usePromoCodeStore } from '@/contexts/GlobalContext';
 import { useRouter } from 'next/navigation';
 import { tree } from 'next/dist/build/templates/app-page';
+import { useTracking } from '@/utils/trackingPixel';
 
 export default function PaiementPage({ params }: { params: { locale: string } }) {
   const { user } = useAuthStore();
@@ -29,6 +30,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   const router = useRouter();
   const t = useTranslations('Payment');
   const { cart, clearCart } = useCart();
+  const { trackPurchase } = useTracking();
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -141,6 +143,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
         paymentMethod: formData.paymentMethod,
         totalAmount: calculateTotal(),
         customer: user?._id,
+        sessionId: cart?.sessionId,
       }
   
       showLoader()
@@ -223,6 +226,11 @@ export default function PaiementPage({ params }: { params: { locale: string } })
         console.log(data, status)
 
         if (data.status === 'success') {
+          // Tracker l'achat réussi
+          if (data.orderId) {
+            trackPurchase(data.orderId, calculateTotal());
+          }
+          
           setShowSuccessModal(true)
           setTitleMessage('Paiement effectué')
           setMessage('Votre commande a été traitée avec succès et le paiement a été effectué avec succès');

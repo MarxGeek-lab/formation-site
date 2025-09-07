@@ -9,14 +9,14 @@ const generateAccessToken = (user) => {
 	};
 
 	return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-		expiresIn: "1d",
+		expiresIn: "90d",
 	});
 };
 
 const generateToken = (data) => {
 	const payload = { data };
 	const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-		expiresIn: "1d",
+		expiresIn: "90d",
 	});
 	return token;
 };
@@ -35,7 +35,7 @@ const generateRefreshToken = (user) => {
 	};
 
 	return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-		expiresIn: "2h",
+		expiresIn: "90d",
 	});
 };
 

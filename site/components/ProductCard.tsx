@@ -10,6 +10,7 @@ import { Box, Typography } from "@mui/material";
 import { AddShoppingCart } from "@mui/icons-material";
 import { useCart } from '@/contexts/CartContext';
 import { useNotification } from '@/contexts/NotificationContext';
+import { useTracking } from '@/utils/trackingPixel';
 
 interface ProductCardProps {
   product: any;
@@ -22,8 +23,9 @@ export default function ProductCard({
 }: ProductCardProps) {
   const router = useRouter();
   const t = useTranslations('Home');
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
   const { addNotification } = useNotification();
+  const { trackProductView, trackAddToCart } = useTracking();
 
   const handleClick = () => {
     if (product.name) {
@@ -32,26 +34,43 @@ export default function ProductCard({
     }
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const finalPrice = product?.pricePromo && product?.pricePromo !== 0 ? product.pricePromo : product.price;
     
-    addToCart({
-      id: product._id,
-      name: product.name,
-      price: finalPrice,
-      image: product?.photos?.[0] || '',
-      category: product.category
-    });
+    try {
+      const finalPrice = product?.pricePromo && product?.pricePromo !== 0 ? product.pricePromo : product.price;
+      
+      // Tracker l'ajout au panier
+      trackAddToCart(product._id);
+      
+      // Ajouter au panier (synchronisation automatique avec backend)
+      await addToCart({
+        id: product._id,
+        name: product.name,
+        price: finalPrice,
+        image: product?.photos?.[0] || '',
+        category: product.category
+      });
 
-    // Show notification
-    addNotification({
-      type: 'success',
-      message: 'Produit ajouté au panier',
-      productName: product.name,
-      productImage: product?.photos?.[0] || '',
-      duration: 4000
-    });
+      // Show success notification
+      addNotification({
+        type: 'success',
+        message: 'Produit ajouté au panier',
+        productName: product.name,
+        productImage: product?.photos?.[0] || '',
+        duration: 4000
+      });
+    } catch (error) {
+      console.error('Erreur ajout au panier:', error);
+      
+      // Show error notification
+      addNotification({
+        type: 'error',
+        message: 'Erreur lors de l\'ajout au panier',
+        productName: product.name,
+        duration: 4000
+      });
+    }
   };
 
   const renderImage = () => {
@@ -93,14 +112,6 @@ export default function ProductCard({
             </svg>
           </div>
         )}
-        {/* <div className={styles.hoverOverlay}>
-          <button className={styles.buyNowButton} onClick={handleClick}>
-            {t('buyNow')}
-          </button>
-          <button className={styles.addToCartButton} onClick={handleAddToCart}>
-            <AddShoppingCart />
-          </button>
-        </div> */}
       </div>
       
       <div className={styles.content}>
@@ -138,8 +149,16 @@ export default function ProductCard({
           <button className={styles.accessButton} onClick={handleClick}>
             {t('accessProduct')}
           </button>
-          <button className={styles.addToCartButtonBottom} onClick={handleAddToCart}>
-            <AddShoppingCart />
+          <button 
+            className={styles.addToCartButtonBottom} 
+            onClick={handleAddToCart}
+            disabled={cart.isLoading}
+          >
+            {cart.isLoading ? (
+              <div className={styles.spinner}>⏳</div>
+            ) : (
+              <AddShoppingCart />
+            )}
           </button>
         </div>
       </div>

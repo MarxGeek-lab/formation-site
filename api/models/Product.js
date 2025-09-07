@@ -81,8 +81,15 @@ const ProductSchema = new mongoose.Schema({
     }
   }],
 
+  // Visuel
   isvisual: { type: Boolean, default: true },
   visualPrice: { type: Number, default: 2500 },
+
+  // Avantages
+  advantage: [{
+    type: String,
+    trim: true
+  }],
   
   // Métadonnées
   isDeleted: { type: Boolean, default: false },

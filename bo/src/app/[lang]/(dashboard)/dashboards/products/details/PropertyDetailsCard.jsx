@@ -103,17 +103,29 @@ const PropertyDetailsCard = ({ product }) => {
           </div>
         </div>
 
-        {product?.characteristics?.length > 0 && (
-          <div className='flex flex-col items-start gap-1'>
+        <div className='flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-5'>
+          <Typography color='text.primary' className='min-is-[100px]'>
+            Avec visuel :
+          </Typography>
+          <Chip
+            label={product?.isvisual ? 'Oui' : 'Non'}
+            variant='filled'
+            color={product?.isvisual ? 'success' : 'error'}
+            size='medium'
+          /> 
+        </div>
+
+        {product?.advantage?.length > 0 && (
+          <div className='flex flex-row flex-wrap items-start gap-1'>
             <Typography color='text.primary' className='min-is-[100px]'>
-              Autres caractéristiques :
+              Avantages :
             </Typography>
             <Typography color='text.primary' className='font-medium'>
-            {product?.characteristics?.map((characteristic, index) => (
+            {product?.advantage?.map((advantage, index) => (
               <div key={index} style={{
                 borderBottom: '1px dashed #ccc'
               }}>
-                <Typography color='text.primary'>{characteristic.key} : {characteristic.value}</Typography>
+                <Typography color='text.primary'>{advantage}</Typography>
               </div>
             ))}
           </Typography>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Container, Typography, TextField, Button, Alert, Divider, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff, Google, Facebook } from '@mui/icons-material';
 import Link from 'next/link';
@@ -10,10 +10,12 @@ import styles from './auth.module.scss';
 import { hideLoader, showLoader } from '@/components/Loader/loaderService';
 import { useAuthStore } from '@/contexts/GlobalContext';
 import { showToast } from '@/components/ToastNotification/ToastNotification';
+import { useRouter } from 'next/navigation';
 
 export default function ConnexionPage({ params }: { params: { locale: string } }) {
   const { locale } = params;
-  const { login} = useAuthStore();
+  const router = useRouter();
+  const { login, user, token} = useAuthStore();
   const { theme } = useTheme();
   const t = useTranslations('Auth');
   const [formData, setFormData] = useState({
@@ -23,6 +25,12 @@ export default function ConnexionPage({ params }: { params: { locale: string } }
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      router.push(`/${locale}/dashboard`);
+    }
+  }, [user]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));

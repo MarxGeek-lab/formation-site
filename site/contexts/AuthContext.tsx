@@ -1,11 +1,12 @@
 "use client";
-import React, { createContext, useState, useContext, type ReactNode, useEffect } from "react";
-import { API_URL } from "../settings/constant";
-import { jwtDecode } from "jwt-decode";
+import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { associateSessionToUser } from '@/utils/trackingPixel';
 import { handleAxiosError } from "../utils/errorHandlers";
 import axios from "axios";
 import axiosInstanceUser from "../config/axiosConfig";
 import { syncTokenToCookies, clearTokenFromStorage } from "../utils/tokenSync";
+import { API_URL } from '@/settings/constant';
 
 // Interface pour définir les types des fonctions d'authentification
 interface AuthContextType {
@@ -173,6 +174,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         // Synchroniser avec les cookies pour le middleware
         syncTokenToCookies();
+        
+        // Associer la session anonyme à l'utilisateur connecté
+        associateSessionToUser();
       }
       return response.status;
     } catch (error) {
@@ -200,12 +204,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token === null || token === undefined) {
       token = String(tokenCookie)
     }
-console.log(token)
+
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
         const userDetail = decoded.user;
-        
         // Vérifier si le token n'est pas expiré
         const currentTime = Date.now() / 1000;
         if (decoded.exp > currentTime) {
@@ -221,8 +224,6 @@ console.log(token)
       } catch (error) {
         // Token invalide, nettoyer le stockage
         console.error('Token invalide:', error);
-        // localStorage.removeItem("accessToken");
-        // sessionStorage.removeItem("accessToken");
         clearTokenFromStorage();
       }
     }

@@ -1,5 +1,5 @@
 require('dotenv').config();
-const EmailService = require('../services/emailService');
+const {EmailService} = require('../services/emailService');
 const logger = require('../utils/logger');
 
 // Middleware de gestion des erreurs

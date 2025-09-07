@@ -28,7 +28,7 @@ const productController = {
         name, description, category, productType,
         isSubscriptionBased, subscriptionId, assignedAdminId,
         price, wholesalePrice, productStatus,
-        characteristics
+        characteristics, advantage, withVisual,
       } = req.body;
 
       console.log('Données produit reçues:', req.body);
@@ -78,10 +78,11 @@ const productController = {
         
         // Caractéristiques personnalisées
         characteristics: characteristics ? JSON.parse(characteristics) : [],
-        
+        advantage: advantage ? JSON.parse(advantage) : [],
         ...(wholesalePrice && { pricePromo: wholesalePrice }),
         ...(price && { price }),
         ...(productStatus && { productStatus }),
+        ...(withVisual && { isvisual: withVisual === 'true' }),
       });
 
       // Sauvegarder dans la base de données
@@ -120,7 +121,7 @@ console.log(req.body)
         isSubscriptionBased, subscriptionId, assignedAdminId,
         price, wholesalePrice, productStatus,
         characteristics, images2, videos2,
-        pdf2,
+        pdf2, advantage, isvisual
       } = req.body;
   
       const productId = req.params.id;
@@ -176,7 +177,8 @@ console.log(req.body)
       product.pricePromo = wholesalePrice ? Number(wholesalePrice) : product.pricePromo;
 
       if (productStatus !== undefined) product.productStatus = productStatus;
-
+      if (isvisual !== undefined) product.isvisual = isvisual === 'true';
+      if (advantage) product.advantage = JSON.parse(advantage);
       // Caractéristiques personnalisées
       if (characteristics) {
         product.characteristics = JSON.parse(characteristics);

@@ -15,7 +15,7 @@ import Stack from '@mui/material/Stack'
 import CustomInputVertical from '@core/components/custom-inputs/Vertical'
 import CustomTextField from '@core/components/mui/TextField'
 import DirectionalIcon from '@components/DirectionalIcon'
-import { Alert, Card, CardContent, Divider, FormControl, FormControlLabel, FormLabel, InputAdornment, Radio, RadioGroup } from '@mui/material'
+import { Alert, Card, CardContent, CardHeader, Divider, FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, Radio, RadioGroup, TextField } from '@mui/material'
 import { EditorContent, useEditor } from '@tiptap/react'
 
 
@@ -145,7 +145,8 @@ const StepPropertyDetails = ({
   selectedFilesSale2,
   selectedVideo, setSelectedVideo,
   selectedVideo2,
-
+  // Visuel
+  withVisual, setWithVisual, advantage, setAdvantage,
 }) => {
   const { allCategories, allAdmin, getAllAdmin } = useAdminStore();
   const { subscriptionPlans, fetchSubscription } = useSubscriptionContext();
@@ -294,6 +295,67 @@ console.log("allAdmin == ", allAdmin)
           </CardContent>
         </Card>
       </Grid>
+      <Grid size={{ xs: 12 }}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">
+            <Typography component="span">
+              Avec visuel <Typography component="span" color="error">*</Typography>
+            </Typography>
+          </FormLabel>
+          <RadioGroup
+            row
+            value={withVisual || 'false'}
+            onChange={(e) => setWithVisual(e.target.value)}
+          >
+            <FormControlLabel value="false" control={<Radio />} label="Non" />
+            <FormControlLabel value="true" control={<Radio />} label="Oui" />
+          </RadioGroup>
+        </FormControl>
+      </Grid>
+
+      <Grid size={{ xs: 12 }}>
+        <Typography variant="h4" className="mb-2 mt-6">
+          Avantages
+        </Typography>
+        <Card>
+          <CardContent>
+            {advantage.map((item, index) => (
+              <Box key={index} sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
+                <TextField
+                  fullWidth
+                  label={`Avantage ${index + 1}`}
+                  value={item}
+                  onChange={(e) => {
+                    const newAdvantages = [...advantage];
+                    newAdvantages[index] = e.target.value;
+                    setAdvantage(newAdvantages);
+                  }}
+                  variant="outlined"
+                  size="small"
+                />
+                <IconButton
+                  color="error"
+                  onClick={() => {
+                    const newAdvantages = advantage.filter((_, i) => i !== index);
+                    setAdvantage(newAdvantages);
+                  }}
+                  disabled={advantage.length === 1}
+                >
+                  <i className="tabler-minus" />
+                </IconButton>
+              </Box>
+            ))}
+            <Button
+              variant="outlined"
+              startIcon={<i className="tabler-plus" />}
+              onClick={() => setAdvantage([...advantage, ''])}
+              sx={{ mt: 1 }}
+            >
+              Ajouter un avantage
+            </Button>
+          </CardContent>
+        </Card>
+      </Grid>
 
       {/* Section 2: Tarification */}
       <Grid size={{ xs: 12 }}>
@@ -406,8 +468,8 @@ console.log("allAdmin == ", allAdmin)
         <CustomTextField
           select
           fullWidth
-          value={assignedAdminId || ''}
-          onChange={(e) => setAssignedAdminId && setAssignedAdminId(e.target.value)}
+          value={assignedAdminId}
+          onChange={(e) => setAssignedAdminId(e.target.value)}
           label="Administrateur responsable"
           helperText="Optionnel"
         >

@@ -56,7 +56,9 @@ const PropertyListingWizard = () => {
   const [assignedAdminId, setAssignedAdminId] = useState('');
   const [availableAdmins, setAvailableAdmins] = useState([]);
   const [availableSubscriptions, setAvailableSubscriptions] = useState([]);
-  
+  const [withVisual, setWithVisual] = useState('false');
+  const [advantage, setAdvantage] = useState(['']);
+
   // Type de produit
   const [productType, setProductType] = useState('standard');
 
@@ -113,7 +115,10 @@ const PropertyListingWizard = () => {
         selectedFilesSale2={selectedFilesSale2} setSelectedFilesSale2={setSelectedFilesSale2}
         selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}
         selectedVideo2={selectedVideo2} setSelectedVideo2={setSelectedVideo2}
-         />
+        // Visuel
+        withVisual={withVisual} setWithVisual={setWithVisual}
+        advantage={advantage} setAdvantage={setAdvantage}
+        />
     } 
   }
 
@@ -160,6 +165,9 @@ const PropertyListingWizard = () => {
       // Informations de base du produit
       if (productName) formData.append("name", productName);
       if (description) formData.append("description", description);
+      if (withVisual) formData.append("withVisual", withVisual);
+      if (advantage.length > 0) formData.append("advantage", JSON.stringify(advantage));
+
       if (category || customService) {
         formData.append("category", category !== 'Autres' ? category : customService);
       }
@@ -288,7 +296,7 @@ const PropertyListingWizard = () => {
           
           // Statut et admin
           if (isValid(data.productStatus)) setProductStatus(data.productStatus);
-          if (isValid(data.assignedAdminId)) setAssignedAdminId(data.assignedAdminId);
+          if (data.assignedAdminId) setAssignedAdminId(data.assignedAdminId);
           
           // Images du produit
           if (data.photos?.length > 0) {
@@ -298,6 +306,10 @@ const PropertyListingWizard = () => {
           // Documents et vidéos
           if (isValid(data.saleDocument)) setSelectedFilesSale2(data.saleDocument);
           if (isValid(data.demoVideo)) setSelectedVideo2(data.demoVideo);
+
+          // Visuel
+          if (isValid(data.withVisual)) setWithVisual(data.withVisual);
+          if (isValid(data.advantage)) setAdvantage(data.advantage);
         }
       }
     }

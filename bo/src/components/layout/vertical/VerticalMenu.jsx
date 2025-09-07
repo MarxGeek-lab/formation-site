@@ -119,24 +119,29 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             Mes Codes promos
           </MenuItem>
         )}
-         {(permissions?.includes('statistics') || permissions?.includes('all')) && (
+         {/* {(permissions?.includes('statistics') || permissions?.includes('all')) && (
           <MenuItem href={`/${locale}/dashboards/statistics`} label={dictionary['navigation'].customers} icon={<i className='tabler-chart-bar' />}>
             Statistiques
           </MenuItem>
-        )}
+        )} */}
         {(permissions?.includes('customers') || permissions?.includes('all')) && (
           <MenuItem href={`/${locale}/dashboards/customers/list`} label={dictionary['navigation'].customers} icon={<i className='tabler-users' />}>
             Mes Clients
           </MenuItem>
         )}
-        {(permissions?.includes('reviews') || permissions?.includes('all')) && (
+        {/* {(permissions?.includes('reviews') || permissions?.includes('all')) && (
           <MenuItem href={`/${locale}/dashboards/reviews`} icon={<i className='tabler-star' />}>
             Commentaires
           </MenuItem>
-        )}
+        )} */}
         {(permissions?.includes('admin') || permissions?.includes('all')) && (
           <MenuItem href={`/${locale}/dashboards/admin`} icon={<i className='tabler-users' />}>
             Administrateurs
+          </MenuItem>
+        )}
+        {(permissions?.includes('tracking') || permissions?.includes('all')) && (
+          <MenuItem href={`/${locale}/dashboards/tracking`} icon={<i className='tabler-truck' />}>
+            Suivi
           </MenuItem>
         )}
         {(permissions?.includes('newsletter') || permissions?.includes('all')) && (

@@ -16,7 +16,9 @@ const subscriptionRoutes = require("./subscriptionRoute");
 const categoryRoutes = require("./categoryRoutes");
 // const commonRoutes = require("./commonRoutes")
 const orderRoutes = require("./orderRoutes")
-const promoCodeRoutes = require("./promoCodeRoutes");       
+const promoCodeRoutes = require("./promoCodeRoutes");
+const cartRoutes = require("./cartRoutes");
+const trackingRoutes = require("./trackingRoutes");
 
 router.use('/users', userRoutes);
 router.use('/products', productRoutes);
@@ -34,6 +36,8 @@ router.use('/subscription', subscriptionRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/orders', orderRoutes);
 router.use('/promoCodes', promoCodeRoutes);
+router.use('/cart', cartRoutes);
+router.use('/tracking', trackingRoutes);
 // router.use('/', commonRoutes);
 
 module.exports = router;

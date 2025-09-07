@@ -9,15 +9,17 @@ const axiosInstanceUser = axios.create({
 axiosInstanceUser.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
-      const cookies = document.cookie.split("; ").reduce((acc, current) => {
-        const [name, value] = current.split("=");
-        acc[name] = value;
-        return acc;
-      }, {});
+      let token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
+
+      const cookies = document.cookie.split(';');
+      const tokenCookie = cookies.find(cookie => 
+        cookie.trim().startsWith('accessToken=')
+      );
+
+      console.log("tokenCookie", tokenCookie)
   
-      const token = cookies["accessToken"];
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      if (tokenCookie || token) {
+        config.headers.Authorization = `Bearer ${tokenCookie || token}`;
       }
     }
     return config;

@@ -8,8 +8,8 @@ import { useEffect, useState } from 'react'
 import { useAuthStore, useOrderStore, useStatsStore } from '@/contexts/GlobalContext'
 import { useSearchParams } from 'next/navigation';
 import { Typography } from '@mui/material';
-import OrderListTable from '../orders/list/OrderListTable';
-import RevenueReport from '@/views/apps/ecommerce/dashboard/RevenueReport';
+import SalesChart from '@/components/SalesChart';
+import SalesByCountryChart from '@/components/SalesByCountryChart';
 
 const DashboardCRM = () => {
   // Vars
@@ -51,38 +51,6 @@ const DashboardCRM = () => {
       gradient: 'linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%)'
     }
   ]
-
-  const ordersStats = [
-    {
-      title: 'Commandes en Attente',
-      stats: statss?.countOrdersPending || 0,
-      trendNumber: 18.2,
-      avatarIcon: 'tabler-shopping-cart',
-      color: 'primary'
-    },
-    {
-      title: 'Commandes Confirmées',
-      stats: statss?.countOrdersConfirmed || 0,
-      trendNumber: -8.7,
-      avatarIcon: 'tabler-shopping-cart',
-      color: 'warning'
-    },
-    {
-      title: 'Commandes Livrées',
-      stats: statss?.countOrdersDelivered || 0,
-      trendNumber: 4.3,
-      avatarIcon: 'tabler-shopping-cart',
-      color: 'success'
-    },
-    {
-      title: 'Commandes Annulées',
-      stats: statss?.countOrdersCancelled || 0,
-      trendNumber: 2.5,
-      avatarIcon: 'tabler-shopping-cart',
-      color: 'info'
-    }
-  ]
-
 
   const fetchStats = async () => {
     if (user) {
@@ -126,16 +94,16 @@ const DashboardCRM = () => {
           </Typography>
         <LogisticsStatisticsCard data={stats1} />
       </Grid>
-      <Grid size={{ xs: 12, xl: 8 }}>
+      {/* <Grid size={{ xs: 12, xl: 8 }}>
         <RevenueReport />
+      </Grid> */}
+      {/* Sales by Country Chart */}
+      <Grid size={{ xs: 12 }}>
+        <SalesChart />
       </Grid>
       <Grid size={{ xs: 12 }}>
-        <Typography variant="h5" sx={{ mb: 5 }}>
-          Dernières Commandes
-        </Typography>
-        <OrderListTable orderData={orders?.slice(0, 5)} showHeader={false} />
+        <SalesByCountryChart />
       </Grid>
-
     </Grid>
   )
 }

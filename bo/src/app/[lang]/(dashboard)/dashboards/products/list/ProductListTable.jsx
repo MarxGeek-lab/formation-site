@@ -45,7 +45,7 @@ import { getLocalizedUrl } from '@/utils/i18n'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 import { formatAmount } from '@/utils/formatAmount'
-import { API_URL_ROOT } from '@/settings'
+import { API_URL_ROOT, URL_SITE } from '@/settings'
 import { usePropertyStore } from '@/contexts/PropertyStore'
 import { showToast } from '@/components/ToastNotification/ToastNotification'
 import { hideLoader, showLoader } from '@/components/Loader/loaderService'
@@ -189,20 +189,27 @@ const ProductListTable = ({ productData }) => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton onClick={() => handleActiveOrInactive(row.original._id) }>
+            <IconButton onClick={() => handleActiveOrInactive(row.original._id) }
+              title={row.original?.productStatus === 'active' ? 'Désactiver le produit' : 'Activer le produit'}>
               <i className={`tabler-${row.original?.productStatus === 'active' ? 'eye-off' : 'eye'}`} style={{color: row.original?.productStatus === 'active' ? '#f44336' : '#4caf50'}} />
             </IconButton>
-            
-            <IconButton onClick={() => window.location.href = `/${locale}/dashboards/products/details/${row.original._id}`}>
+            <IconButton onClick={() => window.open(`${URL_SITE}fr/product/${row.original._id}`) }
+              title='Voir le produit'>
+              <i className={`tabler-eye`} style={{color: '#4caf50'}} />
+            </IconButton>
+            <IconButton onClick={() => window.location.href = `/${locale}/dashboards/products/details/${row.original._id}`}
+              title='Voir les détails du produit'>
               <i className='tabler-info-circle' style={{color: COLORS.primary}} />
             </IconButton>
-            <IconButton onClick={() => window.location.href = `/${locale}/dashboards/product-add?id=${row.original._id}`}>
+            <IconButton onClick={() => window.location.href = `/${locale}/dashboards/product-add?id=${row.original._id}`}
+              title='Modifier le produit'>
               <i className='tabler-edit' style={{color: COLORS.warning}} />
             </IconButton>
             <IconButton onClick={() => {
                 sessionStorage.setItem("_productId", row.original?._id);
                 setShowDialog(true)
-              }}>
+              }}
+              title='Supprimer le produit'>
               <i className='tabler-trash' style={{color: COLORS.error}} />
             </IconButton>
           </div>

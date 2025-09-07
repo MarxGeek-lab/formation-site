@@ -12,6 +12,8 @@ export interface CartState {
   totalItems: number;
   totalPrice: number;
   isOpen: boolean;
+  isLoading?: boolean;
+  sessionId?: string;
 }
 
 export interface CartContextType {
@@ -21,4 +23,6 @@ export interface CartContextType {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   toggleCart: () => void;
+  convertCart?: (orderId: string, email?: string) => Promise<void>;
+  associateWithUser?: () => Promise<void>;
 }

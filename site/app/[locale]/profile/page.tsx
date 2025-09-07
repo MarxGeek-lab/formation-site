@@ -126,6 +126,7 @@ const ProfilePage: React.FC = () => {
     if (user) {
       try {
         const { data, status } = await getUserById(user._id);
+        console.log(data)
         if (status === 200) {
           setLoading(false);
           setProfile(data);

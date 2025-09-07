@@ -3,10 +3,11 @@ const Order = require('../models/Order');
 const Product = require('../models/Product'); // Optionnel si tu veux valider les produits
 const SiteSettings = require('../models/Settings');
 const User = require('../models/User');
-const EmailService = require('../services/emailService');
+const { EmailService } = require('../services/emailService');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
 const generatePDF = require('../services/generateTicket');
 const { getGreeting, generateVerificationCode } = require('../utils/helpers');
+const Cart = require('../models/Cart');
 
 // Créer une commande
 exports.createOrder = async (req, res) => {
@@ -23,6 +24,7 @@ exports.createOrder = async (req, res) => {
       fullName,
       note,
       totalAmount,
+      sessionId, // Ajouter sessionId pour lier avec le panier
     } = req.body;
 
     console.log(req.body)
@@ -83,9 +85,34 @@ exports.createOrder = async (req, res) => {
       items: productItems,
       totalAmount,
       description: note,
+      email,
+      fullName,
+      address,
+      city,
+      district,
+      country,
+      phoneNumber,
     });
 
     const savedOrder = await order.save();
+
+    // Marquer le panier comme converti après création de commande réussie
+    if (sessionId) {
+      try {
+        const cart = await Cart.findOne({ 
+          sessionId, 
+          status: 'active' 
+        });
+        
+        if (cart) {
+          await cart.markAsConverted(savedOrder._id);
+          console.log(`Panier ${cart._id} marqué comme converti pour la commande ${savedOrder._id}`);
+        }
+      } catch (cartError) {
+        console.error('Erreur lors de la conversion du panier:', cartError);
+        // Ne pas faire échouer la commande si la conversion du panier échoue
+      }
+    }
 
     const statusObj = {
       pending: 'En attente',

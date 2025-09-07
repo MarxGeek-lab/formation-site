@@ -38,9 +38,6 @@ const authenticateToken = async (req, res, next) => {
 			}
 			req.user = decoded;
 
-			if (!['super_admin', 'admin', 'moderator'].includes(decoded.role)) {
-
-			}
 			next();
 		});
 	} catch (error) {

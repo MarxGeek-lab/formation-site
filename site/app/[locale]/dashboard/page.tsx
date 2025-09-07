@@ -14,6 +14,11 @@ import {
   Divider,
   LinearProgress,
   Alert,
+  AlertTitle,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import Grid2 from '@mui/material/Grid2';
 import {
@@ -35,6 +40,7 @@ import {
   CreditCard as CreditCardIcon,
   LocationOn as LocationOnIcon,
   Download as DownloadIcon,
+  Logout as LogoutIcon,
 } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
@@ -72,25 +78,29 @@ export default function DashboardPage({ params }: { params: { locale: string } }
   const router = useRouter();
   const { cart } = useCart();
   const { orders, getUserOrders } = useOrderStore()
-  const { user } = useAuthStore()
+  const { user, logout } = useAuthStore()
   const { getStatsOwner } = useCommonStore();
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [logoutDialog, setLogoutDialog] = useState(false);
 
   const fetchData = async () => {
     if (user) {
       try {
         const { status } = await getUserOrders(user._id);
         const { data, status: statusStats } = await getStatsOwner(user._id);
-        console.log(data)
+        setStats(data);
         if (status === 200 || statusStats === 200) {
           setLoading(false);
-          setStats(data);
         }
       } catch (error) {
         console.log(error);
       }
     }
+  };
+
+  const handleLogout = () => {
+    setLogoutDialog(true);
   };
 
   useEffect(() => {
@@ -131,42 +141,6 @@ export default function DashboardPage({ params }: { params: { locale: string } }
     }
   };
 
-  const statsData = [
-    {
-      value: stats?.countOrders || 0,
-      label: 'Commandes totales',
-      icon: <ShoppingBagIcon />,
-      color: 'primary',
-      gradient: ['#1976d2', '#42a5f5'],
-      rgba: 'rgba(25, 118, 210,',
-    },
-    {
-      value: stats?.countOrdersPending || 0,
-      label: 'Commandes en cours',
-      icon: <LocalShippingIcon />,
-      color: 'warning',
-      gradient: ['#ff9800', '#ffb74d'],
-      rgba: 'rgba(255, 152, 0,',
-    },
-    {
-      value: stats?.countOrdersDelivered || 0,
-      label: 'Total Achat',
-      icon: <TrendingUpIcon />,
-      color: 'success',
-      gradient: ['#2e7d32', '#66bb6a'],
-      rgba: 'rgba(46, 125, 50,',
-    },
-    {
-      value: stats?.wishlistCount || 0,
-      label: 'Produits favoris',
-      icon: <StarIcon sx={{ color: '#FFD700' }} />,
-      color: 'inherit',
-      gradient: ['#ffc107', '#ffeb3b'],
-      rgba: 'rgba(255, 193, 7,',
-    },
-  ];
-  
-
   const quickActions: QuickAction[] = [
     {
       title: 'Mes Commandes',
@@ -196,20 +170,6 @@ export default function DashboardPage({ params }: { params: { locale: string } }
       action: () => router.push(`/${locale}/profile`),
       color: '#9c27b0',
     },
-    {
-      title: 'Mes Adresses',
-      description: 'Gérer mes adresses de livraison',
-      icon: <LocationOnIcon />,
-      action: () => router.push(`/${locale}/addresses`),
-      color: '#4caf50',
-    },
-    // {
-    //   title: 'Paramètres & Sécurité',
-    //   description: 'Préférences et sécurité',
-    //   icon: <SecurityIcon />,
-    //   action: () => router.push('/settings'),
-    //   color: '#ff9800',
-    // },
   ];
 
   if (loading) {
@@ -222,6 +182,41 @@ export default function DashboardPage({ params }: { params: { locale: string } }
       </ProtectedRoute>
     );
   }
+
+  const statsData = [
+    {
+      value: stats?.ordersCount || 0,
+      label: 'Commandes totales',
+      icon: <ShoppingBagIcon />,
+      color: 'primary',
+      gradient: ['#1976d2', '#42a5f5'],
+      rgba: 'rgba(25, 118, 210,',
+    },
+    {
+      value: stats?.orderPending || 0,
+      label: 'Commandes en attente',
+      icon: <LocalShippingIcon />,
+      color: 'warning',
+      gradient: ['#ff9800', '#ffb74d'],
+      rgba: 'rgba(255, 152, 0,',
+    },
+    {
+      value: stats?.orderDelivered || 0,
+      label: 'Total Achat',
+      icon: <TrendingUpIcon />,
+      color: 'success',
+      gradient: ['#2e7d32', '#66bb6a'],
+      rgba: 'rgba(46, 125, 50,',
+    },
+    {
+      value: stats?.expense || 0,
+      label: 'Mes dépenses',
+      icon: <StarIcon sx={{ color: '#FFD700' }} />,
+      color: 'inherit',
+      gradient: ['#ffc107', '#ffeb3b'],
+      rgba: 'rgba(255, 193, 7,',
+    },
+  ];
 
   return (
     <ProtectedRoute>
@@ -265,6 +260,54 @@ export default function DashboardPage({ params }: { params: { locale: string } }
         >
           Bienvenue ! Voici un aperçu de votre activité.
         </Typography>
+      </Box>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          p: 2,
+          mb: 2,
+          backgroundColor: 'var(--primary-subtle)',
+          borderRadius: 2,
+          boxShadow: 1
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Avatar 
+            sx={{ 
+              width: 50, 
+              height: 50,
+              bgcolor: 'primary.main',
+              fontSize: '1.2rem',
+              fontWeight: 'bold'
+            }}
+          >
+            {user?.fullName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+          </Avatar>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              {user?.fullName || 'Utilisateur'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {user?.email}
+            </Typography>
+          </Box>
+        </Box>
+        
+        <Button
+          variant="outlined"
+          color="error"
+          startIcon={<LogoutIcon />}
+          onClick={handleLogout}
+          sx={{ 
+            borderRadius: 2,
+            textTransform: 'none',
+            fontWeight: 500
+          }}
+        >
+          Déconnexion
+        </Button>
       </Box>
 
       {/* Alerte panier */}
@@ -328,6 +371,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                   justifyContent: "flex-start",
                   gap: 2,
                   p: { xs: 2, sm: 2.5 },
+                  height: '100%'
                 }}
               >
                 {/* Icône stylisée */}
@@ -363,6 +407,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                       backgroundClip: "text",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
+                      mb: 1,
                     }}
                   >
                     {item.value}
@@ -388,7 +433,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
 
       <Grid2 container spacing={{ xs: 2, sm: 3 }}>
         {/* Actions rapides */}
-        <Grid2 size={{ xs: 12, md: 3 }}>
+        <Grid2 size={{ xs: 12, md: 4 }}>
           <Card
             sx={{
               borderRadius: 2,
@@ -630,6 +675,28 @@ export default function DashboardPage({ params }: { params: { locale: string } }
         </Grid2> 
       </Grid2>
     </Container>
+    <Dialog open={logoutDialog} onClose={() => {setLogoutDialog(false)}}
+      sx={{
+        '& .MuiDialog-paper': {
+          backgroundColor: 'var(--background)',
+          p: 1
+        },
+      }}>
+      <DialogTitle>Déconnexion</DialogTitle>
+      <DialogContent> 
+        <Typography variant="body2">
+          Voulez-vous vraiment vous déconnecter ?
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="contained" color="error" onClick={logout}>
+          Oui
+        </Button>
+        <Button variant="outlined" color="primary" onClick={() => {setLogoutDialog(false)}}>
+          Non
+        </Button>
+      </DialogActions>
+    </Dialog>
     </ProtectedRoute>
   );
 };

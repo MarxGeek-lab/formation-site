@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
 import { CartState, CartItem, CartContextType } from '@/types/cart';
+import cartApiService from '@/services/cartApi';
 
 const CART_STORAGE_KEY = 'shop1_cart_data';
 
@@ -25,6 +26,7 @@ const loadCartFromStorage = (): CartState => {
         return {
           ...parsedCart,
           isOpen: false, // Toujours fermer le panier au chargement
+          sessionId: parsedCart.sessionId || localStorage.getItem('cart_session_id'),
         };
       }
     }
@@ -37,6 +39,7 @@ const loadCartFromStorage = (): CartState => {
     totalItems: 0,
     totalPrice: 0,
     isOpen: false,
+    sessionId: localStorage.getItem('cart_session_id') || undefined,
   };
 };
 
@@ -62,7 +65,9 @@ type CartAction =
   | { type: 'REMOVE_FROM_CART'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' }
-  | { type: 'TOGGLE_CART' };
+  | { type: 'TOGGLE_CART' }
+  | { type: 'SYNC_WITH_BACKEND'; payload: CartState }
+  | { type: 'SET_LOADING'; payload: boolean };
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
@@ -145,6 +150,20 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         isOpen: !state.isOpen,
       };
     
+    case 'SYNC_WITH_BACKEND':
+      return {
+        ...state,
+        items: action.payload.items,
+        totalItems: action.payload.totalItems,
+        totalPrice: action.payload.totalPrice,
+      };
+    
+    case 'SET_LOADING':
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
+    
     default:
       return state;
   }
@@ -160,24 +179,161 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     saveCartToStorage(cart);
   }, [cart]);
 
-  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
-    dispatch({ type: 'ADD_TO_CART', payload: item });
+  // Synchroniser avec le backend au chargement
+  useEffect(() => {
+    const syncWithBackend = async () => {
+      try {
+        dispatch({ type: 'SET_LOADING', payload: true });
+        
+        // S'assurer qu'on a un sessionId
+        if (!cart.sessionId) {
+          const sessionId = cartApiService.generateSessionId();
+          dispatch({ 
+            type: 'SYNC_WITH_BACKEND', 
+            payload: { 
+              ...cart,
+              sessionId 
+            } 
+          });
+        }
+        
+        // Récupérer le panier depuis le backend
+        const backendCart = await cartApiService.getCart();
+        
+        if (backendCart) {
+          // Synchroniser avec le panier backend
+          const frontendData = cartApiService.convertToFrontendFormat(backendCart);
+          dispatch({ 
+            type: 'SYNC_WITH_BACKEND', 
+            payload: frontendData
+          });
+        } else if (cart.items.length > 0) {
+          // Si pas de panier backend mais des items locaux, synchroniser vers le backend
+          await cartApiService.syncCart(cart.items);
+        }
+      } catch (error) {
+        console.error('Erreur synchronisation panier:', error);
+      } finally {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    };
+
+    syncWithBackend();
+  }, []); // Seulement au montage du composant
+
+  const addToCart = async (item: Omit<CartItem, 'quantity'>) => {
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      
+      // Ajouter localement d'abord pour une réponse rapide
+      dispatch({ type: 'ADD_TO_CART', payload: item });
+      
+      // Puis synchroniser avec le backend
+      const backendCart = await cartApiService.addToCart(item);
+      if (backendCart) {
+        const frontendData = cartApiService.convertToFrontendFormat(backendCart);
+        dispatch({ 
+          type: 'SYNC_WITH_BACKEND', 
+          payload: frontendData 
+        });
+      }
+    } catch (error) {
+      console.error('Erreur ajout au panier:', error);
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
   };
 
-  const removeFromCart = (id: string) => {
-    dispatch({ type: 'REMOVE_FROM_CART', payload: id });
+  const removeFromCart = async (id: string) => {
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      
+      // Supprimer localement d'abord
+      dispatch({ type: 'REMOVE_FROM_CART', payload: id });
+      
+      // Puis synchroniser avec le backend
+      const backendCart = await cartApiService.removeFromCart(id);
+      if (backendCart) {
+        const frontendData = cartApiService.convertToFrontendFormat(backendCart);
+        dispatch({ 
+          type: 'SYNC_WITH_BACKEND', 
+          payload: frontendData 
+        });
+      }
+    } catch (error) {
+      console.error('Erreur suppression du panier:', error);
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
   };
 
-  const updateQuantity = (id: string, quantity: number) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
+  const updateQuantity = async (id: string, quantity: number) => {
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      
+      // Mettre à jour localement d'abord
+      dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
+      
+      // Puis synchroniser avec le backend
+      const backendCart = await cartApiService.updateQuantity(id, quantity);
+      if (backendCart) {
+        const frontendData = cartApiService.convertToFrontendFormat(backendCart);
+        dispatch({ 
+          type: 'SYNC_WITH_BACKEND', 
+          payload: frontendData 
+        });
+      }
+    } catch (error) {
+      console.error('Erreur mise à jour quantité:', error);
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
   };
 
-  const clearCart = () => {
-    dispatch({ type: 'CLEAR_CART' });
+  const clearCart = async () => {
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      
+      // Vider localement d'abord
+      dispatch({ type: 'CLEAR_CART' });
+      
+      // Puis synchroniser avec le backend
+      await cartApiService.clearCart();
+    } catch (error) {
+      console.error('Erreur vidage panier:', error);
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
   };
 
   const toggleCart = () => {
     dispatch({ type: 'TOGGLE_CART' });
+  };
+
+  // Fonction pour marquer le panier comme converti (à utiliser après une commande)
+  const convertCart = async (orderId: string, email?: string) => {
+    try {
+      await cartApiService.convertCart(orderId, email);
+      dispatch({ type: 'CLEAR_CART' });
+    } catch (error) {
+      console.error('Erreur conversion panier:', error);
+    }
+  };
+
+  // Fonction pour associer le panier à un utilisateur connecté
+  const associateWithUser = async () => {
+    try {
+      const backendCart = await cartApiService.associateWithUser();
+      if (backendCart) {
+        const frontendData = cartApiService.convertToFrontendFormat(backendCart);
+        dispatch({ 
+          type: 'SYNC_WITH_BACKEND', 
+          payload: frontendData 
+        });
+      }
+    } catch (error) {
+      console.error('Erreur association utilisateur:', error);
+    }
   };
 
   const value: CartContextType = {
@@ -187,6 +343,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     updateQuantity,
     clearCart,
     toggleCart,
+    convertCart,
+    associateWithUser,
   };
 
   return (
