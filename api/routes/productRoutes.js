@@ -6,6 +6,7 @@ const upload = require('../middleware/multer');
 
 // Routes publiques
 router.get('/',  productController.getAllProducts);
+router.get('/mystere', productController.getProductsMystere);
 router.get('/:id', /* authenticateToken */ productController.getProductById);
 router.get('/download-products/:id', authenticateToken, productController.downloadProductsByUser);
 router.get('/category/:categoryId', productController.getProductsByCategory);

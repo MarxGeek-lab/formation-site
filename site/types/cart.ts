@@ -7,6 +7,7 @@ export interface CartItem {
   category?: string;
   options?: any;
   totalPrice?: number;
+  type: string;
 }
 
 export interface CartState {

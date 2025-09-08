@@ -151,12 +151,22 @@ export default function Home({ params }: { params: { locale: string } }) {
               
               <Box className={`${styles.videoPlaceholder}`}>
                 <Box className={styles.content}>
-                  <Box className={styles.iconWrapper}>
+                  <video 
+                    width="100%" 
+                    height="300" 
+                    controls 
+                    autoPlay
+                    style={{ borderRadius: '8px', border: '1px solid #ccc' }}
+                  >
+                    <source src={"/assets/video/raphlyvideo.mp4"} type="video/mp4" />
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
+                  {/* <Box className={styles.iconWrapper}>
                     <svg fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                     </svg>
                   </Box>
-                  <Typography className={styles.dark}>{t('presentationVideo')}</Typography>
+                  <Typography className={styles.dark}>{t('presentationVideo')}</Typography> */}
                 </Box>
               </Box>
             </Grid>
@@ -267,7 +277,7 @@ export default function Home({ params }: { params: { locale: string } }) {
             
             <div className={styles.featuresFooter}>
               <button className={styles.ctaButton}
-                onClick={() => router.push('/catalogue')}>
+                onClick={() => router.push(`${locale}/catalogue`)}>
                 {t('findRightProduct')}
               </button>
               <p className={theme === 'light' ? styles.light : styles.dark}>
@@ -333,10 +343,10 @@ export default function Home({ params }: { params: { locale: string } }) {
           </Container>
 
         {/* Mystery Product Section */}
-        <MysteryProductSection />
+        <MysteryProductSection locale={locale} />
 
         {/* Pricing Section */}
-        <PricingSection />
+        <PricingSection locale={locale} />
 
         {/* Team Section */}
         <TeamSection />

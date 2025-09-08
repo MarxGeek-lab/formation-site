@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Container, Typography, Button, Rating, Card, CardContent } from '@mui/material';
 import { useTheme } from '../hooks/useTheme';
 import { useTranslations } from 'next-intl';
@@ -11,10 +11,46 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 import Vector2 from '@/assets/images/Vector-2.png';
 import MystereImage from '@/assets/images/Mystere-s2-Juillet-copie-2.jpg';
+import { useProductStore } from '@/contexts/ProductStore';
+import { useCart } from '@/contexts/CartContext';
+import { useRouter } from 'next/navigation';
 
-export default function MysteryProductSection() {
+export default function MysteryProductSection({ locale }: { locale: string }) {
   const { theme } = useTheme();
+  const { addToCart} = useCart();
+  const router = useRouter();
+  const { productMystere, getProductsMystere } = useProductStore();
   const t = useTranslations('MysteryProduct');
+
+  const handleAddToCart = async (e: React.MouseEvent, type='achat') => {
+    e.stopPropagation();
+    
+    try {
+      const product = productMystere;
+      const price = product.price;
+      
+      // Ajouter au panier (synchronisation automatique avec backend)
+      await addToCart({
+        id: product._id,
+        name: product.name,
+        price: price,
+        image: product?.photos?.[0] || '',
+        category: product.category,
+        type: type
+      });
+
+      router.push(`/${locale}/paiement`);
+
+    } catch (error) {
+      console.error('Erreur ajout au panier:', error);
+    }
+  };
+
+
+  useEffect(() => {
+    getProductsMystere();
+  }, []);
+console.log(productMystere);
 
   return (
     <Box 
@@ -106,10 +142,9 @@ export default function MysteryProductSection() {
                             overflow: 'hidden'
                         }}
                         >
-                        <Image
-                            src={MystereImage}
+                        <img
+                            src={productMystere?.photos?.[0]}
                             alt="Produit Mystère"
-                            fill
                             style={{ 
                             objectFit: 'cover',
                             borderRadius: '12px'
@@ -144,7 +179,8 @@ export default function MysteryProductSection() {
                             fontSize: '1.5rem'
                             }}
                         >
-                            {t('productTitle')}
+                            {productMystere?.name} 
+                            {/* {t('productTitle')} */}
                         </Typography>
 
                         {/* Product Description */}
@@ -169,8 +205,6 @@ export default function MysteryProductSection() {
                             variant="contained"
                             size="large"
                             startIcon={<ArrowForwardIcon />}
-                            href="https://rafly.me?add-to-cart=5231&quantity=1&e-redirect=https://rafly.me/?post_type=product&p=5231"
-                            target="_blank"
                             sx={{
                                 backgroundColor: 'white',
                                 color: 'var(--primary)',
@@ -186,6 +220,7 @@ export default function MysteryProductSection() {
                                 },
                                 transition: 'all 0.3s ease',
                             }}
+                            onClick={(e) => handleAddToCart(e, 'achat')}
                             >
                             {t('buyNow')}
                             </Button>
@@ -194,7 +229,6 @@ export default function MysteryProductSection() {
                             variant="outlined"
                             size="large"
                             startIcon={<CreditCardIcon />}
-                            href="#abonnement"
                             sx={{
                                 borderColor: 'white',
                                 color: 'white',
@@ -211,6 +245,7 @@ export default function MysteryProductSection() {
                                 },
                                 transition: 'all 0.3s ease',
                             }}
+                            onClick={(e) => handleAddToCart(e, 'abonnement')}
                             >
                             {t('subscribe')}
                             </Button>

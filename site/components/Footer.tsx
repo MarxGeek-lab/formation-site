@@ -59,15 +59,24 @@ export default function Footer({ locale }: { locale: string }) {
           <div className="footer__section">
             <h3 className={`footer__title ${theme === 'light' ? 'footer__title--light' : 'footer__title--dark'}`}>{t('quickLinks')}</h3>
             <div className="footer__links">
-              <a 
+              {/* <a 
                 href={`/${locale}/connexion`} 
                 className="footer__account-btn"
               >
                 {t('myAccount')}
-              </a>
+              </a> */}
               <nav className="footer__nav">
-                <a href={`/${locale}/#tarification`} className={`footer__nav-link ${theme === 'light' ? 'footer__nav-link--light' : 'footer__nav-link--dark'}`}>
+                <a href={`/${locale}#tarification`} className={`footer__nav-link ${theme === 'light' ? 'footer__nav-link--light' : 'footer__nav-link--dark'}`}>
                   {t('pricing')}
+                </a>
+                <a href={`/${locale}/catalogue`} className={`footer__nav-link ${theme === 'light' ? 'footer__nav-link--light' : 'footer__nav-link--dark'}`}>
+                  {t('catalog')}
+                </a>
+                <a href={`/${locale}#produit-mystere`} className={`footer__nav-link ${theme === 'light' ? 'footer__nav-link--light' : 'footer__nav-link--dark'}`}>
+                  {t('mysteryProduct')}
+                </a>
+                <a href={`/${locale}/affiliation`} className={`footer__nav-link ${theme === 'light' ? 'footer__nav-link--light' : 'footer__nav-link--dark'}`}>
+                  {t('affiliation')}
                 </a>
                 <a href={`/${locale}/support`} className={`footer__nav-link ${theme === 'light' ? 'footer__nav-link--light' : 'footer__nav-link--dark'}`}>
                   {t('support')}

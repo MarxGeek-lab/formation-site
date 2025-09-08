@@ -52,7 +52,8 @@ export default function ProductCard({
         name: product.name,
         price: finalPrice,
         image: product?.photos?.[0] || '',
-        category: product.category
+        category: product.category,
+        type: 'achat'
       });
 
       // Show success notification
@@ -197,52 +198,52 @@ export default function ProductCard({
         </div>
       </div>
       <Dialog
-  open={openDemo}
-  onClose={() => setOpenDemo(false)}
-  maxWidth="md" // limite la largeur
-  fullWidth
-  PaperProps={{
-    sx: {
-      background: "var(--background)",
-      borderRadius: "12px",
-      overflow: "hidden", // supprime le scroll interne
-    },
-  }}
->
-  <DialogTitle>{t("videoDemo")}</DialogTitle>
-  <DialogContent
-    sx={{
-      p: 0, // pas de padding autour
-      overflow: "hidden", // empêche le scroll
-    }}
-  >
-    <Box
-      sx={{
-        width: "100%",
-        maxHeight: "70vh", // limite la hauteur à l’écran
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <video
-        controls
-        style={{
-          width: "100%",
-          height: "100%",
-          maxHeight: "70vh", // garde la vidéo responsive
-          objectFit: "contain", // pas de déformation
-          borderRadius: "8px",
+        open={openDemo}
+        onClose={() => setOpenDemo(false)}
+        maxWidth="md" // limite la largeur
+        fullWidth
+        PaperProps={{
+          sx: {
+            background: "var(--background)",
+            borderRadius: "12px",
+            overflow: "hidden", // supprime le scroll interne
+          },
         }}
       >
-        <source src={product?.demoVideo} type="video/mp4" />
-        {t("browserNotSupported")}
-      </video>
-    </Box>
-  </DialogContent>
-  <DialogActions>
-    <Button color="error" size="small" variant="contained" onClick={() => setOpenDemo(false)}>{t("close")}</Button>
-  </DialogActions>
-</Dialog>
+        <DialogTitle>{t("videoDemo")}</DialogTitle>
+        <DialogContent
+          sx={{
+            p: 0, // pas de padding autour
+            overflow: "hidden", // empêche le scroll
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              maxHeight: "70vh", // limite la hauteur à l’écran
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <video
+              controls
+              style={{
+                width: "100%",
+                height: "100%",
+                maxHeight: "70vh", // garde la vidéo responsive
+                objectFit: "contain", // pas de déformation
+                borderRadius: "8px",
+              }}
+            >
+              <source src={product?.demoVideo} type="video/mp4" />
+              {t("browserNotSupported")}
+            </video>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button color="error" size="small" variant="contained" onClick={() => setOpenDemo(false)}>{t("close")}</Button>
+        </DialogActions>
+      </Dialog>
 
     </div>
   );

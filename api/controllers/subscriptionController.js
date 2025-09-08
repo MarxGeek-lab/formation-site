@@ -49,7 +49,6 @@ exports.delete = async (req, res) => {
 
 exports.publishOrUnpublish = async (req, res) => {
     try {
-        console.log(req.body)
       const subscription = await Subscription.findById(req.params.id)
   
       if (!subscription) {
@@ -68,7 +67,7 @@ exports.publishOrUnpublish = async (req, res) => {
 
 exports.getAllSubscription = async (req, res) => {
     try {
-        const subscriptions = await Subscription.find();
+        const subscriptions = await Subscription.find().populate('product');
 
         return res.json(subscriptions)
     } catch (error) {

@@ -183,8 +183,8 @@ const userController = {
       const data = { fullname: fullName, otp };
   
       const emailService = new EmailService();
-      emailService.setSubject(`${action ? "Confirmation de votre mail":"Activation de votre compte"} sur ReserveTout`);
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "ReserveTout");
+      emailService.setSubject(`${action ? "Confirmation de votre mail":"Activation de votre compte"} sur Rafly`);
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
       emailService.addTo(email);
       emailService.setHtml(
         generateTemplateHtml(action ? "templates/resetPwdMobile.html":"templates/activeAccount.html", data),

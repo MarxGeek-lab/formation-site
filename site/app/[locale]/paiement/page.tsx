@@ -127,7 +127,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-console.log("cart == ", cart);
+
   const handleSubmit = async () => {
     if (validateForm()) {
       const orderData = {
@@ -254,7 +254,6 @@ console.log("cart == ", cart);
       const { data, status } = await markPromoAsUsed({
         code: formData.promoCode,
       })
-      console.log("apply code == ", data, status)
     } catch (error) {
       console.log(error)
     }
@@ -320,6 +319,28 @@ console.log("cart == ", cart);
         </Typography>
 
         {/* Section Code Promo */}
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mb: 4,
+          background: 'var(--background)',
+          border: '1px solid var(--primary-light)',
+          borderRadius: '8px',
+          padding: '0.7rem',
+        }}>
+          <Typography variant="body1" sx={{ 
+            color: 'var(--foreground)', 
+          
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 1
+            }}>
+            Consulter votre panier
+          </Typography>
+          <Button variant="contained" onClick={() => router.push(`/${locale}/panier`)}>Panier</Button>
+        </Box>
         <Card className={styles.promoSection} sx={{ mb: 4 }}>
           <CardContent sx={{ p: 0 }}>
             {/* Message d'information */}

@@ -187,12 +187,9 @@ p {
   font-size: 56 !important;
   font-weight: bold !important;
   text-align: left;
-  color: var(--foreground);
-  font-family: 'Nunito', sans-serif;
+  color: white !important;
   line-height: 52px !important;
-  /* background: -webkit-linear-gradient(50deg, #5E3AFC, #ECEFFF);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; */
+  background-color: radial-gradient(circle, white 0%, #5E3AFC 50%);
   width: fit-content !important;
   margin: auto;
   margin-bottom: 1.5rem !important;

@@ -95,7 +95,21 @@
     },
     "elite": {
       "title": "Abonnement Élite",
-      "description": "Pensé pour scaler et dominer le marché digital."
+      "description": "Pensé pour scaler et dominer le marché digital.",
+      "features": {
+        "fullCatalogAccess": "Accès complet à l'intégralité du catalogue produit",
+        "advertising15Posters": "15 affiches publicitaires offertes",
+        "ecommerceStore": "Une boutique e-commerce offerte",
+        "monthlyExpertCall": "Call mensuel avec un expert Facebook Ads",
+        "weeklyMysteryProduct": "01 Produit mystère tendance chaque semaine",
+        "marketReports": "Rapports comparatifs sur les marchés",
+        "weeklyAdvice": "Conseils hebdomadaires",
+        "exclusiveAudiences": "Accès exclusif aux meilleures audiences et pays cibles pour chaque produit",
+        "privateCoachContact": "Contact privé avec les coachs",
+        "monthlyAudit": "Audit mensuel gratuit des campagnes publicitaires",
+        "marketingStrategies": "Suggestions de stratégies marketing",
+        "plrContract": "Contrat de licence PLR"
+      }
     },
     "essential": {
       "title": "Abonnement Essentiel",
@@ -103,8 +117,9 @@
       "features": {
         "access15Products": "Accès à 15 produits gagnants",
         "advertising8Posters": "8 affiches publicitaires offertes",
-        "weeklyTrends": "Conseils hebdomadaires sur les tendances générales",
+        "weeklyTrends": "Conseils hebdomadaires sur les tendances générales du marché",
         "monthlyStrategyAudit": "Audit mensuel gratuit sur les stratégies publicitaires",
+        "monthlySurprise": "1 produit surprise chaque mois",
         "plrLicense": "Contrat de licence PLR"
       }
     }
@@ -163,6 +178,9 @@
     "myAccount": "Mon compte",
     "pricing": "Tarifs",
     "support": "Support",
+    "catalog": "Catalogue",
+    "mysteryProduct": "Produit Mystère",
+    "affiliation": "Affiliation",
     "privacyPolicy": "Politique de confidentialité",
     "newsletter": "Newsletter",
     "newsletterDescription": "Abonnez-vous pour ne pas rater nos produits mystères",

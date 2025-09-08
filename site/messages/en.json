@@ -95,7 +95,21 @@
     },
     "elite": {
       "title": "Elite Subscription",
-      "description": "Designed to scale and dominate the digital market."
+      "description": "Designed to scale and dominate the digital market.",
+      "features": {
+        "fullCatalogAccess": "Full access to the entire product catalog",
+        "advertising15Posters": "15 advertising posters offered",
+        "ecommerceStore": "One e-commerce store offered",
+        "monthlyExpertCall": "Monthly call with a Facebook Ads expert",
+        "weeklyMysteryProduct": "01 trending mystery product each week",
+        "marketReports": "Comparative market reports",
+        "weeklyAdvice": "Weekly advice",
+        "exclusiveAudiences": "Exclusive access to the best audiences and target countries for each product",
+        "privateCoachContact": "Private contact with coaches",
+        "monthlyAudit": "Free monthly audit of advertising campaigns",
+        "marketingStrategies": "Marketing strategy suggestions",
+        "plrContract": "PLR license contract"
+      }
     },
     "essential": {
       "title": "Essential Subscription",
@@ -103,8 +117,9 @@
       "features": {
         "access15Products": "Access to 15 winning products",
         "advertising8Posters": "8 advertising posters offered",
-        "weeklyTrends": "Weekly advice on general trends",
+        "weeklyTrends": "Weekly advice on general market trends",
         "monthlyStrategyAudit": "Free monthly audit on advertising strategies",
+        "monthlySurprise": "1 surprise product each month",
         "plrLicense": "PLR license contract"
       }
     }
@@ -163,6 +178,9 @@
     "myAccount": "My Account",
     "pricing": "Pricing",
     "support": "Support",
+    "catalog": "Catalog",
+    "mysteryProduct": "Mystery Product",
+    "affiliation": "Affiliation",
     "privacyPolicy": "Privacy Policy",
     "newsletter": "Newsletter",
     "newsletterDescription": "Subscribe to not miss our mystery products",

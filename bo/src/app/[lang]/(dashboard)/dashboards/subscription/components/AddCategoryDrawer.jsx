@@ -11,18 +11,19 @@ import Divider from '@mui/material/Divider'
 
 // Components Imports
 import CustomTextField from '@core/components/mui/TextField'
-import { useSubscriptionContext, useAuthStore } from '@/contexts/GlobalContext'
+import { useSubscriptionContext, useAuthStore, useAdminStore, usePropertyStore } from '@/contexts/GlobalContext'
 import { showToast } from '@/components/ToastNotification/ToastNotification'
 import { hideLoader, showLoader } from '@/components/Loader/loaderService'
 import CustomAutocomplete from '@/@core/components/mui/Autocomplete'
-import { Chip, InputAdornment } from '@mui/material'
+import { Chip, InputAdornment, MenuItem } from '@mui/material'
 
 const AddCategoryDrawer = props => {
   // Props
-  const { open, handleClose, subscriptionData, setData, fetchSubscription, setSubscriptionData, allProducts } = props
+  const { open, handleClose, subscriptionData, setData, fetchSubscription, setSubscriptionData } = props
 
   const { addSubscription, updateSubscription } = useSubscriptionContext();
   const { user } = useAuthStore();
+  const { allProducts, getAllProducts } = usePropertyStore();
 
   // States
   const [title, setTitle] = useState('')
@@ -32,6 +33,7 @@ const AddCategoryDrawer = props => {
   const [features, setFeatures] = useState([])
   const [newFeature, setNewFeature] = useState('')
   const [duration, setDuration] = useState('')
+  const [product, setProduct] = useState('')
  
   const featuresArray = [
     'Accès à 3 produits gagnants',
@@ -92,6 +94,7 @@ const AddCategoryDrawer = props => {
         features,
         duration: duration,
         admin: user?._id,
+        product,
       }
 
       showLoader();
@@ -140,6 +143,10 @@ const AddCategoryDrawer = props => {
   }
 
   useEffect(() => {
+    getAllProducts();
+  }, [user]);
+
+  useEffect(() => {
     if (subscriptionData) {
       setTitle(subscriptionData?.title || '');
       setDescription(subscriptionData?.description || '');
@@ -170,7 +177,11 @@ const AddCategoryDrawer = props => {
         {/* <form onSubmit={handleSubmit(data => handleFormSubmit(data))} className='flex flex-col gap-5'> */}
           <CustomTextField
             fullWidth
-            label='Titre'
+            label={
+              <Typography variant="subtitle2" className="mb-2">
+                Titre <span className="text-red-500">*</span>
+              </Typography>
+            }
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="Nom du produit d'abonnement"
@@ -178,7 +189,11 @@ const AddCategoryDrawer = props => {
 
           <CustomTextField
             fullWidth
-            label='Description'
+            label={
+              <Typography variant="subtitle2" className="mb-2">
+                Description <span className="text-red-500">*</span>
+              </Typography>
+            }
             value={description}
             onChange={e => setDescription(e.target.value)}
             placeholder="Description du produit d'abonnement"
@@ -188,7 +203,11 @@ const AddCategoryDrawer = props => {
 
           <CustomTextField
             fullWidth
-            label='Prix'
+            label={
+              <Typography variant="subtitle2" className="mb-2">
+                Prix <span className="text-red-500">*</span>
+              </Typography>
+            }
             value={price}
             onChange={e => setPrice(e.target.value)}
             placeholder='0'
@@ -204,7 +223,11 @@ const AddCategoryDrawer = props => {
 
           <CustomTextField
             fullWidth
-            label='Prix (EUR)'
+            label={
+              <Typography variant="subtitle2" className="mb-2">
+                Prix (EUR) <span className="text-red-500">*</span>
+              </Typography>
+            }
             value={priceEUR}
             onChange={e => setPriceEUR(e.target.value)}
             placeholder='0.00'
@@ -220,7 +243,11 @@ const AddCategoryDrawer = props => {
 
           <CustomTextField
             fullWidth
-            label='Durée en mois'
+            label={
+              <Typography variant="subtitle2" className="mb-2">
+                Durée en mois <span className="text-red-500">*</span>
+              </Typography>
+            }
             value={duration}
             onChange={e => setDuration(e.target.value)}
             placeholder='3'
@@ -235,7 +262,7 @@ const AddCategoryDrawer = props => {
           /> 
 
           <Grid size={{ xs: 12 }}>
-            <Typography variant="subtitle2" className="mb-2">Fonctionnalités</Typography>
+            <Typography variant="subtitle2" className="mb-2">Avantages</Typography>
             <div className="flex gap-2 mb-3">
               <CustomAutocomplete
                 fullWidth
@@ -281,6 +308,28 @@ const AddCategoryDrawer = props => {
               ))}
             </div>
           </Grid>
+
+           <Grid size={{ xs: 12, md: 6 }}>
+              <CustomTextField
+                select
+                fullWidth
+                value={product || ''}
+                onChange={(e) =>  setProduct(e.target.value)}
+                label={
+                  <Typography variant="subtitle2" className="mb-2">
+                    Produit lié directement <span className="text-red-500">*</span>
+                  </Typography>
+                }
+                placeholder="Sélectionner un produit *"
+              >
+                <MenuItem value="">Aucun</MenuItem>
+                {allProducts.map((product, index) => (
+                  <MenuItem key={index} value={product._id}>
+                    {product.name}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
+            </Grid>
 
           {/* <Grid size={{ xs: 12 }}>
             <CustomAutocomplete

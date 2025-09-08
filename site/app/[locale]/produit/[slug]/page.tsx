@@ -318,7 +318,8 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                         image: product?.photos?.[0] || '',
                         category: product?.category || '',
                         options: selectedOptions,
-                        totalPrice: calculateTotal()
+                        totalPrice: calculateTotal(),
+                        type: 'achat'
                       };
                       
                       addToCart(cartItem);
@@ -333,7 +334,8 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                 
               </Card>
               {/* Alternative abonnement */}
-              <Box className={styles.subscriptionAlternative}>
+              {product?.isSubscriptionBased && (
+                <Box className={styles.subscriptionAlternative}>
                 <Box sx={{
                   display: 'flex',
                   alignItems: 'center',
@@ -362,6 +364,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                   {t('takeSubscription')}
                 </Button>
               </Box>
+              )}
             </Box>
           </Grid>
         </Grid>

@@ -8,8 +8,10 @@ import axiosInstanceUser from "../config/axiosConfig";
 
 interface ProductContextType {
     product: any;
+    productMystere: any;
     allProducts: any[];
     getAllProduct: () => void;
+    getProductsMystere: () => void;
     getProductById: (id: string) => Promise<{ data: any, status: number }>;
     getProductsByUser: (userId: string) => Promise<{ data: any[], status: number }>;
     getProductsByCategory: (categoryId: string) => Promise<{ data: any[], status: number }>;
@@ -58,8 +60,10 @@ interface Property {
 
 export const ProductStore = createContext<ProductContextType>({
     product: null,
+    productMystere: null,
     allProducts: [],
     getAllProduct: () => {},
+    getProductsMystere: () => {},
     getProductById: async () => ({ data: null, status: 500 }),
     getProductsByUser: async () => ({ data: [], status: 500 }),
     getProductsByCategory: async () => ({ data: [], status: 500 }),
@@ -74,6 +78,7 @@ export const useProductStore = (): ProductContextType => useContext(ProductStore
 
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
     const [product, setProduct] = useState<Property | null>(null);
+    const [productMystere, setProductMystere] = useState<Property | null>(null);
     const [allProducts, setAllProducts] = useState<Property[]>([]);
 
     // Récupérer toutes les propriétés
@@ -81,6 +86,15 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
         try {
             const response = await axios.get(`${API_URL}products`);
             setAllProducts(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const getProductsMystere = async () => {
+        try {
+            const response = await axios.get(`${API_URL}products/mystere`);
+            setProductMystere(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -196,6 +210,8 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     const data = { 
         product, 
         allProducts,
+        productMystere,
+        getProductsMystere,
         getAllProduct, 
         getProductById, 
         getProductsByUser, 

@@ -46,6 +46,7 @@ import CustomAvatar from '@/@core/components/mui/Avatar'
 import { getInitials } from '@/utils/getInitials'
 import SearchIcon from '@mui/icons-material/Search'
 import { usePropertyStore } from '@/contexts/PropertyStore'
+import dayjs from 'dayjs'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -93,7 +94,6 @@ const columnHelper = createColumnHelper()
 const ProductCategoryTable = ({ fetchSubscription, allSubscriptions }) => {
   // States
   const { deleteSubscription, publishOrUnpublishSubscription } = useSubscriptionContext();
-  const { getAllProducts, allProducts } = usePropertyStore()
 
   const [addCategoryOpen, setAddCategoryOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
@@ -127,6 +127,16 @@ const ProductCategoryTable = ({ fetchSubscription, allSubscriptions }) => {
                 {row.original?.title}
               </Typography>
             </div>
+          </div>
+        )
+      }),
+      columnHelper.accessor('description', {
+        header: 'Description',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-3' style={{ whiteSpace: 'pre-wrap', width: '200px' }}>
+            <Typography variant='body2' color='text.primary'>
+              {row.original?.description}
+            </Typography>
           </div>
         )
       }),
@@ -167,11 +177,19 @@ const ProductCategoryTable = ({ fetchSubscription, allSubscriptions }) => {
           </div>
         )
       }),
+      columnHelper.accessor('product', {
+        header: 'Produit lié',
+        cell: ({ row }) => (
+          <Typography variant='body2' color='text.primary'>
+            {row.original?.product?.name}
+          </Typography>
+        )
+      }),
       columnHelper.accessor('date', {
         header: 'Date',
         cell: ({ row }) => (
           <Typography variant='body2' color='text.primary'>
-            {row.original?.createdAt}
+            {dayjs(row.original?.createdAt).format('DD/MM/YYYY')}
           </Typography>
         )
       }),
@@ -367,7 +385,6 @@ const ProductCategoryTable = ({ fetchSubscription, allSubscriptions }) => {
         handleClose={() => setAddCategoryOpen(!addCategoryOpen)}
         fetchSubscription={fetchSubscription}
         setSubscriptionData={setSubscription}
-        allProducts={allProducts}
       />
     </>
   )

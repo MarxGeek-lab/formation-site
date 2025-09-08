@@ -249,7 +249,9 @@ console.log(req.body)
     try {
       const products = await Product.find({ 
         isDeleted: false, 
-        productStatus: 'active'
+        productStatus: 'active',
+        productType: 'standard',
+        isSubscriptionBased: false
       })
       .populate('subscriptionId')
       .populate('assignedAdminId')
@@ -263,6 +265,28 @@ console.log(req.body)
       }));
 
       return res.status(200).json(productsWithSubcategories);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ 
+        success: false,
+        message: 'Erreur serveur', 
+        error: error.message 
+      });
+    }
+  },
+
+  getProductsMystere: async (req, res) => {
+    try {
+      const productMystere = await Product.findOne({ 
+        isDeleted: false, 
+        productType: 'mystere'
+      })
+      .populate('subscriptionId')
+      .populate('assignedAdminId')
+
+      console.log(productMystere)
+
+      return res.status(200).json(productMystere);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ 

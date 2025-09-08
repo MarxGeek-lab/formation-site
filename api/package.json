@@ -1,7 +1,7 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "ReserveTout API",
+  "description": "Rafly API",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
