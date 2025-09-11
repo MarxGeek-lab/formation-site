@@ -115,7 +115,7 @@ interface UserStats {
 const ProfilePage: React.FC = () => {
   const router = useRouter();
   const { user, getUserById, updateUser } = useAuthStore();
-  const [profile, setProfile] = useState<UserProfile | any | null>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [editedProfile, setEditedProfile] = useState<Partial<UserProfile>>({});
@@ -388,7 +388,6 @@ const ProfilePage: React.FC = () => {
                   label="Nom et Prénom"
                   value={editMode ? editedProfile?.name || '' : profile?.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  disabled={!editMode}
                   fullWidth
                   sx={styleInput}
                 />
@@ -397,7 +396,6 @@ const ProfilePage: React.FC = () => {
                 <TextField
                   label="Email"
                   value={profile?.email}
-                  disabled
                   fullWidth
                   variant="outlined"
                   InputProps={{
@@ -408,14 +406,13 @@ const ProfilePage: React.FC = () => {
               </Grid2>
               <Grid2 size={{ xs: 12, sm: 6 }}>
                 <Stack direction="row" spacing={1}>
-                  <Autocomplete
+                  {/* <Autocomplete
                     options={countries}
                     getOptionLabel={(option) => `${option.dial_code}`}
                     value={countries.find(country => country.dial_code === (editMode ? editedProfile.phoneCode || '' : profile.phoneCode || '')) || null}
                     onChange={(event, newValue) => {
                       handleInputChange('phoneCode', newValue ? newValue.dial_code : '');
                     }}
-                    disabled={!editMode}
                     sx={{ width: 140 }}
                     renderInput={(params) => (
                       <TextField
@@ -438,25 +435,23 @@ const ProfilePage: React.FC = () => {
                       </Box>
                     )}
                     noOptionsText="Aucun code"
-                  />
+                  /> */}
                   <TextField
                     label="Téléphone"
-                    value={editMode ? editedProfile?.phoneNumber || '' : profile?.phoneNumber}
+                    value={editedProfile?.phoneNumber ?? profile?.phoneNumber}
                     onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                    disabled={!editMode}
                     fullWidth
                     variant="outlined"
-                    placeholder="6 12 34 56 78"
+                    placeholder="229 6 12 34 56 78"
                     sx={styleInput}
                   />
                 </Stack>
               </Grid2>
-              <Grid2 size={{ xs: 12, sm: 6 }}>
+              {/* <Grid2 size={{ xs: 12, sm: 6 }}>
                 <TextField
                   label="Adresse"
                   value={editMode ? editedProfile?.address || '' : profile?.address || ''}
                   onChange={(e) => handleInputChange('address', e.target.value)}
-                  disabled={!editMode}
                   fullWidth
                   variant="outlined"
                   InputProps={{
@@ -468,23 +463,21 @@ const ProfilePage: React.FC = () => {
               <Grid2 size={{ xs: 12, sm: 6 }}>
                 <TextField
                   label="Ville"
-                  value={editMode ? editedProfile?.city || '' : profile?.city || ''}
+                  value={profile?.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  disabled={!editMode}
                   fullWidth
                   variant="outlined"
                   sx={styleInput}
                 />
-              </Grid2>
+              </Grid2> */}
               <Grid2 size={{ xs: 12, sm: 6 }}>
                 <Autocomplete
                   options={countries}
                   getOptionLabel={(option) => option.name || ''}
-                  value={countries.find(country => country.name === (editMode ? editedProfile?.country || '' : profile?.country || '')) || null}
+                  value={profile?.country}
                   onChange={(event, newValue) => {
-                    handleInputChange('country', newValue ? newValue.name : '');
+                    handleInputChange('country', newValue.name);
                   }}
-                  disabled={!editMode}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -492,26 +485,27 @@ const ProfilePage: React.FC = () => {
                       variant="outlined"
                       placeholder="Rechercher un pays..."
                       sx={styleInput}
+                      value={profile.country}
                     />
                   )}
                   renderOption={(props, option) => (
-                    <Box component="li" {...props} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box component="li" {...props} sx={{ display: 'flex', alignItems: 'center', gap: 1, background: 'var(--background)' }}>
                       <img
                         src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
                         alt={`Drapeau ${option.name}`}
                         style={{ width: 20, height: 'auto' }}
                       />
-                      <Typography>{option.name}</Typography>
+                      <Typography sx={{color: 'white'}}>{option.name}</Typography>
                     </Box>
                   )}
                   noOptionsText="Aucun pays trouvé"
                 />
               </Grid2>
-              <Grid2 size={{ xs: 12, sm: 6 }}>
-                <FormControl fullWidth disabled={!editMode} sx={styleInput}>
+              {/* <Grid2 size={{ xs: 12, sm: 6 }}>
+                <FormControl fullWidth sx={styleInput}>
                   <InputLabel>Sexe</InputLabel>
                   <Select
-                    value={editMode ? editedProfile?.gender || '' : profile?.gender || ''}
+                    value={profile?.gender}
                     label="Sexe"
                     onChange={(e) => handleInputChange('gender', e.target.value)}
                   >
@@ -521,7 +515,7 @@ const ProfilePage: React.FC = () => {
                     <MenuItem value="other">Autre</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid2>
+              </Grid2> */}
             </Grid2>
 
             {editMode && (
