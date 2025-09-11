@@ -32,6 +32,7 @@ interface BackendCartItem {
   image?: string;
   category?: string;
   options?: Record<string, string>;
+  type?: string
 }
 
 interface BackendCart {
@@ -57,6 +58,7 @@ const convertBackendItemToFrontend = (backendItem: BackendCartItem): CartItem =>
   image: backendItem.image,
   category: backendItem.category,
   options: backendItem.options,
+  type: backendItem.type
 });
 
 // Convertir les items frontend vers backend
