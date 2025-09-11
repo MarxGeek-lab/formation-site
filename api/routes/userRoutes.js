@@ -19,12 +19,12 @@ router.post('/reset-password', userController.resetPwd);
 router.post('/reset-password2', userController.resetPwdMobile);
 
 router.get('/:id', userController.getUserById);
-router.put('/update/:id', authenticateToken, upload.fields([
+router.put('/update/:id', upload.fields([
     { name: 'pdf', maxCount: 1 },
     { name: 'images', maxCount: 1 },
 ]), userController.updateUser);
 router.put('/update-photo/:id', authenticateToken, upload.single('profile'), userController.updateUserPhoto);
-router.put('/deactivate/:id', authenticateToken, userController.desactiveUser);
+router.put('/deactivate/:id', userController.desactiveUser);
 router.put('/delete/:id', authenticateToken, userController.deleteUser);
 router.put('/validate/:id', authenticateToken, userController.validUser);
 router.get('/:id', authenticateToken, userController.getUserById);
