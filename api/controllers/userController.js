@@ -1,17 +1,17 @@
 require("dotenv").config();
 const User = require('../models/User');
-const EmailService = require('../services/emailService');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
 const { generateAccessToken, generateToken } = require('../utils/auth');
 const { encryptPassword, generateVerificationCode, verifyPassword, decryptData, encryptData } = require('../utils/helpers');
 const path = require("path");
 const fs = require("fs");
+const { EmailService } = require("../services/emailService");
 
 const userController = {
   // Fonction pour créer un utilisateur
   signUp: async (req, res) => {
     try {
-      const { name, email, password, phoneNumber,  } = req.body;
+      const { name, email, password, phoneNumber, origin  } = req.body;
       console.log(req.body);
 
       // Vérifier si l'email est déjà utilisé
@@ -42,8 +42,8 @@ const userController = {
 
       // Configuration de l'email à envoyer
       const emailService = new EmailService();
-      emailService.setSubject("Activation de votre compte sur STORE");
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      emailService.setSubject("Activation de votre compte sur Rafly");
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
       emailService.addTo(email);
       emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
       await emailService.send(); // Envoi de l'email
@@ -226,8 +226,8 @@ const userController = {
 
       // Configuration de l'email à envoyer
       const emailService = new EmailService();
-      emailService.setSubject("Activation de votre compte sur STORE");
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      emailService.setSubject("Activation de votre compte sur Rafly");
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
       emailService.addTo(email);
       emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
       await emailService.send(); // Envoi de l'email
@@ -319,12 +319,12 @@ const userController = {
       const token = encryptData({email, id: userVerify._id});
       const emailData = { 
         fullname: `${userVerify.name}`, 
-        link: `${process.env.URL_APP}new-password?cod=${token}`   
+        link: `${process.env.URL_APP}reinitialiser-mot-de-passe?cod=${token}`   
       };
 
       const emailService = new EmailService();
-      emailService.setSubject("Confirmation de votre email sur STORE");
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      emailService.setSubject("Confirmation de votre email sur Rafly");
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
       emailService.addTo(email);
       emailService.setHtml(generateTemplateHtml("templates/verifyEmail.html", emailData));
       await emailService.send();

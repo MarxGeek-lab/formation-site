@@ -69,7 +69,7 @@
 
 //                 const emailService = new EmailService();
 //                 emailService.setSubject(`Rappel urgent : Votre réservation sera bientôt annulée`);
-//                 emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+//                 emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
 //                 emailService.addTo(tenant.email);
 //                 emailService.setHtml(html);
 //                 await emailService.send();
@@ -169,7 +169,7 @@
 
 //                     const emailService = new EmailService();
 //                     emailService.setSubject(`Réservation annulée : Délai de paiement dépassé`);
-//                     emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+//                     emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
 //                     emailService.addTo(tenant.email);
 //                     emailService.setHtml(html);
 //                     await emailService.send();
@@ -247,8 +247,8 @@
 //                     );
 
 //                     const emailService = new EmailService();
-//                     emailService.setSubject(`Rappel : Fin de votre réservation sur STORE`);
-//                     emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+//                     emailService.setSubject(`Rappel : Fin de votre réservation sur Rafly`);
+//                     emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
 //                     emailService.addTo(tenant.email);
 //                     emailService.setHtml(tenantHtml);
             
@@ -281,8 +281,8 @@
 //                     );
 
 //                     const emailService2 = new EmailService();
-//                     emailService2.setSubject(`Rappel : Fin de réservation sur STORE`);
-//                     emailService2.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+//                     emailService2.setSubject(`Rappel : Fin de réservation sur Rafly`);
+//                     emailService2.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
 //                     emailService2.addTo(owner.email);
 //                     emailService2.setHtml(ownerHtml);
             
@@ -368,8 +368,8 @@
 //                 );
 
 //                 const emailService = new EmailService();
-//                 emailService.setSubject(`Fin de votre réservation sur STORE`);
-//                 emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+//                 emailService.setSubject(`Fin de votre réservation sur Rafly`);
+//                 emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
 //                 emailService.addTo(tenant.email);
 //                 emailService.setHtml(tenantHtml);
 //                 await emailService.send();
@@ -402,8 +402,8 @@
 //                 );
 
 //                 const emailService2 = new EmailService();
-//                 emailService2.setSubject(`Réservation terminée sur STORE`);
-//                 emailService2.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+//                 emailService2.setSubject(`Réservation terminée sur Rafly`);
+//                 emailService2.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
 //                 emailService2.addTo(owner.email);
 //                 emailService2.setHtml(ownerHtml);
 //                 await emailService2.send();

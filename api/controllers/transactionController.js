@@ -137,8 +137,8 @@ const transactionController = {
         //   };
 
         //   const emailService = new EmailService();
-        //   emailService.setSubject(`Paiement non effectué sur STORE`);
-        //   emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+        //   emailService.setSubject(`Paiement non effectué sur Rafly`);
+        //   emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
         //   emailService.addTo(email);
         //   emailService.setHtml(generateTemplateHtml("templates/notificationPaymentCustomerFailed.html", templateData));
         //   await emailService.send();
@@ -160,22 +160,22 @@ const transactionController = {
 
       // if (transaction.status === 'success') {
       //   const emailService = new EmailService();
-      //   emailService.setSubject(`Paiement effectué avec succès sur STORE`);
-      //   emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      //   emailService.setSubject(`Paiement effectué avec succès sur Rafly`);
+      //   emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
       //   emailService.addTo(email);
       //   emailService.setHtml(generateTemplateHtml("templates/notificationPaymentCustomer.html", templateData));
       //   await emailService.send();
 
       //   const emailServiceAdmin = new EmailService();
-      //   emailServiceAdmin.setSubject(`Nouveau paiement sur STORE`);
-      //   emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      //   emailServiceAdmin.setSubject(`Nouveau paiement sur Rafly`);
+      //   emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
       //   emailServiceAdmin.addTo(process.env.EMAIL_HOST_USER);
       //   emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationPaymentAdmin.html", templateData));
       //   await emailServiceAdmin.send();
 
       //   const notification = new Notification({
       //     type: 'payment',
-      //     message: `Nouveau paiement sur STORE. ID: PAY-${transaction._id}`,
+      //     message: `Nouveau paiement sur Rafly. ID: PAY-${transaction._id}`,
       //     user: null,
       //     data: JSON.stringify(transaction),
       //   });

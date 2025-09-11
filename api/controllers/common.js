@@ -141,7 +141,7 @@ const controllers = {
 
             const emailService = new EmailService();
             emailService.setSubject(`Nouveau message de contact - ${subject}`);
-            emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+            emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
             emailService.addTo(emailSupport?.supportEmail);
             emailService.setHtml(generateTemplateHtml("templates/contactus.html", templateData));
 

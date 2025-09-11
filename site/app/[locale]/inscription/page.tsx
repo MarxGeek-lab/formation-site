@@ -86,6 +86,7 @@ export default function InscriptionPage({ params }: { params: { locale: string }
       name: formData.firstName + " " + formData.lastName, 
       email: formData.email, 
       password: formData.password,
+      origin: window.location.origin
   };
 
     try {
@@ -95,10 +96,9 @@ export default function InscriptionPage({ params }: { params: { locale: string }
           console.log(status)
 
           if (status === 201) {
-              showToast(t('toasts.accountCreatedSuccess'), "success");
-              setTimeout(() => {
-                  router.push(`/${locale}/connexion`);
-              }, 2000);
+            alert(t('toasts.accountCreatedSuccess'))
+              // showToast(t('toasts.accountCreatedSuccess'), "success");
+              window.location.href = `/${locale}/connexion`
           } else if (status === 409) {
               showToast(t('toasts.emailAlreadyExists'), "error")
           } else {

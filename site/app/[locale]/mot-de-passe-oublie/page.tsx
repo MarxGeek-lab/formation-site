@@ -7,10 +7,14 @@ import Link from 'next/link';
 import { useTheme } from '@/hooks/useTheme';
 import { useTranslations } from 'next-intl';
 import styles from '../connexion/auth.module.scss';
+import { hideLoader, showLoader } from '@/components/Loader/loaderService';
+import { useAuthStore } from '@/contexts/AuthContext';
+import { showToast } from '@/components/ToastNotification/ToastNotification';
 
 export default function MotDePasseOubliePage({ params }: { params: { locale: string } }) {
   const { locale } = params;
   const { theme } = useTheme();
+  const { verifyEmail }= useAuthStore()
   const t = useTranslations('Auth');
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<{[key: string]: string}>({});
@@ -30,17 +34,31 @@ export default function MotDePasseOubliePage({ params }: { params: { locale: str
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        sessionStorage.setItem("email__", email);
+        console.log(email)
+        if (email) {
+            showLoader()
+            try {
+                const status = await verifyEmail(email);
+                console.log(status)
+                hideLoader()
+                if (status) {
 
-    setIsLoading(true);
-    // Simulation d'une requête de réinitialisation
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSuccess(true);
-    }, 2000);
-  };
+                    if (status === 200) {
+                        setIsSuccess(true)
+                    } else if (status === 404) {
+                        showToast(t('toasts.generalError'), "error");
+                    }
+                }
+            } catch (error) {
+                 hideLoader()
+            }
+        } else {
+            alert("Veuillez entrer vos identifiants de connexion");
+        }
+    }
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
@@ -60,7 +78,7 @@ export default function MotDePasseOubliePage({ params }: { params: { locale: str
       }}>
         <Container maxWidth="sm">
           <Box className={styles.authContainer}>
-            <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Box sx={{ textAlign: 'center', mb: 4,  }}>
               <Box sx={{ 
                 width: 80, 
                 height: 80, 
@@ -70,12 +88,13 @@ export default function MotDePasseOubliePage({ params }: { params: { locale: str
                 alignItems: 'center',
                 justifyContent: 'center',
                 mx: 'auto',
-                mb: 3
+                mb: 3,
+                
               }}>
                 <Email sx={{ fontSize: 40, color: 'var(--primary)' }} />
               </Box>
               
-              <Typography variant="h3" className="rafly-title" sx={{ mb: 2 }}>
+              <Typography variant="h3" className="rafly-title" sx={{ mb: 2, mx: 'auto' }}>
                 {t('emailSent')}
               </Typography>
               
@@ -94,7 +113,7 @@ export default function MotDePasseOubliePage({ params }: { params: { locale: str
                 {email}
               </Typography>
               
-              <Alert severity="info" sx={{ mb: 4, textAlign: 'left' }}>
+              <Alert severity="info" sx={{ mb: 4, textAlign: 'left', background: 'var(--primary-light)' }}>
                 <Typography variant="body2">
                   <strong>{t('checkInbox')}</strong><br />
                   {t('resetLinkExpires')}
@@ -102,11 +121,11 @@ export default function MotDePasseOubliePage({ params }: { params: { locale: str
               </Alert>
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2,  }}>
               <Button
                 fullWidth
                 variant="contained"
-                onClick={() => window.location.reload()}
+                onClick={handleSubmit}
                 className={styles.submitButton}
               >
                 {t('resendEmail')}

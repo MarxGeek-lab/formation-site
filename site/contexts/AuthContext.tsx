@@ -23,7 +23,7 @@ interface AuthContextType {
   activateAccount: (code: string) => Promise<number>;
   verifyEmail: (email: string) => Promise<number>;
   confirmEmail: (code: string) => Promise<number>;
-  resetPassword: (token: string, password: string) => Promise<number>;
+  resetPassword: (formData: any) => Promise<number>;
   resendCodeActivation: (email: string) => Promise<number>;
 }
 
@@ -154,9 +154,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const resetPassword = async (token: string, password: string): Promise<number> => {
+  const resetPassword = async (formData: any): Promise<number> => {
     try {
-      const response = await axios.post(`${API_URL}users/reset-password`, { token, password });
+      const response = await axios.post(`${API_URL}users/reset-password`, formData);
       return response.status;
     } catch (error) {
       return handleAxiosError(error);

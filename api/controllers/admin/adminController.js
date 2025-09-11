@@ -350,8 +350,8 @@ const adminController = {
 
 
       const emailService = new EmailService();
-      emailService.setSubject(`${emailSubject} sur STORE`);
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      emailService.setSubject(`${emailSubject} sur Rafly`);
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
       emailService.addTo(user?.email);
       emailService.setHtml(generateTemplateHtml("templates/notificationMessage.html", {
         salutation: getGreeting(),

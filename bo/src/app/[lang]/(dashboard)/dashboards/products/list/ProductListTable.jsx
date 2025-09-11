@@ -193,7 +193,7 @@ const ProductListTable = ({ productData }) => {
               title={row.original?.productStatus === 'active' ? 'Désactiver le produit' : 'Activer le produit'}>
               <i className={`tabler-${row.original?.productStatus === 'active' ? 'eye-off' : 'eye'}`} style={{color: row.original?.productStatus === 'active' ? '#f44336' : '#4caf50'}} />
             </IconButton>
-            <IconButton onClick={() => window.open(`${URL_SITE}fr/product/${row.original._id}`) }
+            <IconButton onClick={() => window.open(`${URL_SITE}fr/produit/${row.original._id}`) }
               title='Voir le produit'>
               <i className={`tabler-eye`} style={{color: '#4caf50'}} />
             </IconButton>

@@ -145,15 +145,15 @@ exports.createOrder = async (req, res) => {
 
     // Notification for admin
     const emailServiceAdmin = new EmailService();
-    emailServiceAdmin.setSubject(`Nouvelle commande sur STORE`);
-    emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+    emailServiceAdmin.setSubject(`Nouvelle commande sur Rafly`);
+    emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
     emailServiceAdmin.addTo(process.env.EMAIL_HOST_USER);
     emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationOrderAdmin.html", templateData));
     await emailServiceAdmin.send();
 
     const notification = new Notifications({
       type: 'order',
-      message: `Nouvelle commande sur STORE. ID: ORD-${savedOrder._id}`,
+      message: `Nouvelle commande sur Rafly. ID: ORD-${savedOrder._id}`,
       user: null,
       data: JSON.stringify(savedOrder),
     });

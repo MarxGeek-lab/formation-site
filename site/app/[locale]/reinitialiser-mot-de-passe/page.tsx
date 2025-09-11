@@ -8,9 +8,13 @@ import { useSearchParams } from 'next/navigation';
 import { useTheme } from '@/hooks/useTheme';
 import { useTranslations } from 'next-intl';
 import styles from '../connexion/auth.module.scss';
+import { hideLoader, showLoader } from '@/components/Loader/loaderService';
+import { useAuthStore } from '@/contexts/GlobalContext';
+import { showToast } from '@/components/ToastNotification/ToastNotification';
 
 export default function ReinitialiserMotDePassePage({ params }: { params: { locale: string } }) {
   const { locale } = params;
+  const { resetPassword } = useAuthStore();
   const { theme } = useTheme();
   const t = useTranslations('Auth');
   const searchParams = useSearchParams();
@@ -18,6 +22,7 @@ export default function ReinitialiserMotDePassePage({ params }: { params: { loca
     password: '',
     confirmPassword: ''
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
@@ -27,7 +32,7 @@ export default function ReinitialiserMotDePassePage({ params }: { params: { loca
   const [isValidToken, setIsValidToken] = useState(true);
 
   useEffect(() => {
-    const tokenParam = searchParams.get('token');
+    const tokenParam = searchParams.get('cod');
     setToken(tokenParam);
     
     // Simulation de validation du token
@@ -62,17 +67,31 @@ export default function ReinitialiserMotDePassePage({ params }: { params: { loca
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-    setIsLoading(true);
-    // Simulation d'une requête de réinitialisation
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSuccess(true);
-    }, 2000);
-  };
+        const urlParams = new URLSearchParams(new URL(window.location.href).search);
+        const token = urlParams.get("cod") || "";
+
+        if (formData.password === formData.confirmPassword) {
+            showLoader()
+            try {
+                const status = await resetPassword({token, password: formData.password});
+                hideLoader()
+                if (status) {
+                    if (status === 200) {
+                        window.location.href = `/${locale}/connexion`
+                    } else {
+                        showToast(t('common.thePasswordHasNotBeenSet'), "error");
+                    }
+                }
+            } catch (error) {
+                hideLoader()
+            }
+        } else {
+            alert("Les mots de passe ne sont pas identiques.");
+        }
+    }
 
   // Token invalide ou expiré
   if (!isValidToken) {

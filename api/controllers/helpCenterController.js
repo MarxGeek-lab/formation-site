@@ -20,8 +20,8 @@ exports.createQuestion = async (req, res) => {
     const userN = await User.findOne({ _id: user });
 
     const emailService = new EmailService();
-    emailService.setSubject(`Assistance sur STORE`);
-    emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+    emailService.setSubject(`Assistance sur Rafly`);
+    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
     emailService.addTo('mgangbala610@gmail.com');
     const message = `Vous avez reçu un nouveau message d'assistance de l'utilisateur ${userN?.name}.
     Veuillez vous rendre dans votre espace personnelle pour y répondre.`
@@ -67,11 +67,11 @@ exports.addMessageToChatSupport = async (req, res) => {
       let msg='';
       let title='';
       if (type === 'message') {
-        title='Demande d\'assistance sur STORE'
+        title='Demande d\'assistance sur Rafly'
         msg = `Vous avez reçu un nouveau message d'assistance de l'utilisateur ${userData?.name}.
         Veuillez vous rendre dans votre espace personnelle pour y répondre.`
       } else {
-        title='Réponse suite à votre demande d\'assistance sur STORE';
+        title='Réponse suite à votre demande d\'assistance sur Rafly';
         msg = `Le support a répondu à votre demande. Veuillez consulter votre boîte d'assistance.`;
       }
 
@@ -82,7 +82,7 @@ exports.addMessageToChatSupport = async (req, res) => {
 
       const emailService = new EmailService();
       emailService.setSubject(title);
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
       if (type === 'message') {
         emailService.addTo(emailsAdmin);
       } else {
@@ -98,7 +98,7 @@ exports.addMessageToChatSupport = async (req, res) => {
 
       // Notifications
       const notification = new Notifications({
-        title: type === 'message' ? 'Demande d\'assistance sur STORE' : 'Réponse suite à votre demande d\'assistance sur STORE',
+        title: type === 'message' ? 'Demande d\'assistance sur Rafly' : 'Réponse suite à votre demande d\'assistance sur Rafly',
         content: msg,
         user: type === 'message' ? null : user,
         type: type === 'message' ? 'user': 'admin',

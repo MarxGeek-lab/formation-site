@@ -40,7 +40,7 @@ exports.createWithdrawalRequest = async (req, res) => {
 
     const emailService = new EmailService();
     emailService.setSubject("Demande de Retrait");
-    emailService.setFrom(process.env.EMAIL_HOST_USER, "STORE");
+    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
     emailService.addTo(admins.map(item => item.email)); 
     emailService.setHtml(generateTemplateHtml('templates/withdrawal.html', {
       salutation: getGreeting(),

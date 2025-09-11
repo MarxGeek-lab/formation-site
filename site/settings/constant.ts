@@ -1,5 +1,5 @@
 
-// API URLs
+API URLs
 export const API_URL = "https://api.rafly.me/api/";
 export const API_URL2 = "https://api.rafly.me/";
 
