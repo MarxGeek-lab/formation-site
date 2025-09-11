@@ -20,20 +20,28 @@ import ellipse from '@/assets/images/ellipse.png';
 import ellipse7 from '@/assets/images/ellipse7.png';
 
 import { useRouter } from "next/navigation";
-import { useProductStore } from "@/contexts/GlobalContext";
+import { useAuthStore, useProductStore } from "@/contexts/GlobalContext";
 import { useTheme } from "@/hooks/useTheme";
+import { useEffect, useState } from "react";
+import { GeoInfo } from "@/types/types";
+import { countries } from "@/data/country";
+import { country } from "@/data/countries";
 
 export default function Home({ params }: { params: { locale: string } }) {
   const { locale } = params;
+  const { currency } = useAuthStore();
   const { theme } = useTheme();
   const { allProducts } = useProductStore();
   const router = useRouter();
   const t = useTranslations('Home');  
 
+   const [geo, setGeo] = useState<GeoInfo | null>(null);
+
+   console.log("currency == ", currency)
   return (
     <>
        {/* Hero Section */}
-       <Container maxWidth="xl" sx={{
+       <Container maxWidth="lg" sx={{
           // mt: {xs: 2, sm: 3, md: 5}, 
           pt: {xs: 2, sm: 16},
           mb: 8,
@@ -156,6 +164,8 @@ export default function Home({ params }: { params: { locale: string } }) {
                     height="300" 
                     controls 
                     autoPlay
+                    muted
+                    playsInline
                     style={{ borderRadius: '8px', border: '1px solid #ccc' }}
                   >
                     <source src={"/assets/video/raphlyvideo.mp4"} type="video/mp4" />

@@ -60,7 +60,7 @@ const siteSettingsSchema = new mongoose.Schema({
     linkedin: { type: String, default: '' },
     youtube: { type: String, default: '' },
   },
-
+  fb_pixel_id: { type: String, default: 'fb_pixel_id'},
   shippingMethods: {
       type: [
         {

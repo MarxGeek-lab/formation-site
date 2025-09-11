@@ -73,7 +73,10 @@ export const PropertyProvider = ({ children }) => {
     try {
       const response = await api.post(`products/create`,
         property,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
+        { 
+          headers: { 'Content-Type': 'multipart/form-data' },
+          timeout: 5 * 60 * 1000
+        }
       );
       return response.status;
     } catch (error) {
@@ -86,7 +89,10 @@ export const PropertyProvider = ({ children }) => {
     try {
       const response = await api.put(`products/update/${id}`,
         property,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
+        { 
+          headers: { 'Content-Type': 'multipart/form-data' },
+          timeout: 5 * 60 * 1000
+        }
       );
       return response.status;
     } catch (error) {

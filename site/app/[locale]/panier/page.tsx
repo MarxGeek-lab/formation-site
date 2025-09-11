@@ -11,6 +11,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCart } from '@/contexts/CartContext';
 import styles from './panier.module.scss';
+import LocalizedPrice from '@/components/LocalizedPrice2';
 
 export default function CartPage({ params }: { params: { locale: string } }) {
   const { locale } = params;
@@ -138,19 +139,21 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                           <Box sx={{ mt: 1 }}>
                             {item.options.visual && item.options.visual !== 'without-visual' && (
                               <Typography variant="body2" className={styles.productOption}>
-                                • Avec visuel de publicité (+2 500 FCFA)
+                                • Avec visuel de publicité 
+                                ( + <LocalizedPrice amount={2500} /> )
                               </Typography>
                             )}
                             {item.options.support && item.options.support.length > 0 && (
                               <Typography variant="body2" className={styles.productOption}>
-                                • Accompagnement personnalisé (+15 000 FCFA)
+                                • Accompagnement personnalisé
+                                ( + <LocalizedPrice amount={150000} /> )
                               </Typography>
                             )}
                           </Box>
                         )}
 
                         <Typography variant="h6" className={styles.productPrice}>
-                          {formatPrice(item.totalPrice || item.price)}
+                           <LocalizedPrice amount={item.totalPrice || item.price} />
                         </Typography>
                       </Grid>
 
@@ -244,7 +247,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                       Sous-total ({cart?.items?.length} {cart?.items?.length === 1 ? 'article' : 'articles'})
                     </Typography>
                     <Typography variant="body2">
-                      {formatPrice(cart?.totalPrice || 0)}
+                      <LocalizedPrice amount={cart?.totalPrice} />
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -267,7 +270,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                     fontWeight: 600,
                     color: 'var(--primary)'
                   }}>
-                    {formatPrice(cart?.totalPrice || 0)}
+                     <LocalizedPrice amount={cart?.totalPrice} />
                   </Typography>
                 </Box>
 

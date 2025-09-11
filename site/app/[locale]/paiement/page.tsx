@@ -20,6 +20,7 @@ import { useAuthStore, useOrderStore, usePaymentStore, usePromoCodeStore } from 
 import { useRouter } from 'next/navigation';
 import { tree } from 'next/dist/build/templates/app-page';
 import { useTracking } from '@/utils/trackingPixel';
+import LocalizedPrice from '@/components/LocalizedPrice2';
 
 export default function PaiementPage({ params }: { params: { locale: string } }) {
   const { user } = useAuthStore();
@@ -168,14 +169,15 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     }
   };
 
-  const calculateTotal = () => {
-    const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-    return subtotal - promoDiscount;
-  };
+  const subTotal = () => {
+    const subtotal = cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return subtotal;
+  }; 
 
-  const formatPrice = (price: number) => {
-    return `${price.toLocaleString('fr-FR')} CFA`;
-  };
+  const calculateTotal = () => {
+    const subtotal = cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return subtotal - promoDiscount;
+  };  
 
   const payment = async (orderId: string, method: string) => {
     showLoader()
@@ -218,7 +220,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     const urlParams = new URLSearchParams(url);
     const paymentId = urlParams.get('paymentId');
     const paymentStatus = urlParams.get('paymentStatus');
-    console.log( "paymentId == ", paymentId, "paymentStatus == ", paymentStatus)
     
     if (paymentId) {
       try {
@@ -478,7 +479,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                     </Grid>
                     <Grid size={{ xs: 12 }}>
                       <div className={styles.formField}>
-                        <label htmlFor="phone">{t('phone')} {t('required')}</label>
+                        <label htmlFor="phone">{t('phone')}</label>
                         <input
                           id="phone"
                           type="tel"
@@ -491,7 +492,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6 }}>
                       <div className={styles.formField}>
-                        <label htmlFor="country">{t('country')}</label>
+                        <label htmlFor="country">{t('country')} {t('required')}</label>
                         <input
                           id="country"
                           type="text"
@@ -502,7 +503,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6 }}>
                       <div className={styles.formField}>
-                        <label htmlFor="city">{t('city')} {t('required')}</label>
+                        <label htmlFor="city">{t('city')} </label>
                         <input
                           id="city"
                           type="text"
@@ -515,7 +516,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                     </Grid>
                     <Grid size={{ xs: 12 }}>
                       <div className={styles.formField}>
-                        <label htmlFor="address">{t('address')} {t('required')}</label>
+                        <label htmlFor="address">{t('address')} </label>
                         <input
                           id="address"
                           type="text"
@@ -663,7 +664,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                               {t('quantity')}: {item.quantity}
                             </Typography> */}
                             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                              {formatPrice(item.price)}
+                              <LocalizedPrice amount={item.price} />
                             </Typography>
                           </Box>
                         </Box>
@@ -677,7 +678,9 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                 <Box className={styles.orderTotal}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                     <Typography variant="body1">{t('subtotal')}:</Typography>
-                    <Typography variant="body1">{formatPrice(cartItems.reduce((total, item) => total + (item.price * item.quantity), 0))}</Typography>
+                    <Typography variant="body1">
+                      <LocalizedPrice amount={subTotal()} />
+                      </Typography>
                   </Box>
                   
                   {promoApplied && promoDiscount > 0 && (
@@ -686,7 +689,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                         Réduction ({formData.promoCode}):
                       </Typography>
                       <Typography variant="body1" sx={{ color: 'var(--success)' }}>
-                        -{formatPrice(promoDiscount)}
+                        -<LocalizedPrice amount={promoDiscount} />
                       </Typography>
                     </Box>
                   )}
@@ -694,7 +697,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('total')}:</Typography>
                     <Typography variant="h6" sx={{ fontWeight: 700, color: 'var(--primary)' }}>
-                      {formatPrice(calculateTotal())}
+                      <LocalizedPrice amount={calculateTotal()} />
                     </Typography>
                   </Box>
                 </Box>

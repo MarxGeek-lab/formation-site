@@ -113,7 +113,7 @@ const productController = {
     try {
       // Récupération des fichiers
       const photos = req.files['images']?.map((file) => process.env.API_URL+file.filename) || [];
-      const pdf = req.files['pdf']?.[0] ? process.env.API_URL+req.files['pdf'][0].filename : null;
+      const pdf = req.files['pdf']?.map((file) => process.env.API_URL+file.filename) || [];
       const videos = req.files['videos']?.[0] ? process.env.API_URL+req.files['videos'][0].filename : null;
 console.log(req.body)
       const {
@@ -149,9 +149,38 @@ console.log(req.body)
         }
       }
 
+      let existingPdf = pdf2 ? JSON.parse(pdf2) : [];
+      const uploadDirPdf = path.join(__dirname, '..', 'uploads', 'documents');
+
+      // Si existingPdf n'est pas un tableau, supprimer les fichiers existants et le réinitialiser
+      if (!Array.isArray(existingPdf)) {
+        if (existingPdf) {
+          const fileName = existingPdf.replace(process.env.API_URL, '');
+          const oldFile = path.join(uploadDirPdf, fileName);
+          if (fs.existsSync(oldFile)) {
+            fs.unlinkSync(oldFile);
+          }
+        }
+        existingPdf = [];
+      }
+      
+      // Calcul de la différence
+      const differencePdf = !Array.isArray(product.saleDocument) ? [] : product.saleDocument.filter(item => !existingPdf.includes(item));
+      
+      // Suppression des fichiers obsolètes
+      for (const file of differencePdf) {
+        const fileName = file.replace(process.env.API_URL, '');
+        const oldFile = path.join(uploadDirPdf, fileName);
+        if (fs.existsSync(oldFile)) {
+          fs.unlinkSync(oldFile);
+        }
+      }
+      
       // Combiner les anciennes et nouvelles images
       const newPhotos = [...existingPhotos, ...photos];
-      
+
+      const newPdf = [...existingPdf, ...pdf];
+      console.log(newPdf)
       // Gestion des fichiers PDF et vidéos
       const finalPdf = pdf || pdf2 || product.pdf;
       const finalVideos = videos || videos2 || product.videos;
@@ -169,7 +198,7 @@ console.log(req.body)
       if (assignedAdminId !== undefined) product.assignedAdminId = assignedAdminId;
       
       // Fichiers
-      if (finalPdf) product.saleDocument = finalPdf;
+      product.saleDocument = newPdf;
       if (finalVideos) product.demoVideo = finalVideos;
       
       // Prix et finance

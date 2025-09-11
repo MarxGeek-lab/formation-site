@@ -145,8 +145,7 @@ const StepPropertyDetails = ({
   selectedFilesSale2,
   selectedVideo, setSelectedVideo,
   selectedVideo2,
-  // Visuel
-  withVisual, setWithVisual, advantage, setAdvantage,
+   advantage, setAdvantage,
 }) => {
   const { allCategories, allAdmin, getAllAdmin } = useAdminStore();
   const { subscriptionPlans, fetchSubscription } = useSubscriptionContext();
@@ -295,7 +294,7 @@ console.log("allAdmin == ", allAdmin)
           </CardContent>
         </Card>
       </Grid>
-      <Grid size={{ xs: 12 }}>
+      {/* <Grid size={{ xs: 12 }}>
         <FormControl component="fieldset">
           <FormLabel component="legend">
             <Typography component="span">
@@ -311,7 +310,7 @@ console.log("allAdmin == ", allAdmin)
             <FormControlLabel value="true" control={<Radio />} label="Oui" />
           </RadioGroup>
         </FormControl>
-      </Grid>
+      </Grid> */}
 
       <Grid size={{ xs: 12 }}>
         <Typography variant="h4" className="mb-2 mt-6">

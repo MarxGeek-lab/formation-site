@@ -50,7 +50,6 @@ export default function MysteryProductSection({ locale }: { locale: string }) {
   useEffect(() => {
     getProductsMystere();
   }, []);
-console.log(productMystere);
 
   return (
     <Box 

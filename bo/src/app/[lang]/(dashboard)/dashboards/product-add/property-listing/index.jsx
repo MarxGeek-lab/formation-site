@@ -45,8 +45,8 @@ const PropertyListingWizard = () => {
   const [selectedFiles2, setSelectedFiles2] = useState([]);
   
   // États pour fichiers PDF et vidéos
-  const [selectedFilesSale, setSelectedFilesSale] = useState(null);
-  const [selectedFilesSale2, setSelectedFilesSale2] = useState(null);
+  const [selectedFilesSale, setSelectedFilesSale] = useState([]);
+  const [selectedFilesSale2, setSelectedFilesSale2] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedVideo2, setSelectedVideo2] = useState(null);
 
@@ -56,7 +56,7 @@ const PropertyListingWizard = () => {
   const [assignedAdminId, setAssignedAdminId] = useState('');
   const [availableAdmins, setAvailableAdmins] = useState([]);
   const [availableSubscriptions, setAvailableSubscriptions] = useState([]);
-  const [withVisual, setWithVisual] = useState('false');
+  const [withVisual, setWithVisual] = useState('true');
   const [advantage, setAdvantage] = useState(['']);
 
   // Type de produit
@@ -125,7 +125,7 @@ const PropertyListingWizard = () => {
 
     // Validation et soumission
     const handleSubmit = async () => {
-
+console.log(assignedAdminId)
       if (!productName) {
         showToast("Veuillez saisir le nom du produit.", 'info', 5000);
         setActiveStep(0)
@@ -165,7 +165,7 @@ const PropertyListingWizard = () => {
       // Informations de base du produit
       if (productName) formData.append("name", productName);
       if (description) formData.append("description", description);
-      if (withVisual) formData.append("withVisual", withVisual);
+      if (withVisual) formData.append("withVisual", 'true');
       if (advantage.length > 0) formData.append("advantage", JSON.stringify(advantage));
 
       if (category || customService) {
@@ -188,7 +188,14 @@ const PropertyListingWizard = () => {
       if (productStatus) formData.append("productStatus", productStatus);
       
       // Attribution admin
-      if (assignedAdminId) formData.append("assignedAdminId", assignedAdminId);
+      if (assignedAdminId)  {
+        if (product) {
+          formData.append("assignedAdminId", assignedAdminId?._id);
+        } else {
+                formData.append("assignedAdminId", assignedAdminId);
+        }
+      } 
+
 
       // Ajout des images
       if (selectedFiles.length > 0) {
@@ -202,12 +209,14 @@ const PropertyListingWizard = () => {
       }
       
       // Images existantes pour la modification
-      if (selectedFilesSale) {
-        formData.append("pdf", selectedFilesSale);
+      if (selectedFilesSale.length > 0) {
+        for (const file of selectedFilesSale) {
+          formData.append("pdf", file);
+        }
       }
 
-      if (selectedFilesSale2) {
-        formData.append("pdf2", selectedFilesSale2);
+      if (selectedFilesSale2.length > 0) {
+        formData.append("pdf2", JSON.stringify(selectedFilesSale2));
       }
 
       if (selectedVideo) {
@@ -358,6 +367,9 @@ const PropertyListingWizard = () => {
             price={price}
             pricePromo={wholesalePrice}
             image={selectedFiles[0]}
+            image2={selectedFiles2[0]}                                                                                                              
+            demoVideo={selectedVideo}
+            demoVideo2={selectedVideo2}
           />
         </Grid>
       </Grid>

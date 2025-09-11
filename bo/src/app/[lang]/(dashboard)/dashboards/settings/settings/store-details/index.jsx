@@ -8,6 +8,7 @@ import api from '@/configs/api';
 import { hideLoader, showLoader } from '@/components/Loader/loaderService';
 import { showToast } from '@/components/ToastNotification/ToastNotification';
 import SocialLinks from './SocialLinks';
+import CustomTextField from '@/@core/components/mui/TextField';
 
 const StoreDetails = () => {
   const { updateSettings } = useSiteSettingsStore()
@@ -32,6 +33,7 @@ const StoreDetails = () => {
   const [linkedinUrl, setLinkedinUrl] = useState('')
   const [youtubeUrl, setYoutubeUrl] = useState('')
   const [warranty, setWarranty] = useState('')
+  const [fbPixelId, setFbPixelId] = useState('')
   const [shipping, setShipping] = useState([
     {
       name: '',
@@ -89,6 +91,10 @@ const StoreDetails = () => {
     // Vérification et ajout de businessName
     if (businessName) {
       formData.append('businessName', businessName);
+    }
+
+    if (fbPixelId) {
+      formData.append('fb_pixel_id', fbPixelId);
     }
 
     // Vérification et ajout de address
@@ -192,6 +198,7 @@ const StoreDetails = () => {
         setYoutubeUrl(data?.youtubeUrl);
         setDescription(data?.description);
         setWebsiteTitle(data?.websiteTitle);
+        setFbPixelId(data?.fb_pixel_id)
         
         // Charger les paramètres de relance de panier
         if (data?.cartReminderSettings) {
@@ -282,8 +289,20 @@ const StoreDetails = () => {
         />
       </Grid> */}
       {/* Configuration des Relances de Panier */}
+       
+
       <Grid size={{ xs: 12 }}>
+        
         <Card>
+          <Grid size={{ xs: 12, md: 6 }} sx={{p: 6}}>
+            <CustomTextField
+              fullWidth
+              value={fbPixelId}
+              onChange={(e) => setFbPixelId(e.target.value)}
+              label="Pixel ID "
+            />
+          </Grid>
+          
           <CardHeader 
             title="Configuration des Relances de Panier"
             subheader="Configurez les délais et messages pour les paniers abandonnés"

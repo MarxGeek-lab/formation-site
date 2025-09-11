@@ -2,13 +2,13 @@
 
 import { Box, Container, Typography, Card, CardContent, Avatar } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination } from 'swiper/modules';
+import { Autoplay } from 'swiper/modules';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 // Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/pagination';
+// import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 
 import Testimonial1 from '@/assets/images/testimonial-1.png';
@@ -40,6 +40,34 @@ const testimonials = [
   },
   {
     id: 4,
+    name: "Aminata",
+    username: "@aminaaa",
+    textKey: "testimonial4",
+    avatar: Testimonial4
+  },
+  {
+    id: 5,
+    name: "Josué D.",
+    username: "@josue.d",
+    textKey: "testimonial1",
+    avatar: Testimonial1
+  },
+  {
+    id: 6,
+    name: "Positif D.",
+    username: "@positif",
+    textKey: "testimonial2",
+    avatar: Testimonial2
+  },
+  {
+    id: 7,
+    name: "Julien B.",
+    username: "@julienjulien",
+    textKey: "testimonial3",
+    avatar: Testimonial3
+  },
+  {
+    id: 8,
     name: "Aminata",
     username: "@aminaaa",
     textKey: "testimonial4",
@@ -96,21 +124,18 @@ export default function TestimonialsSection() {
         {/* Testimonials Carousel */}
         <Box sx={{ position: 'relative' }}>
           <Swiper
-            modules={[Autoplay, Pagination]}
+            modules={[Autoplay]}
             spaceBetween={20}
             slidesPerView={1}
             autoplay={{
-              delay: 2000,
+              delay: 0,
               disableOnInteraction: false,
-              pauseOnMouseEnter: false,
-              reverseDirection: false
             }}
-            speed={3000}
+            
+            speed={5000}
             freeMode={true}
             pagination={{
               clickable: true,
-              bulletClass: 'swiper-pagination-bullet',
-              bulletActiveClass: 'swiper-pagination-bullet-active'
             }}
             breakpoints={{
               640: {
@@ -136,7 +161,9 @@ export default function TestimonialsSection() {
               <SwiperSlide key={testimonial.id}>
                 <Card
                   sx={{
-                    height: '100%',
+                    height: '280px',
+                    minHeight: '200px',
+                    
                     display: 'flex',
                     flexDirection: 'column',
                     p: 3,
@@ -149,10 +176,18 @@ export default function TestimonialsSection() {
                     '&:hover': {
                       transform: 'translateY(-8px)',
                       boxShadow: '0 20px 40px rgba(95, 58, 252, 0.15)'
-                    }
+                    },
+                    flex: 1
                   }}
                 >
-                  <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+                  <CardContent sx={{ 
+                    p: 0, 
+                    flex: 1,
+                    '&:last-child': { pb: 0 },
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                    }}>
                     {/* Testimonial Text */}
                     <Typography 
                       variant="body1" 

@@ -1,7 +1,4 @@
 "use client";
-
-import Image from "next/image";
-import { useTheme } from "../hooks/useTheme";
 import styles from './ProductCard.module.scss';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -11,8 +8,11 @@ import { AddShoppingCart } from "@mui/icons-material";
 import { useCart } from '@/contexts/CartContext';
 import { useNotification } from '@/contexts/NotificationContext';
 import { useTracking } from '@/utils/trackingPixel';
-import { useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "@/contexts/AuthContext";
+import { formatPrice } from "@/utils/formatPrice";
+import { getLocalizedPrice } from "@/utils/LocalizedPrice";
+import ProductImage from './ProductImage';
 
 interface ProductCardProps {
   product: any;
@@ -29,6 +29,7 @@ export default function ProductCard({
   const { addNotification } = useNotification();
   const { trackProductView, trackAddToCart } = useTracking();
   const [openDemo, setOpenDemo] = useState(false);
+  const [price, setPrice] = useState("");
 
   const handleClick = () => {
     if (product.name) {
@@ -103,12 +104,22 @@ export default function ProductCard({
     }
   }
 
+  useEffect(() => {
+    getLocalizedPrice(product.price).then(price => {
+  // console.log("price ===", price);
+      setPrice(price)
+    });
+    
+  }, []);
+
+
   return (
     <div className={styles.productCard}>
       {/* <Link href={`/${locale}/produit/${product._id}`}> */}
         <div className={styles.imageContainer}>
           {product?.photos?.length > 0 ? (
-            renderImage()
+            <ProductImage product={product} />
+          
           ) : (
             <div className={styles.imagePlaceholder}>
               <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
@@ -131,7 +142,7 @@ export default function ProductCard({
                 fontWeight: "500",
                 textTransform: "none",
                 fontSize: "15px",
-                backgroundColor: "rgba(255, 255, 255, 0.7)", // noir transparent
+                backgroundColor: "rgba(255, 255, 255, 0.86)", // noir transparent
                 color: "#333",
                 boxShadow: "0px 4px 10px rgba(0,0,0,0.3)",
                 backdropFilter: "blur(4px)", // effet verre dépoli subtil
@@ -163,11 +174,11 @@ export default function ProductCard({
                 color: 'red',
                 whiteSpace: 'nowrap',
                 fontSize: 13
-                }}>{product?.price} FCFA</Typography>
+                }}>{formatPrice(product?.price, 'USD', locale)}</Typography>
             </Box>
           ) : (
             <Box className={styles.priceContainer}>
-              <span className={styles.price}>{product?.price} FCFA</span>
+              <span className={styles.price}>{price || 'F CFA '+product?.price}</span>
             </Box>
           )}
           <div className={styles.features}>

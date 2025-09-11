@@ -7,11 +7,13 @@ import axios from "axios";
 import axiosInstanceUser from "../config/axiosConfig";
 import { syncTokenToCookies, clearTokenFromStorage } from "../utils/tokenSync";
 import { API_URL } from '@/settings/constant';
+import { country } from '@/data/countries';
 
 // Interface pour définir les types des fonctions d'authentification
 interface AuthContextType {
   user: any;
   token: JWTToken | null;
+  currency: string;
   login: (formData: any) => Promise<number>;
   register: (formData: any) => Promise<number>;
   logout: () => void;
@@ -44,6 +46,7 @@ interface JWTToken {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   token: null,
+  currency: 'XOF',
   login: async () => 500,
   register: async () => 500,
   logout: () => {},
@@ -64,6 +67,7 @@ export const useAuthStore = (): AuthContextType => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const [token, setToken] = useState<JWTToken | any>(null);
+  const [currency, setCurrency] = useState('XOF');
 
   const getUserById = async (userId: string): Promise<{ data: null, status: number }> => {
     try {
@@ -227,11 +231,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         clearTokenFromStorage();
       }
     }
+
+    //
+    fetch("https://ipinfo.io/json?token=2bd97a10417331")
+    .then((response) => response.json())
+    .then((jsonResponse) => 
+    {
+      const countryInfo = country.find((c: any) => c.countryCode === jsonResponse.country);
+      const currency = countryInfo?.currencyCode || "USD";
+      setCurrency(currency)
+    });
   }, []);
 
   const context = {
     user,
     token,
+    currency,
     login,
     register,
     logout,

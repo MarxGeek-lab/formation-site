@@ -3,7 +3,8 @@
 import Image from "next/image";
 import styles from './ProductCard.module.scss';
 import { useRouter } from 'next/navigation';
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { useState } from "react";
 
 export default function ProductCard({ 
   title, 
@@ -11,14 +12,20 @@ export default function ProductCard({
   price, 
   pricePromo, 
   image, 
+  image2,
+  demoVideo,
+  demoVideo2
 }) {
   const router = useRouter();
+  const [openDemo, setOpenDemo] = useState(false);
 
-console.log(image)
+console.log("image == ", demoVideo2)
+console.log("image2 == ", demoVideo)
   return (
     <div className={styles.productCard}>
       <div className={styles.imageContainer}>
-        {image ? (
+        {(image || image2) ? (
+          image ? (
           <Image
             src={URL.createObjectURL(image)}
             alt={title}
@@ -26,6 +33,15 @@ console.log(image)
             height={200}
             className={styles.productImage}
           />
+          ) : (
+            <img
+            src={image2}
+            alt={title}
+            width={300}
+            height={200}
+            className={styles.productImage}
+          />
+          )
         ) : (
           <div className={styles.imagePlaceholder}>
             <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
@@ -34,11 +50,35 @@ console.log(image)
             </svg>
           </div>
         )}
-        <div className={styles.hoverOverlay}>
-          <button className={styles.buyNowButton}>
-            Acheter maintenant
-          </button>
-        </div>
+         {(demoVideo || demoVideo2) && (
+            <Button
+              variant="contained"
+              sx={{
+                position: "absolute",
+                left: 8,
+                bottom: 8,
+                px: 1.5,
+                py: 0.5,
+                borderRadius: "10px",
+                fontWeight: "500",
+                textTransform: "none",
+                fontSize: "15px",
+                backgroundColor: "rgba(255, 255, 255, 0.7)", // noir transparent
+                color: "#333",
+                transform: "translateY(-1px)",
+                boxShadow: "0px 6px 14px rgba(0,0,0,0.4)",
+                backdropFilter: "blur(4px)", // effet verre dépoli subtil
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  boxShadow: "0px 6px 14px rgba(0,0,0,0.4)",
+                  transform: "translateY(-2px)"
+                },
+              }}
+              onClick={() => setOpenDemo(true)}
+            >
+              Demo
+            </Button>
+          )}
       </div>
       
       <div className={styles.content}>
@@ -83,6 +123,73 @@ console.log(image)
           Accéder au produit
         </button>
       </div>
+      {(demoVideo || demoVideo2) && (
+       <Dialog
+          open={openDemo}
+          onClose={() => setOpenDemo(false)}
+          maxWidth="sm" // limite la largeur
+          fullWidth
+          PaperProps={{
+            sx: {
+              background: "#333",
+              borderRadius: "12px",
+              overflow: "hidden", // supprime le scroll interne
+            },
+          }}
+        >
+          <DialogTitle>Démonstration du produit</DialogTitle>
+          <DialogContent
+            sx={{
+              p: 0, // pas de padding autour
+              overflow: "hidden", // empêche le scroll
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                maxHeight: "70vh", // limite la hauteur à l’écran
+                display: "flex",
+                justifyContent: "center",
+                backgroundColor: "#333",
+              }}
+            >
+              {demoVideo ? (
+                <video
+                  controls
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  maxHeight: "70vh", // garde la vidéo responsive
+                  objectFit: "contain", // pas de déformation
+                  borderRadius: "8px",
+                }}
+              >
+                <source src={URL.createObjectURL(demoVideo)} type="video/mp4" />
+                
+              </video>
+              ) : (
+                <video
+                  controls
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  maxHeight: "70vh", // garde la vidéo responsive
+                  objectFit: "contain", // pas de déformation
+                  borderRadius: "8px",
+                  backgroundColor: "#333",
+                }}
+              >
+                <source src={demoVideo2} type="video/mp4" />
+                
+              </video>
+              )}
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{pt: 5}}>
+            <Button color="error" size="small" variant="contained" className="" onClick={() => setOpenDemo(false)}>Fermer</Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 }

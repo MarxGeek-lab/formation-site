@@ -47,7 +47,7 @@ const ProductSchema = new mongoose.Schema({
   photos: [String],
   
   // Documents et médias
-  saleDocument: { type: String }, // PDF de vente
+  saleDocument: [String], // PDF de vente
   demoVideo: { type: String }, // Vidéo de démonstration
   
   // Caractéristiques personnalisées

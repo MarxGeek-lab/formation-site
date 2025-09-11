@@ -1,9 +1,9 @@
 'use client';
 
-import { Box, Container, Typography, Chip, Button, Card, CardContent, FormControlLabel, Radio, RadioGroup, Checkbox, FormGroup } from '@mui/material';
+import { Box, Container, Typography, Chip, Button, Card, CardContent, FormControlLabel, Radio, RadioGroup, Checkbox, FormGroup, CircularProgress } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import styles from './product.module.scss';
@@ -13,6 +13,8 @@ import icon from '@/assets/images/icon.webp'
 import { useProductStore } from '@/contexts/ProductStore';
 import { useCart } from '@/contexts/CartContext';
 import { useTracking } from '@/utils/trackingPixel';
+import LocalizedPrice from '@/components/LocalizedPrice2';
+import ProductImage from '@/components/ProductImage';
 
 export default function ProductPage({ params }: { params: { locale: string; slug: string } }) {
   const { product, getProductById, allProducts } = useProductStore();
@@ -27,6 +29,16 @@ export default function ProductPage({ params }: { params: { locale: string; slug
     support: []
   });
 
+  const [loading, setLoading] = useState(true);
+
+  const imgSrc = product?.photos[0]
+    ? product.photos[0].startsWith("http://localhost:5000/")
+      ? product.photos[0].replace("http://localhost:5000/", "https://api.rafly.me/")
+      : product.photos[0]
+    : null;
+
+  // if (!imgSrc) return null;
+
   useEffect(() => {
     getProductById(slug);
   }, [slug]);
@@ -37,6 +49,15 @@ export default function ProductPage({ params }: { params: { locale: string; slug
       trackProductView(product._id);
     }
   }, [product?._id, trackProductView]);
+
+
+    // useEffect(() => {
+    //   getLocalizedPrice(product.price).then(price => {
+    // // console.log("price ===", price);
+    //     return price
+    //   });
+      
+    // }, []);
 
   if (!product) {
     return (
@@ -96,14 +117,10 @@ export default function ProductPage({ params }: { params: { locale: string; slug
         total += supportOption.price;
       }
     });
-    
-    return total || 0;
-  };
 
-  const formatPrice = (price: number) => {
-    return `${price.toLocaleString('fr-FR')} FCFA`;
+    return  total || 0;
   };
-
+ 
   return (
     <Box sx={{ 
       backgroundColor: 'var(--background)', 
@@ -116,13 +133,32 @@ export default function ProductPage({ params }: { params: { locale: string; slug
           <Grid size={{ xs: 12, md: 7 }}>
             {/* Image produit */}
             <Box className={styles.productImage}>
+              {/* <ProductImage product={product} /> */}
+              {loading && (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "400px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: 'var(--primary-light)'
+                  }}
+                >
+                  {loading && <CircularProgress />}
+                </div>
+              )}
               <img
-                src={product?.photos?.[0]}
+                src={imgSrc}
                 alt={product?.name}
                 width={640}
                 height={360}
                 className={styles.image}
+                 onLoad={() => setLoading(false)}
+                onError={() => setLoading(false)}
+                style={{ display: loading ? "none" : "block" }}
               />
+              
             </Box>
 
             {/* Description détaillée */}
@@ -194,7 +230,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                     </Box>
                     <Box>
                       <Typography variant="h3" className={styles.price}>
-                        {formatPrice(calculateTotal() || 0)}
+                        <LocalizedPrice amount={calculateTotal()} />
                       </Typography>
                     </Box>
                   </Box>
@@ -228,7 +264,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                                         </Typography>
                                         {choice.price > 0 && (
                                           <Typography variant="body2" className={styles.choicePrice}>
-                                            ( +{formatPrice(choice.price)} )
+                                            +<LocalizedPrice amount={choice?.price} />
                                           </Typography>
                                         )}
                                       </Box>
@@ -269,7 +305,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                                           {choice.id === 'accompagnement' ? t('personalizedSupport') : choice.label}
                                         </Typography>
                                         <Typography variant="body2" className={styles.choicePrice}>
-                                          ( +{formatPrice(choice.price)} )
+                                          ( +<LocalizedPrice amount={choice?.price} /> )
                                         </Typography>
                                       </Box>
                                       <Typography variant="body2" className={styles.choiceDescription}>
@@ -296,7 +332,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                       Total
                     </Typography>
                     <Typography variant="h6" className={styles.optionTitle}>
-                      {formatPrice(calculateTotal() || 0)}
+                      <LocalizedPrice amount={calculateTotal()} />
                     </Typography>
                   </Box>
 

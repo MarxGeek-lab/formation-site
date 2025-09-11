@@ -90,18 +90,18 @@ export default function PricingSection({locale}: {locale: string }) {
     const handleAddToCart = async (e: React.MouseEvent, plan: any) => {
       e.stopPropagation();
       
-      try {
-        const product = subscriptionPlans[0].product || subscriptionPlans[1].product || subscriptionPlans[2].product;
-        const priceEur = plan.priceEur;
+      try {console.log(plan) 
+        const product = subscriptionPlans[0]?.product || subscriptionPlans[1]?.product || subscriptionPlans[2]?.product;
         const price = plan.price;
-        
+                console.log(product)
+
         // Ajouter au panier (synchronisation automatique avec backend)
         await addToCart({
-          id: product._id,
-          name: product.name,
+          id: product?._id,
+          name: product?.name,
           price: price,
           image: product?.photos?.[0] || '',
-          category: product.category,
+          category: product?.category || '',
           type: 'achat'
         });
 
@@ -116,7 +116,6 @@ export default function PricingSection({locale}: {locale: string }) {
     fetchSubscription();
   }, []);
 
-  console.log("subscriptionPlans == ", subscriptionPlans)
   return (
     <Box 
       id="tarification" 

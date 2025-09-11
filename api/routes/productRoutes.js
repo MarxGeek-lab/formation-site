@@ -18,7 +18,7 @@ router.post('/create',
     upload.fields([
         { name: 'images', maxCount: 20 },
         { name: 'videos', maxCount: 1 },
-        { name: 'pdf', maxCount: 1 },
+        { name: 'pdf', maxCount: 10 },
     ]), 
     productController.createProduct
 );
@@ -28,7 +28,7 @@ router.put('/update/:id',
     upload.fields([
         { name: 'images', maxCount: 10 },
         { name: 'videos', maxCount: 1 },
-        { name: 'pdf', maxCount: 1 },
+        { name: 'pdf', maxCount: 10 },
     ]),
     productController.updateProduct
 );
