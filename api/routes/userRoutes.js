@@ -18,7 +18,7 @@ router.post('/confirm-email', userController.confirmEmail);
 router.post('/reset-password', userController.resetPwd);
 router.post('/reset-password2', userController.resetPwdMobile);
 
-router.get('/:id', authenticateToken, userController.getUserById);
+router.get('/:id', userController.getUserById);
 router.put('/update/:id', authenticateToken, upload.fields([
     { name: 'pdf', maxCount: 1 },
     { name: 'images', maxCount: 1 },
