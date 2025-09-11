@@ -117,7 +117,7 @@ const userController = {
       } // si l'id est null, alors c'est connexion par défaut
 
       // Recherche de l'utilisateur par email
-      const userExisting = await User.findOne({ email: email, isActive: true });
+      const userExisting = await User.findOne({ email: email });
 
       if (!userExisting) return res.status(404).json({ error: "no email" });
 

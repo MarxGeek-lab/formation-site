@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
   },
   subscribeNewsletter: { type: Boolean, default: false },
   acceptTerms: { type: Boolean, default: false },
-  isActive: { type: Boolean, default: false },
+  isActive: { type: Boolean, default: true },
   isDeleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   loginCount: { type: Number, default: 0 },
