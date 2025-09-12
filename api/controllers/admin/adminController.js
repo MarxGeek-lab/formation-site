@@ -14,6 +14,10 @@ const Notifications = require('../../models/Notifications');
 const SiteSettings = require('../../models/Settings');
 const Order = require('../../models/Order');
 const Category = require('../../models/Categories');
+const Affiliate = require('../../models/Affiliate');
+const Payout = require('../../models/Payout');
+const Commission = require('../../models/Commission');
+const Referral = require('../../models/Referral');
 
 require('dotenv').config();
 
@@ -532,6 +536,47 @@ const adminController = {
       const messages = await HelpCenter.find().populate('user');
 
       res.json(messages);
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  adminOverview: async (req, res) => {
+
+    try {
+      // total affiliates, total commissions (pending/paid), total referrals, total payouts
+      const totalAffiliates = await Affiliate.countDocuments();
+      const totalReferrals = await Referral.countDocuments();
+      const totalCommissions = await Commission.aggregate([
+        { $group: { _id: null, total: { $sum: "$amount" }, paid: { $sum: { $cond: ["$paid", "$amount", 0] } } } },
+      ]);
+      const totalPayouts = await Payout.aggregate([{ $group: { _id: null, total: { $sum: "$amount" } } }]);
+    
+      res.json({
+        totalAffiliates,
+        totalReferrals,
+        totalCommissions: totalCommissions[0] ?? { total: 0, paid: 0 },
+        totalPayouts: totalPayouts[0]?.total ?? 0,
+      });
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: error.message });
+    }
+  },
+  
+  // Affiliates list with filters and basic stats
+  listAffiliates: async (req, res) => {
+    const { page = 1, limit = 20 } = req.query;
+
+    try {
+      const affiliates = await Affiliate.find()
+        .populate("user", "email name")
+        .skip((Number(page) - 1) * Number(limit))
+        .limit(Number(limit))
+        .lean();
+
+      res.json({ affiliates });
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: error.message });

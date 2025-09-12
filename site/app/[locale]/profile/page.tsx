@@ -554,7 +554,7 @@ const ProfilePage: React.FC = () => {
               <Button variant="contained" sx={{ 
                 mt: 2, textTransform: 'none', fontWeight: 600, borderRadius: 2,
                 backgroundColor: 'var(--primary)',
-                }}>
+                }} >
                 Mettre à jour le mot de passe
               </Button>
             </Paper>

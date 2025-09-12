@@ -15,11 +15,18 @@ axiosInstanceUser.interceptors.request.use(
       const tokenCookie = cookies.find(cookie => 
         cookie.trim().startsWith('accessToken=')
       );
-
-      console.log("tokenCookie", tokenCookie)
   
       if (tokenCookie || token) {
-        config.headers.Authorization = `Bearer ${tokenCookie || token}`;
+        const value = tokenCookie ? tokenCookie.split("=")[1] : token;
+        config.headers.Authorization = `Bearer ${value}`;
+      }
+      
+      // ✅ Ajouter le affiliate_ref dans les headers
+      const affiliateCookie = cookies.find((c) =>
+        c.trim().startsWith("affiliate_ref=")
+      );
+      if (affiliateCookie) {
+        config.headers["X-Affiliate-Ref"] = affiliateCookie.split("=")[1];
       }
     }
     return config;

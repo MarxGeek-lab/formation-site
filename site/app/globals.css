@@ -184,7 +184,7 @@ p {
 }
 
 .rafly-title {
-  font-size: 56 !important;
+  font-size: 52px !important;
   font-weight: bold !important;
   text-align: left;
   color: white !important;
@@ -194,6 +194,11 @@ p {
   margin: auto;
   margin-bottom: 1.5rem !important;
   text-align: center;
+}
+
+.rafly-title2 {
+  font-size: 36px !important;
+  margin-bottom: 1rem !important;
 }
 
 @media (max-width: 1024px) {

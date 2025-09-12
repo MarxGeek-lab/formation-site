@@ -7,6 +7,8 @@ const { getStatusPayment, getGreeting } = require('../utils/helpers');
 const Order = require('../models/Order');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
 const { default: MoneroPayment } = require('../services/servicePayment');
+const Referral = require('../models/Referral');
+const Affiliate = require('../models/Affiliate');
 require('dotenv').config();
 
 const transactionController = {
@@ -81,106 +83,7 @@ const transactionController = {
         // const ref = payment.data.reference;
         transaction.reference = payment.data.data.id;
         await transaction.save();
-        
-        // await new Promise(resolve => setTimeout(resolve, 30000));
-        // // Mettre la transaction avec la reference du paiement
-        // const res2 = await getStatusPayment(ref);
-        // const status = res2.data.status;
-
-        // if (status === 'SUCCESSFUL') {
-
-        //   if (order.status !== 'confirmed') {
-        //     for (const item of order.items) {
-        //       const product = await Product.findById(item.product);
-        //       if (product) {
-        //         product.stock.available = product.stock.available - item.quantity;
-        //         product.stock.sold = product.stock.sold || 0 + item.quantity;
-                
-        //         if (product.stock.available === 0) {
-        //           product.state = 'unavailable';
-        //         } else {
-        //           product.state = 'available';
-        //         }
-        //         await product.save();
-        //       }
-        //     }
-        //     order.status = 'confirmed';
-        //     await order.save();
-        //   }
-
-        //   transaction.status = 'success';
-        //   transaction.completedAt = new Date();
-
-        //   // Mettre à jour le statut de la commande
-        //   const paidAmount = order.payments.reduce((total, item) =>  item.status === 'success' ? total + Number(item.amount) : total, 0);
-        //   order.paidAmount = paidAmount;
-
-        //   if (paidAmount === order.totalAmount) {
-        //     order.paymentStatus = 'paid';
-        //   } else {
-        //     order.paymentStatus = 'partiallyPaid';
-        //   }
-          
-        //   // Mettre à jour la balance du propriétaire
-        //   await commonService.updateBalanceOwner(order.customer); 
-        // } else if (['FAILED', 'PENDING'].includes(status)) {
-        //   transaction.status = status === 'FAILED' ? 'failed':'pending';
-
-        //   // mail
-        //   const templateData = {
-        //     fullname: name,
-        //     amount: amount,
-        //     orderId: order._id,
-        //     payId: transaction._id,
-        //     status: transaction.status,
-        //     salutation: getGreeting(),
-        //   };
-
-        //   const emailService = new EmailService();
-        //   emailService.setSubject(`Paiement non effectué sur Rafly`);
-        //   emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
-        //   emailService.addTo(email);
-        //   emailService.setHtml(generateTemplateHtml("templates/notificationPaymentCustomerFailed.html", templateData));
-        //   await emailService.send();
-        // } 
-
-        // await transaction.save();
-        // await order.save();
       }
-
-         // Noitification
-      // const templateData = {
-      //   fullname: name,
-      //   amount: amount,
-      //   orderId: order._id,
-      //   payId: transaction._id,
-      //   status: transaction.status,
-      //   salutation: getGreeting(),
-      // };
-
-      // if (transaction.status === 'success') {
-      //   const emailService = new EmailService();
-      //   emailService.setSubject(`Paiement effectué avec succès sur Rafly`);
-      //   emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
-      //   emailService.addTo(email);
-      //   emailService.setHtml(generateTemplateHtml("templates/notificationPaymentCustomer.html", templateData));
-      //   await emailService.send();
-
-      //   const emailServiceAdmin = new EmailService();
-      //   emailServiceAdmin.setSubject(`Nouveau paiement sur Rafly`);
-      //   emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
-      //   emailServiceAdmin.addTo(process.env.EMAIL_HOST_USER);
-      //   emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationPaymentAdmin.html", templateData));
-      //   await emailServiceAdmin.send();
-
-      //   const notification = new Notification({
-      //     type: 'payment',
-      //     message: `Nouveau paiement sur Rafly. ID: PAY-${transaction._id}`,
-      //     user: null,
-      //     data: JSON.stringify(transaction),
-      //   });
-      //   await notification.save();
-      // }
 
       res.status(201).json({
         success: payment.success,
@@ -204,6 +107,19 @@ const transactionController = {
         return res.status(404).json({ message: 'Transaction non trouvée' });
       }
 
+      const order = await Order.findById({ _id: transaction.order });
+      if (!order) {
+        return res.status(404).json({ message: 'Commande non trouvée' });
+      }
+
+      let referral = null;
+      if (order.affiliate) {
+        const affiliate = await Affiliate.findById(order.affiliate);
+        if (affiliate) {
+          referral = await Referral.findOne({ orderId: order._id });
+        }
+      }
+     
       // if (transaction.status === 'success') {
       //   return res.status(400).json({ message: 'Transaction déjà réussie' });
       // }
@@ -211,7 +127,17 @@ const transactionController = {
         transaction.status = 'success';
         transaction.completedAt = new Date();
 
+        order.paymentStatus = 'paid';
+        order.paidAmount = order.totalAmount;
+        order.completedAt = new Date();
+
+        if (referral) {
+          referral.status = 'paid';
+          await referral.save();
+        }
+
         await transaction.save();
+        await order.save();
         return res.status(200).json({
           status: 'success',
           data: {
@@ -224,9 +150,21 @@ const transactionController = {
       const response = await monero.verifyPayment(transaction.reference);
       const status = response.data.data.status;
       console.log(response)
+
       if (status === 'success') {
         transaction.status = 'success';
+        transaction.completedAt = new Date();
 
+        order.paymentStatus = 'paid';
+        order.paidAmount = order.totalAmount;
+        order.completedAt = new Date();
+
+        if (referral) {
+          referral.status = 'paid';
+          await referral.save();
+        }
+
+        await order.save();
         // Mettre à jour la balance du propriétaire
         // await commonService.updateBalanceOwner(transaction.seller); 
       } else if (status === 'pending') {

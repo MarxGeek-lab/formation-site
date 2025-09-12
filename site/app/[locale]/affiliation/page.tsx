@@ -1,7 +1,6 @@
 'use client';
 
 import { Box, Container } from '@mui/material';
-import { useTheme } from '@/hooks/useTheme';
 import { useTranslations } from 'next-intl';
 import styles from './affiliation.module.scss';
 import Grid from '@mui/material/Grid2';
@@ -13,11 +12,16 @@ import vector1 from '@/assets/images/Vector.png'
 
 import Image from 'next/image';
 import FAQSection from '@/components/FAQSection';
+import { useRouter } from 'next/navigation';
 
 export default function AffiliationPage({ params }: { params: { locale: string } }) {
   const { locale } = params;
-  const { theme } = useTheme();
+  const router = useRouter();
   const t = useTranslations('Affiliation');
+
+  const gotToAffiliate = () => {
+    router.push(`/${locale}/inscription-affiliate`)
+  }
 
   return (
     <Box className={styles.affiliationPage}
@@ -51,7 +55,8 @@ export default function AffiliationPage({ params }: { params: { locale: string }
             <p className={styles.heroDescription}>
               {t('hero.description')}
             </p>
-            <button className={styles.ctaButton}>
+            <button className={styles.ctaButton}
+              onClick={gotToAffiliate}>
               {t('hero.ctaButton')}
             </button>
           </div>
@@ -118,7 +123,8 @@ export default function AffiliationPage({ params }: { params: { locale: string }
         </Grid>
         
         <div className={styles.ctaCenter}>
-          <button className={styles.ctaButton}>
+          <button className={styles.ctaButton}
+            onClick={gotToAffiliate}>
             {t('hero.ctaButton')}
           </button>
         </div>
@@ -234,7 +240,8 @@ export default function AffiliationPage({ params }: { params: { locale: string }
         </Grid>
         
         <div className={styles.ctaCenter}>
-          <button className={styles.ctaButton}>
+          <button className={styles.ctaButton}
+            onClick={gotToAffiliate}>
             {t('hero.ctaButton')}
           </button>
         </div>

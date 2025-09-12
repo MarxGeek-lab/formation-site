@@ -16,14 +16,21 @@ const ProtectedRoute = ({
   redirectTo = '/fr/connexion' ,
   // params: { locale }
 }: ProtectedRouteProps) => {
-  const { user, token } = useAuthStore();
+  const { user } = useAuthStore();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = () => {
       // Vérifier si l'utilisateur est authentifié
-      const isAuthenticated = user && token;
+      const token: string | null = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
+
+      const cookies = document.cookie.split(';');
+      const tokenCookie = cookies.find(cookie => 
+        cookie.trim().startsWith('accessToken=')
+      );
+    
+      const isAuthenticated = tokenCookie || token;
       
       if (requireAuth && !isAuthenticated) {
         // Sauvegarder l'URL actuelle pour redirection après connexion
@@ -46,7 +53,7 @@ const ProtectedRoute = ({
     const timer = setTimeout(checkAuth, 100);
     
     return () => clearTimeout(timer);
-  }, [user, token, requireAuth, redirectTo, router]);
+  }, [requireAuth, redirectTo, router]);
 
   if (isLoading) {
     return (

@@ -7,6 +7,7 @@ import { PaymentProvider } from "./PaymentStore";
 import { CommonProvider } from "./CommonContext";
 import { PromoCodeProvider } from "./PromoContext";
 import { SubscriptionProvider } from "./SubscriptionContext";
+import { AffiliationProvider } from "./AffiliationContext";
 
 export const GlobalProvider = ({children}: {children: ReactNode}) => {
     return (
@@ -18,7 +19,9 @@ export const GlobalProvider = ({children}: {children: ReactNode}) => {
                             <CommonProvider>
                                 <PromoCodeProvider>
                                     <SubscriptionProvider>
+                                        <AffiliationProvider>
                                         {children}
+                                        </AffiliationProvider>
                                     </SubscriptionProvider>
                                 </PromoCodeProvider>
                             </CommonProvider>
@@ -38,3 +41,4 @@ export { usePaymentStore } from './PaymentStore';
 export { useCommonStore } from './CommonContext';
 export { usePromoCodeStore } from './PromoContext';
 export { useSubscriptionContext } from './SubscriptionContext';
+export { useAffiliationStore } from './AffiliationContext'

@@ -130,32 +130,32 @@ export default function ProductCard({
           )}
 
           {product?.demoVideo && (
-            <Button
-              variant="contained"
-              sx={{
-                position: "absolute",
-                left: 8,
-                bottom: 8,
-                px: 1.5,
-                py: 0.5,
-                borderRadius: "10px",
-                fontWeight: "500",
-                textTransform: "none",
-                fontSize: "15px",
-                backgroundColor: "rgba(255, 255, 255, 0.86)", // noir transparent
-                color: "#333",
-                boxShadow: "0px 4px 10px rgba(0,0,0,0.3)",
-                backdropFilter: "blur(4px)", // effet verre dépoli subtil
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  boxShadow: "0px 6px 14px rgba(0,0,0,0.4)",
-                  transform: "translateY(-2px)"
-                },
-              }}
-              onClick={() => setOpenDemo(true)}
-            >
-              Demo
-            </Button>
+             <Button
+                variant="contained"
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  bottom: 8,
+                  px: 1,
+                  py: 0.5,
+                  borderRadius: "8px",
+                  fontWeight: "600",
+                  textTransform: "none",
+                  fontSize: "15px",
+                  backgroundColor: "rgba(255, 255, 255, 1)", // noir transparent
+                  color: "#333",
+                  boxShadow: "0px 4px 10px rgba(0,0,0,0.8)",
+                  backdropFilter: "blur(4px)", // effet verre dépoli subtil
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    boxShadow: "0px 6px 14px rgba(0,0,0,0.4)",
+                    transform: "translateY(-2px)"
+                  },
+                }}
+                onClick={() => setOpenDemo(true)}
+              >
+                Voir démo
+              </Button>
           )}
         </div>
       {/* </Link> */}

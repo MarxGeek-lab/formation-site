@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Container, Typography, Chip, Button, Card, CardContent, FormControlLabel, Radio, RadioGroup, Checkbox, FormGroup, CircularProgress } from '@mui/material';
+import { Box, Container, Typography, Chip, Button, Card, CardContent, FormControlLabel, Radio, RadioGroup, Checkbox, FormGroup, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -23,7 +23,8 @@ export default function ProductPage({ params }: { params: { locale: string; slug
   const router = useRouter();
   const t = useTranslations('Product');
   const { trackProductView, trackAddToCart } = useTracking();
-  
+  const [openDemo, setOpenDemo] = useState(false);
+
   const [selectedOptions, setSelectedOptions] = useState<{[key: string]: any}>({
     visual: 'without-visual',
     support: []
@@ -132,7 +133,8 @@ export default function ProductPage({ params }: { params: { locale: string; slug
           {/* Image et description */}
           <Grid size={{ xs: 12, md: 7 }}>
             {/* Image produit */}
-            <Box className={styles.productImage}>
+            <Box className={styles.productImage}
+            sx={{position: 'relative'}}>
               {/* <ProductImage product={product} /> */}
               {loading && (
                 <div
@@ -158,6 +160,35 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                 onError={() => setLoading(false)}
                 style={{ display: loading ? "none" : "block" }}
               />
+
+              {product?.demoVideo && (
+                <Button
+                  variant="contained"
+                  sx={{
+                    position: "absolute",
+                    right: 8,
+                    bottom: 8,
+                    px: 1,
+                    py: 0.5,
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    textTransform: "none",
+                    fontSize: "15px",
+                    backgroundColor: "rgba(255, 255, 255, 1)", // noir transparent
+                    color: "#333",
+                    boxShadow: "0px 4px 10px rgba(0,0,0,0.8)",
+                    backdropFilter: "blur(4px)", // effet verre dépoli subtil
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      boxShadow: "0px 6px 14px rgba(0,0,0,0.4)",
+                      transform: "translateY(-2px)"
+                    },
+                  }}
+                  onClick={() => setOpenDemo(true)}
+                >
+                 Voir démo
+                </Button>
+              )}
               
             </Box>
 
@@ -438,6 +469,53 @@ export default function ProductPage({ params }: { params: { locale: string; slug
           {/* </Container> */}
         </Box>
       </Container>
+      <Dialog
+        open={openDemo}
+        onClose={() => setOpenDemo(false)}
+        maxWidth="md" // limite la largeur
+        fullWidth
+        PaperProps={{
+          sx: {
+            background: "var(--background)",
+            borderRadius: "12px",
+            overflow: "hidden", // supprime le scroll interne
+          },
+        }}
+      >
+        <DialogTitle>{t("videoDemo")}</DialogTitle>
+        <DialogContent
+          sx={{
+            p: 0, // pas de padding autour
+            overflow: "hidden", // empêche le scroll
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              maxHeight: "70vh", // limite la hauteur à l’écran
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <video
+              controls
+              style={{
+                width: "100%",
+                height: "100%",
+                maxHeight: "70vh", // garde la vidéo responsive
+                objectFit: "contain", // pas de déformation
+                borderRadius: "8px",
+              }}
+            >
+              <source src={product?.demoVideo} type="video/mp4" />
+              {t("browserNotSupported")}
+            </video>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button color="error" size="small" variant="contained" onClick={() => setOpenDemo(false)}>{t("close")}</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

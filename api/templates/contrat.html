@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Contrat de Licence de Revente - Rafly.me</title>
+  <style>
+    body {
+      font-family: "Helvetica", Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #333;
+      margin: 40px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      font-size: 20px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    h2 {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .section h3 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .info {
+      margin-bottom: 15px;
+    }
+
+    .info p {
+      margin: 2px 0;
+    }
+
+    ul {
+      margin: 5px 0 5px 20px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 12px;
+    }
+
+    .signature {
+      margin-top: 60px;
+    }
+
+    .signature p {
+      margin: 5px 0;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #111;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>CONTRAT DE LICENCE DE REVENTE</h1>
+  <h2>Plateforme Rafly.me</h2>
+
+  <div class="section">
+    <p><strong>Entre les parties :</strong></p>
+    <div class="info">
+      <p><span class="highlight">1. Éditeur</span></p>
+      <p>Rafly.me</p>
+      <p>Email : support@rafly.me</p>
+    </div>
+
+    <div class="info">
+      <p><span class="highlight">2. Titulaire de la licence (Client)</span></p>
+      <p>Nom et prénom : <span class="highlight">{{clientName}}</span></p>
+      <p>Email : <span class="highlight">{{clientEmail}}</span></p>
+      <p>Numéro de commande : <span class="highlight">{{orderNumber}}</span></p>
+      <p>Date d’achat : <span class="highlight">{{purchaseDate}}</span></p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Article 1 – Objet du contrat</h3>
+    <p>Le présent contrat atteste que le Titulaire a acquis une licence pour le produit suivant :</p>
+    <p>Produit : <span class="highlight">{{productName}}</span></p>
+    <p>Type de licence : <span class="highlight">{{licenceType}}</span></p>
+  </div>
+
+  <div class="section">
+    <h3>Article 2 – Droits accordés</h3>
+    <ul>
+      <li><strong>Licence personnelle :</strong> droit d’utilisation strictement personnel, non transférable.</li>
+      <li><strong>Licence de revente :</strong> droit de revendre uniquement le produit acquis, sous sa propre marque, au prix de son choix, sans limitation de quantité.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3>Article 3 – Restrictions</h3>
+    <p>Le Titulaire n’est pas autorisé à :</p>
+    <ul>
+      <li>Revendre ou partager l’accès direct aux fichiers sources hébergés sur Rafly.me.</li>
+      <li>Revendre ou céder ses accès personnels à Rafly.me.</li>
+      <li>Revendiquer la création originale du produit.</li>
+      <li>Utiliser le produit dans un but illégal.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3>Article 4 – Garantie</h3>
+    <p>Rafly.me garantit que le produit est exempt de virus ou contenu illégal et que le Titulaire obtient légalement les droits mentionnés dans ce contrat.</p>
+  </div>
+
+  <div class="section">
+    <h3>Article 5 – Durée</h3>
+    <p>Cette licence est valable à vie à compter de la date d’achat, sauf en cas de violation des conditions ci-dessus.</p>
+  </div>
+
+  <footer>
+    <p>Fait à Cotonou, le <span class="highlight">{{purchaseDate}}</span></p>
+    <div class="signature">
+      <p>Signature électronique :</p>
+      <p><strong>Rafly.me</strong></p>
+    </div>
+  </footer>
+
+</body>
+</html>

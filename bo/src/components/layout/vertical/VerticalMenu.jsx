@@ -149,6 +149,11 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             Paniers
           </MenuItem>
         )}
+        {(permissions?.includes('affiliation') || permissions?.includes('all')) && (
+          <MenuItem href={`/${locale}/dashboards/affiliation`} icon={<i className='tabler-user-check' />}>
+            Affiliés
+          </MenuItem>
+        )}
         {(permissions?.includes('newsletter') || permissions?.includes('all')) && (
           <MenuItem href={`/${locale}/dashboards/newsletter`} icon={<i className='tabler-mail' />}>
             Newsletters

@@ -109,8 +109,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const register = async (formData: any): Promise<number> => {
+     // ✅ Ajouter le affiliate_ref dans les headers
+     const affiliateCookie = document.cookie.split(';').find((c) =>
+      c.trim().startsWith("affiliate_ref=")
+    );
+    console.log("affiliateCookie == ", affiliateCookie?.split("=")[1])
+
     try {
-      const response = await axios.post(`${API_URL}users/signup`, formData);
+      const response = await axios.post(`${API_URL}users/signup`, formData,{
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Affiliate-Ref': affiliateCookie?.split("=")[1],
+        },
+      });
       return response.status;
     } catch (error) {
       return handleAxiosError(error);

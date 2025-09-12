@@ -23,6 +23,7 @@ interface OrderStore {
   updateOrderStatus: (id: string, status: string) => Promise<{ data: any; status: number }>;
   markAsDelivered: (id: string) => Promise<{ data: any; status: number }>;
   cancelOrder: (id: string) => Promise<{ data: any; status: number }>;
+  downloadContrat: (id: string) => Promise<{ data: any; status: number }>;
 }
 
 const OrderContext = createContext<OrderStore>({
@@ -33,6 +34,7 @@ const OrderContext = createContext<OrderStore>({
   updateOrderStatus: async () => ({ data: null, status: 500 }),
   markAsDelivered: async () => ({ data: null, status: 500 }),
   cancelOrder: async () => ({ data: null, status: 500 }),
+  downloadContrat: async () => ({ data: null, status: 500 }),
 });
 
 export const useOrderStore = () => useContext(OrderContext);
@@ -50,8 +52,17 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getUserOrders = async (customerId: string): Promise<{ data: Order[] | null; status: number }> => {
+    const affiliateCookie = document.cookie.split(';').find((c) =>
+      c.trim().startsWith("affiliate_ref=")
+    );
+    console.log("affiliateCookie == ", affiliateCookie?.split("=")[1])
     try {
-      const response = await axiosInstanceUser.get(`${API_URL}orders/user/${customerId}`);
+      const response = await axiosInstanceUser.get(`${API_URL}orders/user/${customerId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Affiliate-Ref': affiliateCookie?.split("=")[1],
+        },
+      });
       setOrders(response.data);
       return { data: response.data, status: response.status };
     } catch (error) {
@@ -95,6 +106,15 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const downloadContrat = async (id: string): Promise<{ data: any; status: number }> => {
+    try {
+      const response = await axiosInstanceUser.get(`${API_URL}orders/${id}/contrat`);
+      return { data: response.data, status: response.status };
+    } catch (error) {
+      return { data: null, status: handleAxiosError(error) };
+    }
+  };
+
   const data: OrderStore = {
     orders,
     createOrder,
@@ -103,6 +123,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
     updateOrderStatus,
     markAsDelivered,
     cancelOrder,
+    downloadContrat,
   };
 
   return <OrderContext.Provider value={data}>{children}</OrderContext.Provider>;

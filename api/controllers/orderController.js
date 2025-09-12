@@ -5,15 +5,20 @@ const SiteSettings = require('../models/Settings');
 const User = require('../models/User');
 const { EmailService } = require('../services/emailService');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
-const generatePDF = require('../services/generateTicket');
+const generatePDF = require('../services/generateContrat');
 const { getGreeting, generateVerificationCode } = require('../utils/helpers');
 const Cart = require('../models/Cart');
+const Affiliate = require('../models/Affiliate');
+const Referral = require('../models/Referral');
 
 require('dotenv').config();
 
 // Créer une commande
 exports.createOrder = async (req, res) => {
   try {
+    const affiliateRef = req.headers['x-affiliate-ref'];
+    console.log("affiliateRef reçu == ", affiliateRef)
+
     const {
       customer,
       items,
@@ -54,6 +59,19 @@ exports.createOrder = async (req, res) => {
         });
         await user.save();
 
+         if (affiliateRef) {
+
+            // Chercher l'affilié correspondant
+            const affiliate = await Affiliate.findOne({ refCode: affiliateRef });
+            if (affiliate) {
+              user.referredBy = affiliate._id;
+              affiliate.referrals.push(newUser._id);
+              await affiliate.save();
+            }
+          }
+
+        customer_ = user._id;
+
         const link = `${process.env.URL_APP}/activer-mon-compte`;
         const emailData = { fullname: user?.name, otp, link };
         
@@ -84,6 +102,14 @@ exports.createOrder = async (req, res) => {
       })
     }
 
+    let affiliate_ = null;
+    if (affiliateRef) {
+      const affiliate = await Affiliate.findOne({ refCode: affiliateRef });
+      if (affiliate) {
+        affiliate_ = affiliate._id;
+      }
+    }
+
     const order = new Order({
       customer: customer_,
       items: productItems,
@@ -96,6 +122,7 @@ exports.createOrder = async (req, res) => {
       district,
       country,
       phoneNumber,
+      affiliate: affiliate_ || null
     });
 
     const savedOrder = await order.save();
@@ -158,6 +185,24 @@ exports.createOrder = async (req, res) => {
       data: JSON.stringify(savedOrder),
     });
     await notification.save();
+
+    // Affiliation
+    if (affiliateRef) {
+      const affiliate = await Affiliate.findOne({ refCode: affiliateRef });
+      if (affiliate) {
+        const referral = await Referral.create({
+          affiliate: affiliate._id,
+          refCode: affiliateRef,
+          type: "order",
+          orderId: savedOrder._id,
+          amount: savedOrder.totalAmount,
+          commissionAmount: Number((savedOrder.totalAmount * affiliate.commissionRate).toFixed(2)),
+          status: "pending",
+        });
+
+        await referral.save();
+      }
+    }
 
     res.status(201).json(savedOrder);
   } catch (error) {
@@ -456,7 +501,7 @@ exports.reminderOrder = async (req, res) => {
   }
 
   // générer et télécharger le ticket de reservation
-exports.generateInvoice = async (req, res) => {
+exports.generateContrat = async (req, res) => {
   try {
     console.log(req.params)
     const order = await Order.findById(req.params.id)
@@ -469,51 +514,20 @@ exports.generateInvoice = async (req, res) => {
       });
     }
 
-    const siteSetting = await SiteSettings.findOne();
-
-    const paidAmount = order?.payments?.reduce((acc, payment) => {
-      return payment?.transaction?.status === 'success' && payment?.type === 'payment' ? acc + Number(payment?.transaction?.amount) : acc;
-    }, 0);
-
     // générer le fichier
     const pdfFileName = await generatePDF({
-      title: "Facture de votre commande ORD-" + order._id?.toString().slice(0, 6).toUpperCase()+" sur " + siteSetting?.websiteTitle,
-      fullname: order.customer.name,
-      message: `Veuillez télécharger la facture de votre commande ORD- ${order._id?.toString().slice(0, 6).toUpperCase()} sur ${siteSetting?.websiteTitle}.`,
-      orderId: "ORD-" + order._id?.toString().slice(0, 6).toUpperCase(),
-      items: `${order?.items?.map(item => {
-        return `<tr>
-        <td>${item.product.name}</td>
-        <td>${item.quantity}</td>
-        <td>${item.price} FCFA</td>
-        <td>${item.price * item.quantity} FCFA</td>
-        </tr>`;
-      }).join('')}`,
-      numberArticle: order?.items?.length,
-      amount: order?.totalAmount,
-      paidAmount: paidAmount,
-      createdAt: order?.createdAt?.toLocaleString(),
-      siteSetting: siteSetting,
-      websiteTitle: siteSetting?.websiteTitle,
-      websiteLogo: siteSetting?.logo,
-      websiteAddress: [siteSetting?.address || '', siteSetting?.city || '', siteSetting?.country || ''].join(', '),
-      websitePhone: siteSetting?.contactPhoneCall,
-      websiteEmail: siteSetting?.supportEmail,
-      client_name: order.shippingAddress.fullName || order.customer.name,
-      client_email: order.shippingAddress.email || order.customer.email,
-      client_phone: order.shippingAddress.phone || order.customer.phone,
-      client_address: [order.shippingAddress.address || "", order.shippingAddress.city || "", order.shippingAddress.district || "", order.shippingAddress.postalCode || "", order.shippingAddress.country || ""].join(", ") || [order.customer.address || "", order.customer.city || "", order.customer.district || "", order.customer.postalCode || "", order.customer.country || ""].join(", "),
-      subtotal: order.items.reduce((total, item) => total + item.price * item.quantity, 0),
-      taxe: siteSetting?.taxe,
-      taxeAmount: Math.round(order.totalAmount * siteSetting?.taxe / 100),
-      totalAmount: order.totalAmount,
-      shipping: order.shippingMethod.fee === 0 ? "Gratuit" : order.shippingMethod.fee+ " FCFA",
+      clientName: order?.customer?.name,
+      clientEmail: order.customer.email,
+      orderNumber: 'ORD-' + order._id,
+      purchaseDate: order.createdAt.toLocaleDateString(),
+      productName: order.items.map(i => i.product.name).join(', '),
+      licenceType: 'Licence de revente'
     });
 
     console.log('PDF généré à :', pdfFileName.filename);
 
     // Chemin du fichier PDF
-    const pdfFilePath = path.join(__dirname, "../uploads/invoices/", pdfFileName.filename); 
+    const pdfFilePath = path.join(__dirname, "../uploads/contrat/", pdfFileName.filename); 
 
     // Vérifier si le fichier existe
     if (!fs.existsSync(pdfFilePath)) {
@@ -522,7 +536,7 @@ exports.generateInvoice = async (req, res) => {
         console.log("✅ Le fichier PDF existe !");
     }
 
-    order.invoice = pdfFileName.filename;
+    order.contrat = pdfFileName.filename;
     await order.save();
 
     res.setHeader('Content-Type', 'application/pdf');

@@ -6,13 +6,17 @@ const { encryptPassword, generateVerificationCode, verifyPassword, decryptData, 
 const path = require("path");
 const fs = require("fs");
 const { EmailService } = require("../services/emailService");
+const Affiliate = require("../models/Affiliate");
 
 const userController = {
   // Fonction pour créer un utilisateur
   signUp: async (req, res) => {
     try {
       const { name, email, password, phoneNumber, origin  } = req.body;
-      console.log(req.body);
+
+      // Lire le cookie envoyé automatiquement
+      const affiliateRef = req.headers['x-affiliate-ref'];
+      console.log("affiliateRef reçu == ", affiliateRef)
 
       // Vérifier si l'email est déjà utilisé
       const existingUser = await User.findOne({ email: email });
@@ -47,6 +51,16 @@ const userController = {
       emailService.addTo(email);
       emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
       await emailService.send(); // Envoi de l'email
+
+      if (affiliateRef) {
+        // Chercher l'affilié correspondant
+        const affiliate = await Affiliate.findOne({ refCode: affiliateRef });
+        if (affiliate) {
+          newUser.referredBy = affiliate._id;
+          affiliate.referrals.push(newUser._id);
+          await affiliate.save();
+        }
+      }
 
       // Sauvegarder l'utilisateur dans la base de données
       await newUser.save();

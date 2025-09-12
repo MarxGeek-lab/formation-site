@@ -19,6 +19,7 @@ const orderRoutes = require("./orderRoutes")
 const promoCodeRoutes = require("./promoCodeRoutes");
 const cartRoutes = require("./cartRoutes");
 const trackingRoutes = require("./trackingRoutes");
+const affiliateRoutes = require("./affiliateRoutes");
 
 router.use('/users', userRoutes);
 router.use('/products', productRoutes);
@@ -41,6 +42,7 @@ router.use('/promoCodes', promoCodeRoutes);
 router.use('/cart', cartRoutes);
 
 router.use('/tracking', trackingRoutes);
+router.use('/', affiliateRoutes);
 // router.use('/', commonRoutes);
 
 module.exports = router;

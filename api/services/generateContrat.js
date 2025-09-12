@@ -6,12 +6,12 @@ require('dotenv').config();
 
 async function generatePDF(data) {
     // Vérifier et créer le dossier uploads/tickets s'il n'existe pas
-    const ticketsDir = path.join(__dirname, '../uploads/invoices');
+    const ticketsDir = path.join(__dirname, '../uploads/contrats');
     if (!fs.existsSync(ticketsDir)) {
         fs.mkdirSync(ticketsDir, { recursive: true });
     }
 
-    const templatePath = path.join(__dirname, '../templates/invoice.html'); 
+    const templatePath = path.join(__dirname, '../templates/contrat.html'); 
     let htmlTemplate = fs.readFileSync(templatePath, 'utf8');
 
     // Remplacement des valeurs dynamiques
@@ -52,11 +52,11 @@ async function generatePDF(data) {
         console.log('PDF généré avec succès');
         
         // Sauvegarder le fichier localement
-        filename = `invoice_${data.orderId}.pdf`;
-        const pdfPath = path.join(__dirname, `../uploads/invoices/${filename}`);
+        filename = `contrat_${data.orderId}.pdf`;
+        const pdfPath = path.join(__dirname, `../uploads/contrats/${filename}`);
         fs.writeFileSync(pdfPath, pdfBuffer);
         
-        console.log('✅ Invoice généré:', filename);
+        console.log('✅ Contrat généré:', filename);
         await browser.close();
     } catch (error) {
         console.error('Erreur lors de la génération du PDF:', error);

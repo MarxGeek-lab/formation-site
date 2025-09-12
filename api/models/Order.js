@@ -77,6 +77,9 @@ const orderSchema = new mongoose.Schema(
     deliveredAt: {
       type: Date,
     },
+    completedAt: {
+      type: Date,
+    },
     payments: [{
       transaction: {
         type: mongoose.Schema.Types.ObjectId,
@@ -109,6 +112,14 @@ const orderSchema = new mongoose.Schema(
     },
     invoice: {
       type: String,
+    },
+    contrat:  {
+      type: String,
+    },
+    affiliate: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "Affiliate", 
+      default: null 
     },
   },
   {

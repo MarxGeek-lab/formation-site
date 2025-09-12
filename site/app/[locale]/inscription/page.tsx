@@ -12,7 +12,8 @@ import { showToast } from '@/components/ToastNotification/ToastNotification';
 import { useAuthStore } from '@/contexts/GlobalContext';
 import router from 'next/router';
 
-export default function InscriptionPage({ params }: { params: { locale: string } }) {
+export default function InscriptionPage({ params, affiliate = false, setIsAffiliate }: 
+  { params: { locale: string }, affiliate?: boolean, setIsAffiliate?: (value: boolean) => void }) {
   const { locale } = params;
   const { register } = useAuthStore();
   const { theme } = useTheme();
@@ -86,7 +87,8 @@ export default function InscriptionPage({ params }: { params: { locale: string }
       name: formData.firstName + " " + formData.lastName, 
       email: formData.email, 
       password: formData.password,
-      origin: window.location.origin
+      origin: window.location.origin,
+      affiliate: affiliate
   };
 
     try {
@@ -96,9 +98,13 @@ export default function InscriptionPage({ params }: { params: { locale: string }
           console.log(status)
 
           if (status === 201) {
-            alert(t('toasts.accountCreatedSuccess'))
+            if (!affiliate) {
+              alert(t('toasts.accountCreatedSuccess'))
               // showToast(t('toasts.accountCreatedSuccess'), "success");
               window.location.href = `/${locale}/connexion`
+            } else {
+              setIsAffiliate && setIsAffiliate(true);
+            }
           } else if (status === 409) {
               showToast(t('toasts.emailAlreadyExists'), "error")
           } else {
@@ -128,7 +134,7 @@ export default function InscriptionPage({ params }: { params: { locale: string }
         <Box className={styles.authContainer}>
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography variant="h3" className="rafly-title" 
+            <Typography variant="h3" className="rafly-title rafly-title2" 
             sx={{ mb: 0, mx: 'auto' }}>
               {t('register')}
             </Typography>

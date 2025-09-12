@@ -7,7 +7,7 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 const routes = require("./routes/index");
-const generatePDF = require("./services/generateTicket");
+const generatePDF = require("./services/generateContrat");
 const { initReservationCron } = require('./crons/reservationCron');
 const cartAbandonmentCron = require('./crons/cartAbandonmentCron');
 const reservationCron = require('./crons/reservationCron');

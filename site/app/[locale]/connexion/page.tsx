@@ -12,7 +12,16 @@ import { useAuthStore } from '@/contexts/GlobalContext';
 import { showToast } from '@/components/ToastNotification/ToastNotification';
 import { useRouter } from 'next/navigation';
 
-export default function ConnexionPage({ params }: { params: { locale: string } }) {
+export default function ConnexionPage({ 
+  params, 
+  affiliate = false,
+  setIsAffiliate
+}: 
+  { 
+    params: { locale: string }, 
+    affiliate?: boolean,
+    setIsAffiliate?: (value: boolean) => void
+  }) {
   const { locale } = params;
   const router = useRouter();
   const { login, user, token} = useAuthStore();
@@ -28,7 +37,7 @@ export default function ConnexionPage({ params }: { params: { locale: string } }
 
   useEffect(() => {
     if (user) {
-      router.push(`/${locale}/dashboard`);
+      // router.push(`/${locale}/dashboard`);
     }
   }, [user]);
 
@@ -63,6 +72,7 @@ export default function ConnexionPage({ params }: { params: { locale: string } }
     const data = {
       email: formData.email,
       password: formData.password,
+      affiliate: affiliate
     };
 
     try {
@@ -72,7 +82,11 @@ export default function ConnexionPage({ params }: { params: { locale: string } }
           console.log(status)
 
           if (status === 200) {
+            if (!affiliate) {
               window.location.href = `/${locale}/dashboard`;
+            } else {
+              setIsAffiliate && setIsAffiliate(true);
+            }
           } else if (status === 429) {
               showToast(t('toasts.tooManyAttempts'), "error");
           } else {
@@ -102,7 +116,7 @@ export default function ConnexionPage({ params }: { params: { locale: string } }
         <Box className={styles.authContainer}>
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography className="rafly-title" 
+            <Typography className="rafly-title rafly-title2" 
             sx={{ mb: 0, mx: 'auto' }}>
               {t('login')}
             </Typography>

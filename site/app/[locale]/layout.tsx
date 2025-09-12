@@ -78,7 +78,9 @@ export default async function LocaleLayout({
               <NotificationProvider>
                 <CartProvider>
                   <Header locale={locale} />
-                  <main>{children}</main>
+                  <main style={{
+                    minHeight: '100vh',
+                  }}>{children}</main>
                   <Footer locale={locale} />
                   <CartSidebar params={{ locale }} />
                   <NotificationToast />

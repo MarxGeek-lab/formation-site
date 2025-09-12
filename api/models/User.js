@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   account: { type: String },
   expiresIn: { type: Date },
   otp: { type: Number },
+  isAffiliate: { type: Boolean, default: false },
   addressShipping: [{
     type: {
       type: String,
@@ -35,6 +36,10 @@ const userSchema = new mongoose.Schema({
     fullName: { type: String, trim: true },
     isDefault: { type: Boolean, default: false },
   }],
+  referredBy: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Affiliate" 
+  },
   preferences: {
     notifications: {
       email: { type: Boolean, default: true },

@@ -17,6 +17,7 @@ import { AnnoncesProvider } from "./AnnoncesContext";
 import { OrderProvider } from "./orderStore";
 import { SubscriptionProvider } from "./SubscriptionContext";
 import { PromoCodeProvider } from "./PromoContext";
+import { AdminAffiliationProvider } from "./AffiliationContext";
 
 export const GlobalStoreProvider = ({ children }) => {
     return (
@@ -39,8 +40,10 @@ export const GlobalStoreProvider = ({ children }) => {
                                         <HelpCenterProvider>
                                             <CommonProvider>
                                                 <WalletProvider>
-                                                    <PaymentProvider>   
+                                                    <PaymentProvider>  
+                                                        <AdminAffiliationProvider>   
                                                     {children}
+                                                    </AdminAffiliationProvider>
                                                     </PaymentProvider>
                                                 </WalletProvider>
                                             </CommonProvider>
@@ -83,3 +86,4 @@ export { useAnnoncesStore } from "./AnnoncesContext";
 export { useOrderStore } from "./orderStore";
 export { useSubscriptionContext } from "./SubscriptionContext";
 export { usePromoCodeStore } from "./PromoContext";
+export { useAdminAffiliationStore } from "./AffiliationContext";

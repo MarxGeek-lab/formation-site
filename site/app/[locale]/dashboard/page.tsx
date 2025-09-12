@@ -141,7 +141,24 @@ export default function DashboardPage({ params }: { params: { locale: string } }
     }
   };
 
+  console.log("user ===", user)
+
   const quickActions: QuickAction[] = [
+    {
+      title: 'Affiliations',
+      description: 'Voir le tableau de bord des affiliations',
+      icon: <ShoppingBagIcon />,
+      action: () => {
+        if (user) {
+          if (user?.isAffiliate) {
+            router.push(`/${locale}/affiliate`);
+          } else {
+            router.push(`/${locale}/affiliation`);
+          }
+        }
+      },
+      color: '#1976d2',
+    },
     {
       title: 'Mes Commandes',
       description: 'Voir toutes mes commandes',
@@ -330,7 +347,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
             <Button 
               variant="contained"
               color="warning" 
-              onClick={() => router.push('/checkout')}
+              onClick={() => router.push(`/${locale}/paiement`)}
               sx={{ whiteSpace: 'nowrap', fontWeight: 600, ml: 2 }}
             >
               Finaliser

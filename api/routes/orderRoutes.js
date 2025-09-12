@@ -10,6 +10,6 @@ router.patch('/:id/deliver', orderController.markAsDelivered);
 router.patch('/:id/cancel', orderController.cancelOrder);
 router.patch('/:id/reminder', orderController.reminderOrder);
 router.patch('/:id/invoice', orderController.sendInvoice);
-router.get('/:id/invoice', orderController.generateInvoice);
+router.get('/:id/contrat', orderController.generateContrat);
 
 module.exports = router;
