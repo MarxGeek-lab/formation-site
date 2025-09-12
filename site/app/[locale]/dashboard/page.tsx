@@ -78,11 +78,12 @@ export default function DashboardPage({ params }: { params: { locale: string } }
   const router = useRouter();
   const { cart } = useCart();
   const { orders, getUserOrders } = useOrderStore()
-  const { user, logout } = useAuthStore()
+  const { user, logout, getUserById } = useAuthStore()
   const { getStatsOwner } = useCommonStore();
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [logoutDialog, setLogoutDialog] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
 
   const fetchData = async () => {
     if (user) {
@@ -99,12 +100,26 @@ export default function DashboardPage({ params }: { params: { locale: string } }
     }
   };
 
+  const fetchDataUser = async () => {
+    if (user) {
+      try {
+        const { data, status } = await getUserById(user._id);
+        if (status === 200) {
+          setProfile(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const handleLogout = () => {
     setLogoutDialog(true);
   };
 
   useEffect(() => {
     fetchData();
+    fetchDataUser()
   }, [user]);
 
   const getStatusColor = (status: RecentOrder['status']) => {
@@ -150,7 +165,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
       icon: <ShoppingBagIcon />,
       action: () => {
         if (user) {
-          if (user?.isAffiliate) {
+          if (profile?.isAffiliate) {
             router.push(`/${locale}/affiliate`);
           } else {
             router.push(`/${locale}/affiliation`);
