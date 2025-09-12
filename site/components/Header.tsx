@@ -211,7 +211,16 @@ export default function Header({ locale }: { locale: string }) {
                   )}
                 </button>
               )} */}
-              
+              <button className={styles.ctaButton2} 
+              onClick={() => {
+                if (user) {
+                  router.push(`/${locale}/dashboard`);
+                } else {
+                  router.push(`/${locale}/connexion`);
+                }
+              }}>
+              Mon Compte
+            </button>
               <button className={`${styles.ctaButton} ${styles.fullWidth}`}
                 onClick={() => router.push(`/${locale}/catalogue`)}>
                 {t('viewCatalogue')}

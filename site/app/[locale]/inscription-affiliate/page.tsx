@@ -143,11 +143,11 @@ export default function AffiliationPage({ params }: { params: { locale: string }
         <Container maxWidth="lg">        
           <Grid container spacing={4} sx={{px: 0}}>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <ConnexionPage affiliate={true} params={{ locale }} />
+              <ConnexionPage setIsAffiliate={setIsAffiliate} affiliate={true} params={{ locale }} />
             </Grid>
             
             <Grid size={{ xs: 12, sm: 6 }}>
-              <InscriptionPage affiliate={true} params={{ locale }} />
+              <InscriptionPage setIsAffiliate={setIsAffiliate} affiliate={true} params={{ locale }} />
             </Grid>
           </Grid>
         </Container>

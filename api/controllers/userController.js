@@ -7,12 +7,13 @@ const path = require("path");
 const fs = require("fs");
 const { EmailService } = require("../services/emailService");
 const Affiliate = require("../models/Affiliate");
+const { generateRefCode } = require("../utils/generateRefCode");
 
 const userController = {
   // Fonction pour créer un utilisateur
   signUp: async (req, res) => {
     try {
-      const { name, email, password, phoneNumber, origin  } = req.body;
+      const { name, email, password, phoneNumber, origin, affiliate  } = req.body;
 
       // Lire le cookie envoyé automatiquement
       const affiliateRef = req.headers['x-affiliate-ref'];
@@ -37,7 +38,8 @@ const userController = {
         phoneNumber,
         password: hashedPassword,
         otp,
-        isActive: true
+        isActive: true,
+        isAffiliate: affiliate ? true : false
       });
       
       // Préparation des données pour le service d'email
@@ -62,6 +64,30 @@ const userController = {
         }
       }
 
+      // generate unique refCode
+      if (affiliate) {
+        let refCode = generateRefCode();
+        while (await Affiliate.findOne({ refCode })) {
+            refCode = generateRefCode();
+        }
+
+        const baseUrl = process.env.URL_APP || "https://app.rafly.me";
+        let affiliate_user = await Affiliate.findOne({ user: newUser._id });
+        if (!affiliate_user) {
+          affiliate_user = await Affiliate.create({
+            user: newUser._id,
+            refCode,
+            referralLink: `${baseUrl}?ref=${refCode}`,
+            commissionRate: 0.1,
+          });
+
+          await affiliate_user.save();
+
+          newUser.isAffiliate = true;
+          await newUser.save()
+        }
+      }
+
       // Sauvegarder l'utilisateur dans la base de données
       await newUser.save();
       return res.status(201).json({ message: 'User created successfully', user: newUser });
@@ -72,9 +98,10 @@ const userController = {
   },
 
   signIn: async (req, res) => {
-    const { email, password, fullname, id, country, phone, roles, authToken, typeAuth } = req.body;
+    const { email, password, fullname, id, country, phone, roles, authToken, typeAuth, affiliate } = req.body;
     console.log(req.body);
     try {
+      const affiliateRef = req.headers['x-affiliate-ref'];
       // lors d'une connexion, si l'id renvoyé n'est pas null, alors il s'agit d'une connexion par réseaux social
       if (id) {
         // on vérifie d'abord s'il s'est déjà connecté une fois
@@ -145,6 +172,29 @@ const userController = {
       userExisting.lastLogin +=1;
       userExisting.lastLogin = new Date();
       await userExisting.save();
+
+      if (affiliate) {
+        let refCode = generateRefCode();
+        while (await Affiliate.findOne({ refCode })) {
+            refCode = generateRefCode();
+        }
+
+        const baseUrl = process.env.URL_APP || "https://app.rafly.me";
+        let affiliate_user = await Affiliate.findOne({ user: userExisting._id });
+        if (!affiliate_user) {
+          affiliate_user = await Affiliate.create({
+            user: userExisting._id,
+            refCode,
+            referralLink: `${baseUrl}?ref=${refCode}`,
+            commissionRate: 0.1,
+          });
+
+          await affiliate_user.save();
+
+          userExisting.isAffiliate = true;
+          await userExisting.save()
+        }
+      }
 
       // Génération du token JWT avec une durée d'une journée
       const user = await User.findOne({ email: email }).lean();
