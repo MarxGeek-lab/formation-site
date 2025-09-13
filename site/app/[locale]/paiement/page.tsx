@@ -239,7 +239,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
           }
 
           setTimeout(() => {
-            window.location.href = `/${locale}/orders`;
+            window.location.href = `/${locale}/dashboard`;
           }, 1000);
         } else {
           setShowErrorModal(true)
