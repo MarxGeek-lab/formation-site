@@ -34,7 +34,6 @@ import UploadPDFFile2 from '@/components/UploadsPdfFile/DocumentFile2'
 import UploadPDFFile from '@/components/UploadsPdfFile/DocumentFile '
 
 const EditorToolbar = ({ editor }) => {
-  console.log(editor)
   if (!editor) {
     return null
   }
@@ -153,7 +152,7 @@ const StepPropertyDetails = ({
   const { subscriptionPlans, fetchSubscription } = useSubscriptionContext();
   const [showCustomService, setShowCustomService] = useState(false);
 
-  const editor = useEditor({
+  let editor = useEditor({
       extensions: [
         StarterKit,
         Placeholder.configure({
@@ -167,27 +166,28 @@ const StepPropertyDetails = ({
       immediatelyRender: true,
       content: description,
       onUpdate: ({ editor }) => {
-        setDescription(editor.getHTML() || description); // Récupère le contenu en HTML
+        setDescription(editor.getHTML()); // Récupère le contenu en HTML
       },
   })
 
-  const editorEn = useEditor({
+  let editorEn = useEditor({
     extensions: [
       StarterKit,
       Placeholder.configure({
-        placeholder: 'Write something here...'
+        placeholder: 'Write something here...',
       }),
       TextAlign.configure({
-        types: ['heading', 'paragraph']
+        types: ['heading', 'paragraph'],
       }),
-      Underline
-    ],   
+      Underline,
+    ],
     immediatelyRender: true,
-    content: descriptionEn,
+    content: descriptionEn, // contenu initial
     onUpdate: ({ editor }) => {
-      setDescriptionEn(editor.getHTML() || descriptionEn); // Récupère le contenu en HTML
+      setDescriptionEn(editor.getHTML()); // toujours prendre la valeur de l'éditeur
     },
-  })
+  });
+  
 
   const handleCategoryChange = (e) => {
     const value = e.target.value;
@@ -219,7 +219,11 @@ const StepPropertyDetails = ({
     getAllAdmin();
   }, []);
 
-console.log("allAdmin == ", allAdmin)
+  useEffect(() => {
+    editor?.commands.setContent(description);
+    editorEn?.commands.setContent(descriptionEn);
+  }, [description, descriptionEn]);
+
   return (
     <Grid container spacing={6}>
       {/* Section 1: Informations de base */}

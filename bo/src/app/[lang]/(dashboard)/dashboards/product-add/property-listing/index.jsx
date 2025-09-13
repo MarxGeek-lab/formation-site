@@ -291,15 +291,15 @@ console.log(assignedAdminId)
                 !(typeof value === "object" && Object.keys(value).length === 0);
         }
 
-        console.log(data)
-
         if (data && typeof data === "object" && Object.keys(data).length > 0) {
           setProduct(data);
           
           // Informations de base du produit
           if (isValid(data.name)) setProductName(data.name);
+          if (isValid(data.nameEn)) setProductNameEn(data.nameEn);
           if (isValid(data.category)) setCategory(data.category);
           if (isValid(data.description)) setDescription(data.description);
+          if (isValid(data.descriptionEn)) setDescriptionEn(data.descriptionEn);
           
           // Type de produit
           if (isValid(data.productType)) setProductType(data.productType);
@@ -328,6 +328,7 @@ console.log(assignedAdminId)
           // Visuel
           if (isValid(data.withVisual)) setWithVisual(data.withVisual);
           if (isValid(data.advantage)) setAdvantage(data.advantage);
+          if (isValid(data.advantageEn)) setAdvantageEn(data.advantageEn);
         }
       }
     }
