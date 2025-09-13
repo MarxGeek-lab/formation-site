@@ -124,9 +124,9 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     if (!formData.firstName.trim()) newErrors.firstName = t('errors.firstNameRequired');
     if (!formData.lastName.trim()) newErrors.lastName = t('errors.lastNameRequired');
     if (!formData.email.trim()) newErrors.email = t('errors.emailRequired');
-    if (!formData.phone.trim()) newErrors.phone = t('errors.phoneRequired');
-    if (!formData.city.trim()) newErrors.city = t('errors.cityRequired');
-    if (!formData.address.trim()) newErrors.address = t('errors.addressRequired');
+    // if (!formData.phone.trim()) newErrors.phone = t('errors.phoneRequired');
+    // if (!formData.city.trim()) newErrors.city = t('errors.cityRequired');
+    // if (!formData.address.trim()) newErrors.address = t('errors.addressRequired');
     if (!formData.acceptTerms) newErrors.acceptTerms = t('errors.acceptTermsRequired');
     
     setErrors(newErrors);

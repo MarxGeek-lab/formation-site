@@ -82,7 +82,6 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
   }
 
   return (
-    <ProtectedRoute>
       <Container maxWidth="md" sx={{ pt: 4, pb: 4 }}>
         {/* Header */}
         {/* Message de succès */}
@@ -248,7 +247,6 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
         </Alert>
         )}
       </Container>
-    </ProtectedRoute>
   );
 };
 
