@@ -113,7 +113,7 @@ export default function PricingSection({locale}: {locale: string }) {
           image: product?.photos?.[0] || '',
           category: product?.category || '',
           type: 'abonnement',
-          subscription: JSON.stringify(plan)
+          subscription: plan
         })
 
         showLoader();
