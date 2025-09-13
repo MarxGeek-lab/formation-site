@@ -513,12 +513,7 @@ const generateContrat = async (orderId) => {
     const order = await Order.findById(orderId)
                   .populate('customer')
                   .populate('items.product')
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Commande non trouvée'
-      });
-    }
+
 
     // générer le fichier
     const pdfFileName = await generatePDF({
@@ -550,9 +545,6 @@ const generateContrat = async (orderId) => {
     return contratFile;
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: 'Erreur lors de la génération du ticket de reservation',        error: error.message
-    });
+
   }
 }
