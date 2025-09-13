@@ -224,8 +224,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     if (paymentId) {
       try {
         const { data, status } = await getStatusPayment({paymentId, paymentStatus})
-        console.log(data, status)
-
         if (data.statusPayment === 'success') {
           // Tracker l'achat réussi
           if (data.orderId) {
@@ -239,6 +237,10 @@ export default function PaiementPage({ params }: { params: { locale: string } })
           if (formData.promoCode) {
             await markPromoAsUseds()
           }
+
+          setTimeout(() => {
+            window.location.href = `/${locale}/orders`;
+          }, 1000);
         } else {
           setShowErrorModal(true)
           setTitleMessage('Paiement echoué')
