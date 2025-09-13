@@ -34,6 +34,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   const t = useTranslations('Payment');
   const { cart, clearCart } = useCart();
   const { trackPurchase } = useTracking();
+
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -59,6 +60,9 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [paymentId, setPaymentId] = useState('');
+
+
 
   // Charger les données du panier depuis le contexte
   useEffect(() => {
@@ -158,8 +162,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
         } else {
           hideLoader()
           setShowErrorModal(true)
-          setTitleMessage('Erreur')
-          setMessage('Une erreur est survenue lors du traitement de votre commande. Veuillez réessayer.');
+          setTitleMessage('Erreur lors de la création de la commande')
+          setMessage('Une erreur est survenue lors de la création de la commande. Veuillez réessayer.');
         }
       } catch (error) {
         console.log(error)
@@ -205,11 +209,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   }
 
   const retryPayment = async () => {
-    const url = window.location.href;
-    const urlParams = new URLSearchParams(url);
-    const orderId = urlParams.get('orderId');
-    const paymentId = urlParams.get('paymentId');
-
     if (paymentId) {
       await payment(paymentId, 'paymentId');
     }
@@ -218,12 +217,15 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   const getStatusPaiement = async () => {
     const url = window.location.href;
     const urlParams = new URLSearchParams(url);
-    const paymentId = urlParams.get('paymentId');
+    const orderId = urlParams.get('orderId');
+    const paymentIds = urlParams.get('paymentId');
     const paymentStatus = urlParams.get('paymentStatus');
-    
-    if (paymentId) {
+    console.log(paymentIds, paymentStatus)
+    if (paymentIds) {
+      showLoader()
       try {
-        const { data, status } = await getStatusPayment({paymentId, paymentStatus})
+        const { data, status } = await getStatusPayment({paymentId: paymentIds, paymentStatus})
+        hideLoader()
         if (data.statusPayment === 'success') {
           // Tracker l'achat réussi
           if (data.orderId) {
@@ -238,15 +240,16 @@ export default function PaiementPage({ params }: { params: { locale: string } })
             await markPromoAsUseds()
           }
 
-          setTimeout(() => {
-            window.location.href = `/${locale}/dashboard`;
-          }, 1000);
+          // setTimeout(() => {
+            window.location.href = `/${locale}/orders/${data?.orderId}`;
+       
         } else {
           setShowErrorModal(true)
-          setTitleMessage('Paiement echoué')
-          setMessage('Votre commande a été créée avec succès, mais le paiement a echoué. Veuillez vous rendre sur votre espace personnel pour finaliser le paiement.');
+          setTitleMessage('Paiement echoué! Réessayez')
+          setMessage('Votre commande a été créée avec succès, mais le paiement a echoué. Veuillez réessayer le paiement.');
         }
       } catch (error) {
+        hideLoader()
         console.log(error)
       }
     } 
@@ -298,11 +301,17 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   }
 
   useEffect(() => {
-    console.log("vérification de status")
     getStatusPaiement()
+    const url = window.location.href;
+    const urlParams = new URLSearchParams(url);
+    const orderId = urlParams.get('orderId');
+    const paymentIds = urlParams.get('paymentId');
+
+    if (paymentIds) {
+      setPaymentId(paymentIds)
+    }
   }, [])
 
-  console.log(cartItems)
 
   return (
     <Box sx={{ 
@@ -681,8 +690,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                               {t('quantity')}: {item.quantity}
                             </Typography> */}
                             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                              {/* <LocalizedPrice amount={item.price} /> */}
-                              {formatAmount(item.price)} FCFA
+                              <LocalizedPrice amount={item?.price} />
+                              {/* {formatAmount(item.price)} FCFA */}
                             </Typography>
                           </Box>
                         </Box>
@@ -697,8 +706,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                     <Typography variant="body1">{t('subtotal')}:</Typography>
                     <Typography variant="body1">
-                      {/* <LocalizedPrice amount={subTotal()} /> */}
-                      {formatAmount(subTotal())} FCFA
+                      <LocalizedPrice amount={subTotal()} />
+                      {/* {formatAmount(subTotal())} FCFA */}
                       </Typography>
                   </Box>
                   
@@ -708,7 +717,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                         Réduction ({formData.promoCode}):
                       </Typography>
                       <Typography variant="body1" sx={{ color: 'var(--success)' }}>
-                        -{formatAmount(promoDiscount)} FCFA
+                        <LocalizedPrice amount={promoDiscount} />
+                        {/* -{formatAmount(promoDiscount)} FCFA */}
                       </Typography>
                     </Box>
                   )}
@@ -716,8 +726,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('total')}:</Typography>
                     <Typography variant="h6" sx={{ fontWeight: 700, color: 'var(--primary)' }}>
-                      {/* <LocalizedPrice amount={calculateTotal()} /> */}
-                      {formatAmount(calculateTotal())} FCFA
+                      <LocalizedPrice amount={calculateTotal()} />
+                      {/* {formatAmount(calculateTotal())} FCFA */}
                     </Typography>
                   </Box>
                 </Box>
@@ -914,7 +924,11 @@ export default function PaiementPage({ params }: { params: { locale: string } })
             <Button
               onClick={() => {
                 setShowErrorModal(false)
-                retryPayment()
+                if (paymentId) {
+                  retryPayment()
+                } else {
+                  handleSubmit()
+                }
               }}
               variant="contained"
               size="large"

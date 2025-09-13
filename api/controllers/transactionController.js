@@ -29,7 +29,6 @@ const transactionController = {
         paymentId,
       } = req.body;
 
-      console.log(req.body)
       // Vérifier si la propriété existe
       let order 
       if (method === 'orderId') {
@@ -152,6 +151,7 @@ const transactionController = {
         await order.save();
         return res.status(200).json({
           statusPayment: transaction.status,
+          orderId: order._id
         });
       }
 
@@ -190,6 +190,7 @@ const transactionController = {
 
       res.status(200).json({
         statusPayment: transaction.status,
+        orderId: order._id
       });
     } catch (error) {
       console.log(error)
@@ -559,6 +560,10 @@ const sendOrderEmail = async (order) => {
                   <h2 style="margin-bottom:15px; color:#333;">Merci pour votre achat 🎉</h2>
                   <p style="color:#555; font-size:16px; margin-bottom:25px;">
                     Votre commande a bien été enregistrée. Vous pouvez télécharger vos fichiers en utilisant les boutons ci-dessous :
+                  </p>
+                  <p style="color:#555; font-size:16px; margin-bottom:25px;">
+                    Veuillez noter que si vous n'avez encore un compte utilisateur, un compte vous a été créer automatiquement avec le email fourni lors de votre achat.
+                    Réinitialisez le mot de passe pour vous connecter.
                   </p>
 
                   <!-- Button Produits -->

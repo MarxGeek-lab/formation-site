@@ -215,37 +215,8 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                   </Box>
                 </>
               )}
-{/* 
-              <Typography variant="h4" className={styles.sectionTitle}>
-                {t('targetAudience')}
-              </Typography>
-              <Box component="ul" className={styles.targetList}>
-                {product?.description?.target?.map((target: string, index: number) => (
-                  <Box component="li" key={index} sx={{ mb: 1 }}>
-                    <Typography>{target}</Typography>
-                  </Box>
-                ))}
-              </Box> */}
 
-              {/* <Typography variant="h4" className={styles.sectionTitle}>
-                {t('includedInPack')}
-              </Typography>
-              <Box component="ul" className={styles.includesList}>
-                {product?.description?.includes?.map((item: string, index: number) => (
-                  <Box component="li" key={index} sx={{ mb: 1 }}>
-                    <Typography>{item}</Typography>
-                  </Box>
-                ))}
-              </Box> */}
-
-              <Box className={styles.winningProduct}>
-                <Typography sx={{ fontWeight: 600 }}>
-                  {t('winningProduct')}
-                </Typography>
-                <Typography>
-                  {t('winningProductDescription')}
-                </Typography>
-              </Box>
+            
             </Box>
           </Grid>
 
@@ -386,7 +357,8 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                         category: product?.category || '',
                         options: selectedOptions,
                         totalPrice: calculateTotal(),
-                        type: 'achat'
+                        type: 'achat',
+                        subscription: null,
                       };
                       
                       addToCart(cartItem);

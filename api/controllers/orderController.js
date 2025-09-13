@@ -36,7 +36,6 @@ exports.createOrder = async (req, res) => {
       sessionId, // Ajouter sessionId pour lier avec le panier
     } = req.body;
 
-    console.log(req.body)
     let customer_=customer;
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'La commande ne peut pas être vide.' });
