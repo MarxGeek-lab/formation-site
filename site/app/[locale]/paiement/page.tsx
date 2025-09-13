@@ -16,7 +16,7 @@ import styles from './paiement.module.scss';
 import icon_monero from '@/assets/images/icon_monero.svg'
 import Image from 'next/image';
 import { hideLoader, showLoader } from '@/components/Loader/loaderService';
-import { useAuthStore, useOrderStore, usePaymentStore, usePromoCodeStore } from '@/contexts/GlobalContext';
+import { useAuthStore, useOrderStore, usePaymentStore, useProductStore, usePromoCodeStore } from '@/contexts/GlobalContext';
 import { useRouter } from 'next/navigation';
 import { tree } from 'next/dist/build/templates/app-page';
 import { useTracking } from '@/utils/trackingPixel';
@@ -24,6 +24,7 @@ import LocalizedPrice from '@/components/LocalizedPrice2';
 
 export default function PaiementPage({ params }: { params: { locale: string } }) {
   const { user } = useAuthStore();
+  const { allProducts } = useProductStore();
   const { applyPromoCode, markPromoAsUsed } = usePromoCodeStore();
   const { createOrder } = useOrderStore();
   const { SubmitPayment, getStatusPayment } = usePaymentStore();
@@ -58,19 +59,24 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
 
+  console.log(allProducts)
   // Charger les données du panier depuis le contexte
   useEffect(() => {
     if (cart.items && cart.items.length > 0) {
       // Utiliser les données du panier du contexte
-      const formattedItems = cart.items.map((item: any) => ({
-        id: item.id,
-        title: item.name,
-        price: item?.totalPrice || item.price,
-        quantity: item.quantity || 1,
-        image: item.image,
-        category: item.category,
-        options: item.options,
-      }));
+      const formattedItems = cart.items.map((item: any) => {
+        return {
+          id: item.id,
+          title: item.name,
+          price: item?.totalPrice || item.price,
+          quantity: item.quantity || 1,
+          image: item.image,
+          category: item.category,
+          options: item.options,
+          type: item.type,
+          subscription: item.subscription
+        }
+      });
       setCartItems(formattedItems);
     } else {
       // Fallback: charger depuis localStorage si le panier est vide
@@ -82,19 +88,13 @@ export default function PaiementPage({ params }: { params: { locale: string } })
           title: data.title,
           price: data?.totalPrice || data.price,
           quantity: 1,
-          options: data?.options
+          options: data?.options,
+          type: data?.type,
+          subscription: data?.subscriptionId
         }]);
       } else {
         // Données par défaut si pas de checkout data
-        setCartItems([
-          {
-            id: 1,
-            title: 'FORMATION COMPLÈTE PREMIERE PRO',
-            price: 45000,
-            quantity: 1,
-            options: null
-          }
-        ]);
+        setCartItems([]);
       }
     }
   }, [cart.items]);
@@ -299,6 +299,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     console.log("vérification de status")
     getStatusPaiement()
   }, [])
+
+  console.log(cartItems)
 
   return (
     <Box sx={{ 
@@ -627,6 +629,19 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                               {item.category}
                             </Typography>
                           )}
+
+                          {item.subscription && (
+                            <Box>
+                            <Typography sx={{ 
+                              display: 'block',
+                              color: 'var(--primary)',
+                              fontSize: '0.95rem',
+                              mb: 0
+                            }}>
+                              {item.subscription.title}
+                            </Typography>
+                            </Box>
+                          )}
                           
                           {/* Afficher les options sélectionnées */}
                           {item.options && (
@@ -780,6 +795,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
               Vous recevrez un email de confirmation avec les détails de votre commande.
+              Vous pouvez télécharger les produits et le contrat directement dans le mail ou dans votre espace client.
             </Typography>
           </DialogContent>
 
@@ -806,7 +822,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
               onClick={ () => {
                 clearCart(); 
                 setShowSuccessModal(false); 
-                router.push('/orders')}}
+                router.push(`/${locale}/orders`)
+              }}
               variant="contained"
               size="large"
               sx={{

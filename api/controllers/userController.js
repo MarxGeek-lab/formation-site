@@ -8,6 +8,7 @@ const fs = require("fs");
 const { EmailService } = require("../services/emailService");
 const Affiliate = require("../models/Affiliate");
 const { generateRefCode } = require("../utils/generateRefCode");
+const SiteSettings = require("../models/Settings");
 
 const userController = {
   // Fonction pour créer un utilisateur
@@ -74,11 +75,12 @@ const userController = {
         const baseUrl = process.env.URL_APP || "https://app.rafly.me";
         let affiliate_user = await Affiliate.findOne({ user: newUser._id });
         if (!affiliate_user) {
+          const settings = await SiteSettings.findOne();
           affiliate_user = await Affiliate.create({
             user: newUser._id,
             refCode,
             referralLink: `${baseUrl}?ref=${refCode}`,
-            commissionRate: 0.1,
+            commissionRate: settings.percentAffiliate,
           });
 
           await affiliate_user.save();
@@ -182,11 +184,13 @@ const userController = {
         const baseUrl = process.env.URL_APP || "https://app.rafly.me";
         let affiliate_user = await Affiliate.findOne({ user: userExisting._id });
         if (!affiliate_user) {
+          const settings = await SiteSettings.findOne();
+
           affiliate_user = await Affiliate.create({
             user: userExisting._id,
             refCode,
             referralLink: `${baseUrl}?ref=${refCode}`,
-            commissionRate: 0.1,
+            commissionRate: settings.percentAffiliate,
           });
 
           await affiliate_user.save();

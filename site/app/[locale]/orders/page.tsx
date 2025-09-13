@@ -336,7 +336,7 @@ console.log(selectedOrder)
                         variant="h6"
                         sx={{ fontWeight: 600, fontSize: { xs: '1rem', sm: '1.1rem' } }}
                       >
-                        Commande ORD-{order?._id?.slice(-6).toUpperCase()}
+                        Commande ORD-{order?._id?.toUpperCase()}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         {formatDate(order?.createdAt)}
@@ -412,32 +412,38 @@ console.log(selectedOrder)
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                      
-                      <Button
-                        variant="contained"
-                        onClick={() => handleViewOrder(order)}
-                        startIcon={<WhatsAppIcon />}
-                        sx={{ 
-                          textTransform: 'none', fontWeight: 600,
-                          color: 'white',
-                          borderColor: '#25D366',
-                          backgroundColor: '#25D366',
-                        }}
-                      >
-                        Nous joindre sur whatsApp
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={() => handleViewOrder(order)}
-                        startIcon={<DownloadIcon />}
-                        sx={{ 
-                          textTransform: 'none', fontWeight: 600,
-                          color: 'white',
-                          borderColor: '#25D366',
-                        }}
-                      >
-                        Télécharger le produit
-                      </Button>
+
+                       {(order?.paymentStatus === 'paid' && order?.productZip) && (
+                        <Button
+                          variant="contained"
+                          onClick={() => window.open(order?.productZip, '_blank')}
+                          startIcon={<DownloadIcon />}
+                          sx={{ 
+                            textTransform: 'none', fontWeight: 600,
+                            color: 'white',
+                            borderColor: '#25D366',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          Télécharger les produits (PDF)
+                        </Button>
+                      )}
+                      {order?.paymentStatus === 'paid' && order?.contrat && (
+                        <Button
+                          variant="contained"
+                          onClick={() => window.open(order?.contrat, '_blank')}
+                          startIcon={<DownloadIcon />}
+                          sx={{ 
+                            textTransform: 'none', fontWeight: 600,
+                            color: 'white',
+                            borderColor: '#25D366',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          Télécharger le contrat (PDF)
+                        </Button>
+                      )}
+
                       <Button
                         variant="outlined"
                         onClick={() => handleViewOrder(order)}

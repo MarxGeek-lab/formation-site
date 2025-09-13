@@ -52,7 +52,7 @@ async function generatePDF(data) {
         console.log('PDF généré avec succès');
         
         // Sauvegarder le fichier localement
-        filename = `contrat_${data.orderId}.pdf`;
+        filename = `contrat_ORD-${data.orderNumber}.pdf`;
         const pdfPath = path.join(__dirname, `../uploads/contrats/${filename}`);
         fs.writeFileSync(pdfPath, pdfBuffer);
         

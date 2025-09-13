@@ -8,6 +8,7 @@ export interface CartItem {
   options?: any;
   totalPrice?: number;
   type?: string;
+  subscription: string;
 }
 
 export interface CartState {

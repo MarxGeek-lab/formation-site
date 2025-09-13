@@ -186,7 +186,10 @@ const siteSettingsSchema = new mongoose.Schema({
       default: 0, // Valeur minimale du panier pour déclencher une relance
       min: 0
     }
-  }
+  },
+
+  percentAffiliate: { type: Number, default: 10 },
+
   // Ajoutez d'autres paramètres selon vos besoins
 });
 

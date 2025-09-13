@@ -116,6 +116,9 @@ const orderSchema = new mongoose.Schema(
     contrat:  {
       type: String,
     },
+    productZip: {
+      type: String,
+    },
     affiliate: { 
       type: mongoose.Schema.Types.ObjectId, 
       ref: "Affiliate", 

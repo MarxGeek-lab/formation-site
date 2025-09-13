@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Confirmation</title>
+</head>
+<body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f7f7f7;">
+  <table style="margin: 0 auto;" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
+    <tr>
+      <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background: #5E3AFC;">
+        <!-- Logo -->
+        <img src="https://api.rafly.me/logo/icon.webp" alt="Logo" style="width:40px; height:auto;" />
+        <h3 style="color: #fff; font-size: 24px;">Rafly</h3>
+      </td>
+    </tr>
+
+    <tr>
+      <td align="center">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+          <tr>
+            <td style="padding:30px; text-align:center;">
+              <h2 style="margin-bottom:15px; color:#333;">Merci pour votre achat 🎉</h2>
+              <p style="color:#555; font-size:16px; margin-bottom:25px;">
+                Votre commande a bien été enregistrée. Vous pouvez télécharger vos fichiers en utilisant les boutons ci-dessous :
+              </p>
+
+              <!-- Button Produits -->
+              <a href="{{productPdfUrl}}" 
+                 style="display:inline-block; background:#007bff; color:#fff; padding:12px 20px; border-radius:6px; text-decoration:none; font-weight:bold; margin-bottom:15px;">
+                📄 Télécharger Produits (PDF)
+              </a>
+              <br />
+
+              <!-- Button Contrat -->
+              <a href="{{contractPdfUrl}}" 
+                 style="display:inline-block; background:#28a745; color:#fff; padding:12px 20px; border-radius:6px; text-decoration:none; font-weight:bold;">
+                📑 Télécharger Contrat (PDF)
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td align="center" style="padding:20px; font-size:12px; color:#888;">
+        © 2025 Votre Société. Tous droits réservés.
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

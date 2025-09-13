@@ -2,7 +2,7 @@
 
 import Grid from '@mui/material/Grid2';
 import { useEffect, useState } from 'react';
-import { Button, Card, CardHeader, CardContent, TextField, Switch, FormControlLabel, Typography, Divider, Box } from '@mui/material';
+import { Button, Card, CardHeader, CardContent, TextField, Switch, FormControlLabel, Typography, Divider, Box, InputAdornment } from '@mui/material';
 import { useAuthStore, useSiteSettingsStore } from '@/contexts/GlobalContext';
 import api from '@/configs/api';
 import { hideLoader, showLoader } from '@/components/Loader/loaderService';
@@ -34,6 +34,7 @@ const StoreDetails = () => {
   const [youtubeUrl, setYoutubeUrl] = useState('')
   const [warranty, setWarranty] = useState('')
   const [fbPixelId, setFbPixelId] = useState('')
+  const [percentAffiliate, setPercentAffiliate] = useState(10)
   const [shipping, setShipping] = useState([
     {
       name: '',
@@ -116,8 +117,8 @@ const StoreDetails = () => {
       formData.append('images', logoFile);
     }
 
-    if (taxe) {
-      formData.append('taxe', taxe);
+    if (percentAffiliate) {
+      formData.append('percentAffiliate', percentAffiliate);
     }
 
     if (facebookUrl) {
@@ -199,6 +200,7 @@ const StoreDetails = () => {
         setDescription(data?.description);
         setWebsiteTitle(data?.websiteTitle);
         setFbPixelId(data?.fb_pixel_id)
+        setPercentAffiliate(data?.percentAffiliate)
         
         // Charger les paramètres de relance de panier
         if (data?.cartReminderSettings) {
@@ -294,13 +296,28 @@ const StoreDetails = () => {
       <Grid size={{ xs: 12 }}>
         
         <Card>
-          <Grid size={{ xs: 12, md: 6 }} sx={{p: 6}}>
-            <CustomTextField
-              fullWidth
-              value={fbPixelId}
-              onChange={(e) => setFbPixelId(e.target.value)}
-              label="Pixel ID "
-            />
+          <Grid container spacing={4}>
+            <Grid size={{ xs: 12, sm: 6 }} sx={{p: 6}}>
+              <CustomTextField
+                fullWidth
+                value={fbPixelId}
+                onChange={(e) => setFbPixelId(e.target.value)}
+                label="Pixel ID "
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }} sx={{p: 6}}>
+              <CustomTextField
+                fullWidth
+                value={percentAffiliate}
+                onChange={(e) => setPercentAffiliate(e.target.value)}
+                label="Poucentage parrainage "
+                slotProps={{
+                  input: {
+                    endAdornment: <InputAdornment position='end'>%</InputAdornment>
+                  }
+                }}
+              />
+            </Grid>
           </Grid>
           
           <CardHeader 

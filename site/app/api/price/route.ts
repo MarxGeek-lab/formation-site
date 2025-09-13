@@ -28,6 +28,7 @@ export async function GET(req: Request) {
       throw new Error("Conversion failed");
     }
 
+    console.log("exchangeData == ", exchangeData)
     const rate = exchangeData.conversion_rates[currency];
     const convertedAmount = rate ? amount * rate : amount;
 

@@ -141,7 +141,7 @@ const AffiliateTable = ({ fetchAffiliates, allAffiliates }) => {
       )
     }),
     columnHelper.accessor('count', {
-      header: 'Nombre d\'utilisateur',
+      header: 'Nombre fileul',
       cell: ({ row }) => <Chip 
         size='small' 
         label={row.original?.referrals?.length} 

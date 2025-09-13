@@ -42,6 +42,8 @@ app.use("/", express.static("uploads/products"));
 app.use("/", express.static("uploads/documents"));
 app.use("/", express.static("uploads/videos"));
 app.use("/", express.static("uploads/logo"));
+app.use("/", express.static("uploads/zips"));
+app.use("/", express.static("uploads/contrats"));
 
 // Initialize cron jobs
 // initReservationCron();

@@ -9,6 +9,7 @@ import { useSubscriptionContext } from '@/contexts/SubscriptionContext';
 import { useEffect } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useRouter } from 'next/navigation';
+import { hideLoader, showLoader } from './Loader/loaderService';
 
 const CheckIcon: React.FC<{ color?: string }> = ({ color }) => (
   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +48,7 @@ const RocketIcon = () => (
 
 export default function PricingSection({locale}: {locale: string }) {
     const t = useTranslations('Pricing');
-    const { addToCart } = useCart();
+    const { addToCart, clearCart } = useCart();
     const router = useRouter();
     const { subscriptionPlans, fetchSubscription } = useSubscriptionContext();
 
@@ -87,13 +88,12 @@ export default function PricingSection({locale}: {locale: string }) {
       color: 'var(--primary)'
     }
 
-    const handleAddToCart = async (e: React.MouseEvent, plan: any) => {
-      e.stopPropagation();
-      
-      try {console.log(plan) 
+    const handleAddToCart = async (plan: any) => {
+      clearCart();
+
+      try { 
         const product = subscriptionPlans[0]?.product || subscriptionPlans[1]?.product || subscriptionPlans[2]?.product;
         const price = plan.price;
-                console.log(product)
 
         // Ajouter au panier (synchronisation automatique avec backend)
         await addToCart({
@@ -102,10 +102,26 @@ export default function PricingSection({locale}: {locale: string }) {
           price: price,
           image: product?.photos?.[0] || '',
           category: product?.category || '',
-          type: 'achat'
+          type: 'abonnement',
+          subscription: JSON.stringify(plan)
         });
 
-        router.push(`/${locale}/paiement`);
+        console.log({
+          id: product?._id,
+          name: product?.name,
+          price: price,
+          image: product?.photos?.[0] || '',
+          category: product?.category || '',
+          type: 'abonnement',
+          subscription: JSON.stringify(plan)
+        })
+
+        showLoader();
+
+        setTimeout(() => {
+          hideLoader();
+          router.push(`/${locale}/paiement`);
+        }, 1000);
   
       } catch (error) {
         console.error('Erreur ajout au panier:', error);
@@ -115,6 +131,8 @@ export default function PricingSection({locale}: {locale: string }) {
   useEffect(() => {
     fetchSubscription();
   }, []);
+
+  console.log("subscriptionPlans == ", subscriptionPlans)
 
   return (
     <Box 
@@ -205,7 +223,7 @@ export default function PricingSection({locale}: {locale: string }) {
 
               {/* CTA Button */}
               <button className={styles.primaryButton}
-                onClick={(e) => handleAddToCart(e, subscriptionPlans[0])}>
+                onClick={() => handleAddToCart(subscriptionPlans[0])}>
                 <span>{t('subscribe')}</span>
                 <Box className={styles.iconWrapper}>
                   <svg fill="currentColor" viewBox="0 0 20 20">
@@ -332,7 +350,7 @@ export default function PricingSection({locale}: {locale: string }) {
                   background: 'white',
                   color: 'var(--primary)',
                   border: '1px solid var(--primary)'
-                }} onClick={(e) => handleAddToCart(e, subscriptionPlans[2])}>
+                }} onClick={() => handleAddToCart(subscriptionPlans[2])}>
                 <span>{t('subscribe')}</span>
                 <Box className={styles.iconWrapper} sx={{background: 'var(--primary)'}}>
                   <svg fill="currentColor" viewBox="0 0 20 20">
@@ -448,7 +466,7 @@ export default function PricingSection({locale}: {locale: string }) {
 
               {/* CTA Button */}
               <button className={styles.primaryButton}
-                onClick={(e) => handleAddToCart(e, subscriptionPlans[1])}>
+                onClick={() => handleAddToCart(subscriptionPlans[1])}>
                 <span>{t('subscribe')}</span>
                 <Box className={styles.iconWrapper}>
                   <svg fill="currentColor" viewBox="0 0 20 20">

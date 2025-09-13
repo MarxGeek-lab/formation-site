@@ -24,11 +24,12 @@ const affiliateController = {
         const baseUrl = process.env.URL_APP || "https://app.rafly.me";
         let affiliate = await Affiliate.findOne({ user: user._id });
         if (!affiliate) {
+            const settings = await SiteSettings.findOne();
             affiliate = await Affiliate.create({
                 user: user._id,
                 refCode,
                 referralLink: `${baseUrl}?ref=${refCode}`,
-                commissionRate: 0.1,
+                commissionRate: settings.percentAffiliate,
             });
 
             await affiliate.save();

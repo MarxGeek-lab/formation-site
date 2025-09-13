@@ -99,6 +99,14 @@ const ActivityHistoryTable = ({ activities }) => {
         </div>
       )
     }),
+    columnHelper.accessor('amount', {
+      header: 'Montant de vente',
+      cell: ({ row }) => (
+        <div className='flex flex-col gap-1'>
+          <Typography variant='body2'>{row.original.amount || '0'} FCFA</Typography>
+        </div>
+      )
+    }),
     columnHelper.accessor('commissionAmount', {
       header: 'Commission',
       cell: ({ row }) => (

@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { GeoInfo } from "@/types/types";
 import { countries } from "@/data/country";
 import { country } from "@/data/countries";
+import VideoPlayer from "@/components/VideoPlayer";
 
 export default function Home({ params }: { params: { locale: string } }) {
   const { locale } = params;
@@ -123,7 +124,7 @@ export default function Home({ params }: { params: { locale: string } }) {
                   gap: 2
                 }}>
                 <button className={styles.primaryButton}
-                  onClick={() => router.push('/catalogue')}>
+                  onClick={() => router.push(`/${locale}/catalogue`)}>
                   <span>{t('browseProducts')}</span>
                   <Box className={styles.iconWrapper}>
                     <svg fill="currentColor" viewBox="0 0 20 20">
@@ -159,7 +160,7 @@ export default function Home({ params }: { params: { locale: string } }) {
               
               <Box className={`${styles.videoPlaceholder}`}>
                 <Box className={styles.content}>
-                  <video 
+                  {/* <video 
                     width="100%" 
                     height="300" 
                     controls 
@@ -170,7 +171,9 @@ export default function Home({ params }: { params: { locale: string } }) {
                   >
                     <source src={"/assets/video/raphlyvideo.mp4"} type="video/mp4" />
                     Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
+                  </video> */}
+                  <VideoPlayer src="/assets/video/raphlyvideo.mp4" height={300} />
+
                   {/* <Box className={styles.iconWrapper}>
                     <svg fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
@@ -340,6 +343,9 @@ export default function Home({ params }: { params: { locale: string } }) {
               ))}
             </Grid>
             <button className={styles.primaryButton}
+              style={{
+                margin: '2rem auto',
+              }}
               onClick={() => router.push(`${locale}/catalogue`)}>
               <span>{t('exploreCatalog')}</span>
               <Box className={styles.iconWrapper} sx={{

@@ -10,6 +10,8 @@ const { getGreeting, generateVerificationCode } = require('../utils/helpers');
 const Cart = require('../models/Cart');
 const Affiliate = require('../models/Affiliate');
 const Referral = require('../models/Referral');
+const path = require('path');
+const fs = require('fs');
 
 require('dotenv').config();
 
@@ -60,7 +62,6 @@ exports.createOrder = async (req, res) => {
         await user.save();
 
          if (affiliateRef) {
-
             // Chercher l'affilié correspondant
             const affiliate = await Affiliate.findOne({ refCode: affiliateRef });
             if (affiliate) {
@@ -189,6 +190,8 @@ exports.createOrder = async (req, res) => {
     // Affiliation
     if (affiliateRef) {
       const affiliate = await Affiliate.findOne({ refCode: affiliateRef });
+      const settings = await SiteSettings.findOne();
+
       if (affiliate) {
         const referral = await Referral.create({
           affiliate: affiliate._id,
@@ -196,13 +199,17 @@ exports.createOrder = async (req, res) => {
           type: "order",
           orderId: savedOrder._id,
           amount: savedOrder.totalAmount,
-          commissionAmount: Number((savedOrder.totalAmount * affiliate.commissionRate).toFixed(2)),
+          commissionAmount: Number(((savedOrder.totalAmount * settings.percentAffiliate)/100).toFixed(2)),
           status: "pending",
         });
 
         await referral.save();
       }
     }
+
+    // Générer le contrat
+    const contrat = await generateContrat(savedOrder._id);
+    console.log('Contrat généré à :', contrat);
 
     res.status(201).json(savedOrder);
   } catch (error) {
@@ -500,11 +507,10 @@ exports.reminderOrder = async (req, res) => {
     }
   }
 
-  // générer et télécharger le ticket de reservation
-exports.generateContrat = async (req, res) => {
+  // générer le contrat
+const generateContrat = async (orderId) => {
   try {
-    console.log(req.params)
-    const order = await Order.findById(req.params.id)
+    const order = await Order.findById(orderId)
                   .populate('customer')
                   .populate('items.product')
     if (!order) {
@@ -518,7 +524,7 @@ exports.generateContrat = async (req, res) => {
     const pdfFileName = await generatePDF({
       clientName: order?.customer?.name,
       clientEmail: order.customer.email,
-      orderNumber: 'ORD-' + order._id,
+      orderNumber: 'ORD-' + order._id.toString().toUpperCase(),
       purchaseDate: order.createdAt.toLocaleDateString(),
       productName: order.items.map(i => i.product.name).join(', '),
       licenceType: 'Licence de revente'
@@ -536,12 +542,12 @@ exports.generateContrat = async (req, res) => {
         console.log("✅ Le fichier PDF existe !");
     }
 
-    order.contrat = pdfFileName.filename;
+    const contratFile = process.env.API_URL+pdfFileName.filename;
+    order.contrat = contratFile;
+    console.log(order.contrat)
     await order.save();
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="invoice.pdf"');
-    return res.status(200).json({ filename: pdfFileName.filename });
+    return contratFile;
   } catch (error) {
     console.log(error);
     return res.status(500).json({

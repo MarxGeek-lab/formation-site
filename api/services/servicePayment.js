@@ -29,8 +29,8 @@ class MoneroPayment {
       const options = {
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${this.secretKey}`,
+          "Accept": "application/json",
+          "Authorization": `Bearer ${this.secretKey}`,
         },
       };
 

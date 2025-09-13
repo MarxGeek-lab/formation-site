@@ -156,8 +156,6 @@ export default function DashboardPage({ params }: { params: { locale: string } }
     }
   };
 
-  console.log("user ===", user)
-
   const quickActions: QuickAction[] = [
     {
       title: 'Affiliations',
@@ -176,17 +174,10 @@ export default function DashboardPage({ params }: { params: { locale: string } }
     },
     {
       title: 'Mes Commandes',
-      description: 'Voir toutes mes commandes',
+      description: 'Voir toutes mes commandes / produit zippé / contrat',
       icon: <ShoppingBagIcon />,
       action: () => router.push(`/${locale}/orders`),
       color: '#1976d2',
-    },
-    {
-      title: 'Mes Téléchargements',
-      description: 'Articles téléchargés',
-      icon: <DownloadIcon />,
-      action: () => router.push(`/${locale}/favorites`),
-      color: '#e91e63',
     },
     {
       title: 'Mes Abonnements',
@@ -529,7 +520,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                       <Typography
                         variant="body2"
                         color="text.secondary"
-                        sx={{ fontSize: { xs: "0.75rem", sm: "0.85rem" } }}
+                        sx={{ fontSize: { xs: "0.75rem", sm: "0.8rem" } }}
                       >
                         {action.description}
                       </Typography>
