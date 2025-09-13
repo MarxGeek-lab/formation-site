@@ -183,7 +183,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
       title: 'Mes Abonnements',
       description: 'Abonnements actifs',
       icon: <FavoriteIcon />,
-      action: () => router.push(`/${locale}/favorites`),
+      action: () => router.push(`/${locale}/orders`),
       color: '#e91e63',
     },
     {
@@ -452,7 +452,29 @@ export default function DashboardPage({ params }: { params: { locale: string } }
         ))}
       </Grid2>
 
+      <Alert 
+          severity="warning"
+          // icon={<InfoOutlinedIcon sx={{ fontSize: 24, mt: 0.5 }} />}
+          sx={{ 
+            mb: { xs: 2, sm: 3 },
+            borderRadius: 2,
+            background: 'rgba(255, 76, 60, 0.08)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 76, 60, 0.15)',
+            color: 'warning.dark',
+            boxShadow: 'none',
+            p: { xs: 1.5, sm: '12px 16px' },
+            alignItems: 'center',
+          }}
+          action={
+            <Button onClick={() => window.open('https://wa.me/22941559913', '_blank')} variant="contained" color="success">Contactez-nous</Button>
+          }
+        >
+          <Typography sx={{ fontWeight: 500 }}>
+            Si vous aviez commander un visuel, contactez-nous sur WhatsApp 
 
+          </Typography>
+        </Alert>
 
       <Grid2 container spacing={{ xs: 2, sm: 3 }}>
         {/* Actions rapides */}

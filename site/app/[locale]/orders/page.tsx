@@ -83,7 +83,8 @@ interface Order {
   estimatedDelivery?: string;
 }
 
-const OrdersPage: React.FC = () => {
+const OrdersPage = ({ params }: { params: { locale: string } }) => {
+  const { locale } = params;
   const router = useRouter();
   const { orders, getUserOrders } = useOrderStore()
   const { user } = useAuthStore()
@@ -229,7 +230,7 @@ console.log(selectedOrder)
       {/* Header */}
       <Box sx={{ mb: { xs: 3, sm: 4 } }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <IconButton onClick={() => router.back()} sx={{ mr: 1 }}>
+          <IconButton onClick={() => router.push(`/${locale}/dashboard`)} sx={{ mr: 1 }}>
             <ArrowBackIcon color='primary' />
           </IconButton>
           <Typography 
