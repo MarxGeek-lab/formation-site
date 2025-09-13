@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation';
 import { tree } from 'next/dist/build/templates/app-page';
 import { useTracking } from '@/utils/trackingPixel';
 import LocalizedPrice from '@/components/LocalizedPrice2';
+import { formatAmount } from '@/utils/formatAmount';
 
 export default function PaiementPage({ params }: { params: { locale: string } }) {
   const { user } = useAuthStore();
@@ -59,7 +60,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
 
-  console.log(allProducts)
   // Charger les données du panier depuis le contexte
   useEffect(() => {
     if (cart.items && cart.items.length > 0) {
@@ -679,7 +679,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                               {t('quantity')}: {item.quantity}
                             </Typography> */}
                             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                              <LocalizedPrice amount={item.price} />
+                              {/* <LocalizedPrice amount={item.price} /> */}
+                              {formatAmount(item.price)} FCFA
                             </Typography>
                           </Box>
                         </Box>
@@ -694,7 +695,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                     <Typography variant="body1">{t('subtotal')}:</Typography>
                     <Typography variant="body1">
-                      <LocalizedPrice amount={subTotal()} />
+                      {/* <LocalizedPrice amount={subTotal()} /> */}
+                      {formatAmount(subTotal())} FCFA
                       </Typography>
                   </Box>
                   
@@ -704,7 +706,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                         Réduction ({formData.promoCode}):
                       </Typography>
                       <Typography variant="body1" sx={{ color: 'var(--success)' }}>
-                        -<LocalizedPrice amount={promoDiscount} />
+                        -{formatAmount(promoDiscount)} FCFA
                       </Typography>
                     </Box>
                   )}
@@ -712,7 +714,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('total')}:</Typography>
                     <Typography variant="h6" sx={{ fontWeight: 700, color: 'var(--primary)' }}>
-                      <LocalizedPrice amount={calculateTotal()} />
+                      {/* <LocalizedPrice amount={calculateTotal()} /> */}
+                      {formatAmount(calculateTotal())} FCFA
                     </Typography>
                   </Box>
                 </Box>
