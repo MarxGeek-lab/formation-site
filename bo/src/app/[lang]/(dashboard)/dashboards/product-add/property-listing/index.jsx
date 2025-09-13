@@ -37,7 +37,9 @@ const PropertyListingWizard = () => {
   const [activeStep, setActiveStep] = useState(0)
   const [category, setCategory] = useState("");
   const [productName, setProductName] = useState("");
+  const [productNameEn, setProductNameEn] = useState("");
   const [description, setDescription] = useState("");
+  const [descriptionEn, setDescriptionEn] = useState("");
   const [price, setPrice] = useState(0);
   const [wholesalePrice, setWholesalePrice] = useState('');
   const [productStatus, setProductStatus] = useState('active');
@@ -58,6 +60,7 @@ const PropertyListingWizard = () => {
   const [availableSubscriptions, setAvailableSubscriptions] = useState([]);
   const [withVisual, setWithVisual] = useState('true');
   const [advantage, setAdvantage] = useState(['']);
+  const [advantageEn, setAdvantageEn] = useState(['']);
 
   // Type de produit
   const [productType, setProductType] = useState('standard');
@@ -118,6 +121,9 @@ const PropertyListingWizard = () => {
         // Visuel
         withVisual={withVisual} setWithVisual={setWithVisual}
         advantage={advantage} setAdvantage={setAdvantage}
+        descriptionEn={descriptionEn} setDescriptionEn={setDescriptionEn}
+        advantageEn={advantageEn} setAdvantageEn={setAdvantageEn}
+        productNameEn={productNameEn} setProductNameEn={setProductNameEn}
         />
     } 
   }
@@ -164,9 +170,12 @@ console.log(assignedAdminId)
   
       // Informations de base du produit
       if (productName) formData.append("name", productName);
+      if (productNameEn) formData.append("nameEn", productNameEn);
       if (description) formData.append("description", description);
+      if (descriptionEn) formData.append("descriptionEn", descriptionEn);
       if (withVisual) formData.append("withVisual", 'true');
       if (advantage.length > 0) formData.append("advantage", JSON.stringify(advantage));
+      if (advantageEn.length > 0) formData.append("advantageEn", JSON.stringify(advantageEn));
 
       if (category || customService) {
         formData.append("category", category !== 'Autres' ? category : customService);

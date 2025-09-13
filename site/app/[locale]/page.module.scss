@@ -93,6 +93,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.9rem;
+    overflow: hidden !important;
 
     .iconWrapper {
         background: white;
@@ -196,7 +197,7 @@
     justify-content: center;
     border: 6px solid var(--primary);
     margin-top: 3rem;
-    
+    overflow: hidden;
     &.light {
         background-color: #f3f4f6;
     }

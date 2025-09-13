@@ -29,6 +29,7 @@ const productController = {
         isSubscriptionBased, subscriptionId, assignedAdminId,
         price, wholesalePrice, productStatus,
         characteristics, advantage, withVisual,
+        nameEn, descriptionEn, advantageEn
       } = req.body;
 
       console.log('Données produit reçues:', req.body);
@@ -59,7 +60,9 @@ const productController = {
       // Créer un nouveau produit
       const newProduct = new Product({
         name,
+        nameEn,
         description,
+        descriptionEn,
         category,
         photos,
         
@@ -79,6 +82,7 @@ const productController = {
         // Caractéristiques personnalisées
         characteristics: characteristics ? JSON.parse(characteristics) : [],
         advantage: advantage ? JSON.parse(advantage) : [],
+        ...(advantageEn && { advantageEn: JSON.parse(advantageEn) }),
         ...(wholesalePrice && { pricePromo: wholesalePrice }),
         ...(price && { price }),
         ...(productStatus && { productStatus }),
@@ -121,7 +125,7 @@ console.log(req.body)
         isSubscriptionBased, subscriptionId, assignedAdminId,
         price, wholesalePrice, productStatus,
         characteristics, images2, videos2,
-        pdf2, advantage, isvisual
+        pdf2, advantage, isvisual, nameEn, descriptionEn, advantageEn
       } = req.body;
   
       const productId = req.params.id;
@@ -187,7 +191,9 @@ console.log(req.body)
 
       // Mettre à jour les champs du produit
       product.name = name || product.name;
+      product.nameEn = nameEn || product.nameEn;
       product.description = description || product.description;
+      product.descriptionEn = descriptionEn || product.descriptionEn;
       product.category = category || product.category;
       product.photos = newPhotos;
       
@@ -208,6 +214,7 @@ console.log(req.body)
       if (productStatus !== undefined) product.productStatus = productStatus;
       if (isvisual !== undefined) product.isvisual = isvisual === 'true';
       if (advantage) product.advantage = JSON.parse(advantage);
+      if (advantageEn) product.advantageEn = JSON.parse(advantageEn);
       // Caractéristiques personnalisées
       if (characteristics) {
         product.characteristics = JSON.parse(characteristics);

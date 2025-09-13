@@ -144,8 +144,10 @@ const StepPropertyDetails = ({
   selectedFilesSale, setSelectedFilesSale, 
   selectedFilesSale2,
   selectedVideo, setSelectedVideo,
-  selectedVideo2,
-   advantage, setAdvantage,
+  selectedVideo2, advantage, setAdvantage,
+  descriptionEn, setDescriptionEn,
+  advantageEn, setAdvantageEn,
+  productNameEn, setProductNameEn,
 }) => {
   const { allCategories, allAdmin, getAllAdmin } = useAdminStore();
   const { subscriptionPlans, fetchSubscription } = useSubscriptionContext();
@@ -167,6 +169,24 @@ const StepPropertyDetails = ({
       onUpdate: ({ editor }) => {
         setDescription(editor.getHTML() || description); // Récupère le contenu en HTML
       },
+  })
+
+  const editorEn = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: 'Write something here...'
+      }),
+      TextAlign.configure({
+        types: ['heading', 'paragraph']
+      }),
+      Underline
+    ],   
+    immediatelyRender: true,
+    content: descriptionEn,
+    onUpdate: ({ editor }) => {
+      setDescriptionEn(editor.getHTML() || descriptionEn); // Récupère le contenu en HTML
+    },
   })
 
   const handleCategoryChange = (e) => {
@@ -221,6 +241,19 @@ console.log("allAdmin == ", allAdmin)
           label={
             <Typography component="span">
               Nom du produit <Typography component="span" color="error">*</Typography>
+            </Typography>
+          }
+        />
+      </Grid>
+      <Grid size={{ xs: 12, md: 6 }}>
+        <CustomTextField
+          fullWidth
+          placeholder="Ex: iPhone 15 Pro Max 256GB"
+          value={productNameEn}
+          onChange={(e) => setProductNameEn(e.target.value)}
+          label={
+            <Typography component="span">
+              Nom du produit en anglais <Typography component="span" color="error">*</Typography>
             </Typography>
           }
         />
@@ -294,6 +327,19 @@ console.log("allAdmin == ", allAdmin)
           </CardContent>
         </Card>
       </Grid>
+      <Grid size={{ xs: 12 }}>
+        <Typography className="mbe-1">Description en anglais</Typography>
+        <Card className="p-0 border shadow-none">
+          <CardContent className="p-0">
+            <EditorToolbar editor={editorEn} />
+            <Divider className="mli-6" />
+            <EditorContent
+              editor={editorEn}
+              className="bs-[135px] overflow-y-auto flex"
+            />
+          </CardContent>
+        </Card>
+      </Grid>
       {/* <Grid size={{ xs: 12 }}>
         <FormControl component="fieldset">
           <FormLabel component="legend">
@@ -348,6 +394,50 @@ console.log("allAdmin == ", allAdmin)
               variant="outlined"
               startIcon={<i className="tabler-plus" />}
               onClick={() => setAdvantage([...advantage, ''])}
+              sx={{ mt: 1 }}
+            >
+              Ajouter un avantage
+            </Button>
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid size={{ xs: 12 }}>
+        <Typography variant="h4" className="mb-2 mt-6">
+          Avantages en anglais
+        </Typography>
+        <Card>
+          <CardContent>
+            {advantageEn.map((item, index) => (
+              <Box key={index} sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
+                <TextField
+                  fullWidth
+                  label={`Avantage ${index + 1}`}
+                  value={item}
+                  onChange={(e) => {
+                    const newAdvantages = [...advantageEn];
+                    newAdvantages[index] = e.target.value;
+                    setAdvantageEn(newAdvantages);
+                  }}
+                  variant="outlined"
+                  size="small"
+                />
+                <IconButton
+                  color="error"
+                  onClick={() => {
+                    const newAdvantages = advantageEn.filter((_, i) => i !== index);
+                    setAdvantageEn(newAdvantages);
+                  }}
+                  disabled={advantageEn.length === 1}
+                >
+                  <i className="tabler-minus" />
+                </IconButton>
+              </Box>
+            ))}
+            <Button
+              variant="outlined"
+              startIcon={<i className="tabler-plus" />}
+              onClick={() => setAdvantageEn([...advantageEn, ''])}
               sx={{ mt: 1 }}
             >
               Ajouter un avantage

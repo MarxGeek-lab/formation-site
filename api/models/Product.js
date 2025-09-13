@@ -4,7 +4,9 @@ const ProductSchema = new mongoose.Schema({
   // Informations de base du produit
   category: { type: String, required: true, trim: true },
   name: { type: String, required: true, trim: true },
+  nameEn: { type: String, trim: true },
   description: { type: String, trim: true },
+  descriptionEn: { type: String, trim: true },
   
   // Type de produit
   productType: { 
@@ -87,6 +89,10 @@ const ProductSchema = new mongoose.Schema({
 
   // Avantages
   advantage: [{
+    type: String,
+    trim: true
+  }],
+  advantageEn: [{
     type: String,
     trim: true
   }],

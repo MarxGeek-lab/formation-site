@@ -11,6 +11,7 @@ import { Box, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useTranslations } from 'next-intl';
 import styles from './page.module.scss';
+import ReactPlayer from "react-player";
 
 import banniere from '@/assets/images/BANNIERE-1920px-600px.jpg';
 import users from '@/assets/images/Frame-12-1.png'
@@ -27,6 +28,7 @@ import { GeoInfo } from "@/types/types";
 import { countries } from "@/data/country";
 import { country } from "@/data/countries";
 import VideoPlayer from "@/components/VideoPlayer";
+import VideoComponent from "@/components/VideoPlayer";
 
 export default function Home({ params }: { params: { locale: string } }) {
   const { locale } = params;
@@ -160,26 +162,7 @@ export default function Home({ params }: { params: { locale: string } }) {
               
               <Box className={`${styles.videoPlaceholder}`}>
                 <Box className={styles.content}>
-                  {/* <video 
-                    width="100%" 
-                    height="300" 
-                    controls 
-                    autoPlay
-                    muted
-                    playsInline
-                    style={{ borderRadius: '8px', border: '1px solid #ccc' }}
-                  >
-                    <source src={"/assets/video/raphlyvideo.mp4"} type="video/mp4" />
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video> */}
-                  <VideoPlayer src="/assets/video/raphlyvideo.mp4" height={300} />
-
-                  {/* <Box className={styles.iconWrapper}>
-                    <svg fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                    </svg>
-                  </Box>
-                  <Typography className={styles.dark}>{t('presentationVideo')}</Typography> */}
+                  <VideoComponent src="/assets/video/raphlyvideo.mp4" height={300} />
                 </Box>
               </Box>
             </Grid>

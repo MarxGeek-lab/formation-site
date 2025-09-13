@@ -161,7 +161,9 @@ export default function ProductCard({
       {/* </Link> */}
 
       <div className={styles.content}>
-        <h3 className={styles.title}>{product?.name}</h3>
+        <h3 className={styles.title}>
+          {locale === 'fr' ? product?.name : product?.nameEn || product?.name}
+        </h3>
         <p className={styles.category}>{product?.category}</p>
         
         <div className={styles.priceSection}>

@@ -198,16 +198,31 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                 {t('description')}
               </Typography>
               <Typography sx={{ mb: 3 }}>
-                <div dangerouslySetInnerHTML={{ __html: product?.description }} />
+                <div dangerouslySetInnerHTML={{ __html: locale === "fr" ? product?.description : product?.descriptionEn }} />
               </Typography>
 
-              {product?.advantage?.length > 0 && (
+              {locale === "fr" && product?.advantage?.length > 0 && (
                 <>  
                   <Typography variant="h4" className={styles.sectionTitle}>
                     {t('advantages')}
                   </Typography>
                   <Box component="ul" className={styles.benefitsList}>
                     {product?.advantage?.map((benefit: string, index: number) => (
+                      <Box component="li" key={index} sx={{ mb: 1 }}>
+                        <Typography>{benefit}</Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                </>
+              )}
+
+              {locale === "en" && product?.advantageEn?.length > 0 && (
+                <>  
+                  <Typography variant="h4" className={styles.sectionTitle}>
+                    {t('advantages')}
+                  </Typography>
+                  <Box component="ul" className={styles.benefitsList}>
+                    {product?.advantageEn?.map((benefit: string, index: number) => (
                       <Box component="li" key={index} sx={{ mb: 1 }}>
                         <Typography>{benefit}</Typography>
                       </Box>

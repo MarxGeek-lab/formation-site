@@ -1,51 +1,30 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React from "react";
+import ReactPlayer from "react-player";
 
-interface VideoPlayerProps {
+interface VideoComponentProps {
   src: string;
   width?: string | number;
   height?: string | number;
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({
+const VideoComponent: React.FC<VideoComponentProps> = ({
   src,
   width = "100%",
-  height = 300,
+  height = 300
 }) => {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      // Essaye de jouer la vidéo après que le DOM soit prêt
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log("Vidéo en lecture automatique");
-          })
-          .catch((error) => {
-            console.log("Autoplay bloqué:", error);
-          });
-      }
-    }
-  }, []);
-
   return (
-    <video
-      ref={videoRef}
-      width={width}
-      height={height}
-      controls
-      muted
-      playsInline
-      style={{ borderRadius: "8px", border: "1px solid #ccc" }}
-    >
-      <source src={src} type="video/mp4" />
-      Votre navigateur ne supporte pas la lecture vidéo.
-    </video>
+    <ReactPlayer
+      src={src}
+      playing={true}      
+      muted={true}        
+      loop={true}         
+      controls={false} 
+      style={{width: '100%', height: '100%', overflow: 'hidden'}}
+      playsInline         
+    />
   );
 };
 
-export default VideoPlayer;
+export default VideoComponent;
