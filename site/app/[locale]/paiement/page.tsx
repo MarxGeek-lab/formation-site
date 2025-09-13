@@ -226,7 +226,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
         const { data, status } = await getStatusPayment({paymentId, paymentStatus})
         console.log(data, status)
 
-        if (data.status === 'success') {
+        if (data.statusPayment === 'success') {
           // Tracker l'achat réussi
           if (data.orderId) {
             trackPurchase(data.orderId, calculateTotal());

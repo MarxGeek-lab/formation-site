@@ -135,11 +135,11 @@ const transactionController = {
         transaction.completedAt = new Date();
 
         order.paymentStatus = 'paid';
+        order.status = 'confirmed';
         order.paidAmount = order.totalAmount;
         order.completedAt = new Date();
 
         if (referral) {
-          console.log("referral update == ", referral)
           referral.status = 'paid';
           await referral.save();
         }
@@ -165,11 +165,11 @@ const transactionController = {
         transaction.completedAt = new Date();
 
         order.paymentStatus = 'paid';
+        order.status = 'confirmed';
         order.paidAmount = order.totalAmount;
         order.completedAt = new Date();
 
         if (referral) {
-          console.log("referral update == ", referral)
           referral.status = 'paid';
           await referral.save();
         }
