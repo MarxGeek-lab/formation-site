@@ -12,14 +12,16 @@ export async function GET(req: Request) {
     // 1️⃣ Détection IP et localisation
     console.log("🔍 Étape 1: Détection pays via ipapi");
     const forwardedFor = req.headers.get("x-forwarded-for");
-  const ip = forwardedFor ? forwardedFor.split(",")[0] : "check"; // fallback ipapi "check"
+    const realIp = req.headers.get("x-real-ip");
 
-  console.log("🌍 IP détectée:", ip);
-  console.log("🌍 forwardedFor:", forwardedFor);
+    const ip = forwardedFor?.split(",")[0] || realIp || "check";
+    console.log("🌍 IP détectée:", ip);
+    console.log("🌍 forwardedFor:", forwardedFor);
+    console.log("🌍 realIp:", realIp);
 
-  const ipRes = await fetch(
-    `http://api.ipapi.com/api/${ip}?access_key=${process.env.GEO_API_KEY}`
-  );
+    const ipRes = await fetch(
+      `http://api.ipapi.com/api/${ip}?access_key=${process.env.GEO_API_KEY}`
+    );
     const ipData = await ipRes.json();
     console.log("📌 ipData == ", ipData);
 
