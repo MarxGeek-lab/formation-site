@@ -11,9 +11,15 @@ export async function GET(req: Request) {
   try {
     // 1️⃣ Détection IP et localisation
     console.log("🔍 Étape 1: Détection pays via ipapi");
-    const ipRes = await fetch(
-      `http://api.ipapi.com/api/check?access_key=${process.env.GEO_API_KEY}`
-    );
+    const forwardedFor = req.headers.get("x-forwarded-for");
+  const ip = forwardedFor ? forwardedFor.split(",")[0] : "check"; // fallback ipapi "check"
+
+  console.log("🌍 IP détectée:", ip);
+  console.log("🌍 forwardedFor:", forwardedFor);
+
+  const ipRes = await fetch(
+    `http://api.ipapi.com/api/${ip}?access_key=${process.env.GEO_API_KEY}`
+  );
     const ipData = await ipRes.json();
     console.log("📌 ipData == ", ipData);
 
