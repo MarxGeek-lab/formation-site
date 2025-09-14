@@ -22,6 +22,8 @@ import { tree } from 'next/dist/build/templates/app-page';
 import { useTracking } from '@/utils/trackingPixel';
 import LocalizedPrice from '@/components/LocalizedPrice2';
 import { formatAmount } from '@/utils/formatAmount';
+import { Translate } from '@/components/Translate';
+import { getLocalizedPrice } from '@/utils/getLocalizedPrice';
 
 export default function PaiementPage({ params }: { params: { locale: string } }) {
   const { user } = useAuthStore();
@@ -41,7 +43,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     lastName: '',
     email: '',
     phone: '',
-    country: 'Cameroun',
+    country: 'Bénin',
     city: '',
     address: '',
     district: '',
@@ -124,9 +126,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     if (!formData.firstName.trim()) newErrors.firstName = t('errors.firstNameRequired');
     if (!formData.lastName.trim()) newErrors.lastName = t('errors.lastNameRequired');
     if (!formData.email.trim()) newErrors.email = t('errors.emailRequired');
-    // if (!formData.phone.trim()) newErrors.phone = t('errors.phoneRequired');
-    // if (!formData.city.trim()) newErrors.city = t('errors.cityRequired');
-    // if (!formData.address.trim()) newErrors.address = t('errors.addressRequired');
     if (!formData.acceptTerms) newErrors.acceptTerms = t('errors.acceptTermsRequired');
     
     setErrors(newErrors);
@@ -134,7 +133,12 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   };
 
   const handleSubmit = async () => {
+    
     if (validateForm()) {
+      showLoader()
+      const { price, amount, currency } = await getLocalizedPrice(calculateTotal());
+      console.log(amount, currency)
+      
       const orderData = {
         items: cart.items,
         fullName: formData.firstName + ' ' + formData.lastName,
@@ -147,11 +151,12 @@ export default function PaiementPage({ params }: { params: { locale: string } })
         email: formData.email,
         paymentMethod: formData.paymentMethod,
         totalAmount: calculateTotal(),
+        totalAmountConvert: amount,
+        currency: currency,
+        price,
         customer: user?._id,
         sessionId: cart?.sessionId,
       }
-  
-      showLoader()
   
       try {
         const { data, status } = await createOrder(orderData)
@@ -180,22 +185,33 @@ export default function PaiementPage({ params }: { params: { locale: string } })
 
   const calculateTotal = () => {
     const subtotal = cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+
     return subtotal - promoDiscount;
   };  
 
   const payment = async (orderId: string, method: string) => {
     showLoader()
+    const { amount, currency } = await getLocalizedPrice(calculateTotal());
+    
     try {
       const { data: paymentData, status: paymentStatus } = await SubmitPayment({
         orderId: orderId,
         userId: user?._id,
         amount: calculateTotal(),
+        currency: currency || 'XOF',
+        totalAmountConvert: amount,
         method: method,
       });
       console.log(paymentData, paymentStatus)
 
-      if (paymentData.success) {
-        window.location.href = paymentData.url;
+      if (paymentStatus === 201) {
+        if (paymentData.success) {
+          window.location.href = paymentData.url;
+        } else {
+          setShowErrorModal(true)
+          setTitleMessage('Paiement echoué')
+          setMessage('Votre commande a été créée avec succès, mais le paiement a echoué. Veuillez réessayer ou vous rendre sur votre espace personnel pour finaliser le paiement.');
+        }
       } else {
         setShowErrorModal(true)
         setTitleMessage('Paiement echoué')
@@ -351,9 +367,11 @@ export default function PaiementPage({ params }: { params: { locale: string } })
             flexWrap: 'wrap',
             gap: 1
             }}>
-            Consulter votre panier
+              <Translate text="Consulter votre panier" lang={locale} /> 
           </Typography>
-          <Button variant="contained" onClick={() => router.push(`/${locale}/panier`)}>Panier</Button>
+          <Button variant="contained" onClick={() => router.push(`/${locale}/panier`)}>
+            <Translate text="Panier" lang={locale} /> 
+          </Button>
         </Box>
         <Card className={styles.promoSection} sx={{ mb: 4 }}>
           <CardContent sx={{ p: 0 }}>
@@ -427,7 +445,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                       }}
                       sx={{ color: 'var(--muted-foreground)' }}
                     >
-                      Supprimer le code promo
+                      <Translate text="Supprimer le code promo" lang={locale} /> 
                     </Button>
                   </Box>
                 )}
@@ -568,9 +586,9 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                         className={styles.checkbox}
                       />
                       <span className={styles.checkboxText}>
-                        J'ai lu et j'accepte les{' '}
+                        <Translate text="J'ai lu et j'accepte les" lang={locale} /> 
                         <a href="/conditions" className={styles.link}>
-                          conditions générales
+                          <Translate text="conditions générales" lang={locale} /> 
                         </a>
                       </span>
                     </label>
@@ -691,7 +709,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                             </Typography> */}
                             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                               <LocalizedPrice amount={item?.price} />
-                              {/* {formatAmount(item.price)} FCFA */}
                             </Typography>
                           </Box>
                         </Box>
@@ -714,7 +731,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                   {promoApplied && promoDiscount > 0 && (
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                       <Typography variant="body1" sx={{ color: 'var(--success)' }}>
-                        Réduction ({formData.promoCode}):
+                        <Translate text="Réduction" lang={locale} /> 
+                        ({formData.promoCode}):
                       </Typography>
                       <Typography variant="body1" sx={{ color: 'var(--success)' }}>
                         <LocalizedPrice amount={promoDiscount} />
@@ -799,18 +817,18 @@ export default function PaiementPage({ params }: { params: { locale: string } })
               <CheckCircleIcon sx={{ fontSize: 56, color: 'success.main' }} />
             </Box>
             <Typography variant="h5" sx={{ fontWeight: 700, color: 'success.main' }}>
-              {titleMessage}
+              <Translate text={titleMessage} lang={locale} /> 
             </Typography>
           </DialogTitle>
 
           {/* Contenu */}
           <DialogContent sx={{ textAlign: 'center', pb: 4, px: 4 }}>
             <Typography variant="body1" sx={{ mb: 2, fontSize: 16, color: '#374151' }}>
-              {message}
+              <Translate text={message} lang={locale} /> 
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
-              Vous recevrez un email de confirmation avec les détails de votre commande.
-              Vous pouvez télécharger les produits et le contrat directement dans le mail ou dans votre espace client.
+              <Translate text="Vous recevrez un email de confirmation avec les détails de votre commande." lang={locale} /> 
+              <Translate text="Vous pouvez télécharger les produits et le contrat directement dans le mail ou dans votre espace client." lang={locale} /> 
             </Typography>
           </DialogContent>
 
@@ -831,7 +849,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                 fontWeight: 600,
               }}
             >
-              Retour à l'accueil
+              <Translate text="Retour à l'accueil" lang={locale} /> 
             </Button>
             <Button
               onClick={ () => {
@@ -850,7 +868,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                 '&:hover': { bgcolor: 'success.dark' },
               }}
             >
-              Voir ma commande
+              <Translate text="Voir ma commande" lang={locale} /> 
             </Button>
           </DialogActions>
         </Dialog>
@@ -893,14 +911,14 @@ export default function PaiementPage({ params }: { params: { locale: string } })
               <ErrorIcon sx={{ fontSize: 48, color: 'error.main' }} />
             </Box>
             <Typography variant="h5" sx={{ fontWeight: 700, color: 'error.main' }}>
-              {titleMessage}
+              <Translate text={titleMessage} lang={locale} /> 
             </Typography>
           </DialogTitle>
 
           {/* Contenu */}
           <DialogContent sx={{ textAlign: 'center', pb: 4, px: 4 }}>
             <Typography variant="body1" sx={{ mb: 2, fontSize: 16, color: '#374151' }}>
-              {message}
+              <Translate text={message} lang={locale} /> 
             </Typography>
 
             <Alert
@@ -914,7 +932,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
               }}
             >
               <Typography variant="body2">
-                Si le problème persiste, veuillez contacter notre service client.
+                <Translate text="Si le problème persiste, veuillez contacter notre service client." lang={locale} /> 
               </Typography>
             </Alert>
           </DialogContent>
@@ -941,7 +959,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                 '&:hover': { bgcolor: 'error.dark' },
               }}
             >
-              Réessayer
+              <Translate text="Réessayer" lang={locale} /> 
             </Button>
             <Button
               onClick={() => {
@@ -952,7 +970,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
               size="large"
               color='error'
             >
-              Retour
+              <Translate text="Retour" lang={locale} /> 
             </Button>
           </DialogActions>
         </Dialog>

@@ -14,6 +14,7 @@ import styles from './Header/Header.module.scss';
 import logo from '@/assets/images/logo-1.webp'; 
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/contexts/GlobalContext";
+import { Translate } from "./Translate";
 
 export default function Header({ locale }: { locale: string }) {
   const { user } = useAuthStore();
@@ -122,7 +123,7 @@ export default function Header({ locale }: { locale: string }) {
                   router.push(`/${locale}/connexion`);
                 }
               }}>
-              Mon Compte
+                <Translate text="Mon Compte" lang={locale} /> 
             </button>
             <button className={styles.ctaButton} 
               onClick={() => router.push(`/${locale}/catalogue`)}>
@@ -134,17 +135,6 @@ export default function Header({ locale }: { locale: string }) {
            {/* Language Switcher & Cart for Mobile */}
           <Box className="lg:hidden flex items-center space-x-3">
             <LanguageSwitcher />
-            
-            {/* Cart Icon Mobile */}
-            {/* <button 
-              onClick={toggleCart}
-              className={styles.cartButton}
-              aria-label="Panier"
-            >
-              <Badge badgeContent={cart.totalItems} color="primary">
-                <ShoppingCart />
-              </Badge>
-            </button> */}
           </Box>
           
           <button
@@ -219,7 +209,7 @@ export default function Header({ locale }: { locale: string }) {
                   router.push(`/${locale}/connexion`);
                 }
               }}>
-              Mon Compte
+                <Translate text="Mon Compte" lang={locale} /> 
             </button>
               <button className={`${styles.ctaButton} ${styles.fullWidth}`}
                 onClick={() => router.push(`/${locale}/catalogue`)}>

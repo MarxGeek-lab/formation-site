@@ -12,16 +12,13 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCart } from '@/contexts/CartContext';
 import styles from './panier.module.scss';
 import LocalizedPrice from '@/components/LocalizedPrice2';
+import { Translate } from '@/components/Translate';
 
 export default function CartPage({ params }: { params: { locale: string } }) {
   const { locale } = params;
   const router = useRouter();
   const t = useTranslations('Cart');
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
-
-  const formatPrice = (price: number) => {
-    return `${price.toLocaleString('fr-FR')} FCFA`;
-  };
 
   const handleCheckout = () => {
     router.push(`/${locale}/paiement`);
@@ -49,13 +46,13 @@ export default function CartPage({ params }: { params: { locale: string } }) {
               mb: 2,
               color: 'var(--foreground)'
             }}>
-              Votre panier est vide
+              <Translate text="Votre panier est vide" lang={locale} /> 
             </Typography>
             <Typography variant="body1" sx={{ 
               mb: 4,
               color: 'var(--muted-foreground)'
             }}>
-              Découvrez nos produits et ajoutez-les à votre panier
+              <Translate text="Découvrez nos produits et ajoutez-les à votre panier" lang={locale} /> 
             </Typography>
             <Button
               variant="contained"
@@ -69,7 +66,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                 }
               }}
             >
-              Voir le catalogue
+              <Translate text="Voir le catalogue" lang={locale} /> 
             </Button>
           </Box>
         </Container>
@@ -92,12 +89,13 @@ export default function CartPage({ params }: { params: { locale: string } }) {
             color: 'var(--foreground)',
             mb: 2
           }}>
-            Mon Panier
+            <Translate text="Mon Panier" lang={locale} /> 
           </Typography>
           <Typography variant="body1" sx={{ 
             color: 'var(--muted-foreground)'
           }}>
-            {cart?.items?.length} {cart?.items?.length === 1 ? 'produit' : 'produits'} dans votre panier
+            {cart?.items?.length} {cart?.items?.length === 1 ? 'produit' : 'produits'} 
+            <Translate text="dans votre panier" lang={locale} /> 
           </Typography>
         </Box>
 
@@ -128,10 +126,10 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                       {/* Détails du produit */}
                       <Grid size={{ xs: 12, sm: 6 }}>
                         <Typography variant="h6" className={styles.productName}>
-                          {item.name}
+                          <Translate text={item.name} lang={locale} /> 
                         </Typography>
                         <Typography variant="body2" className={styles.productCategory}>
-                          {item.category}
+                          <Translate text={item.category} lang={locale} /> 
                         </Typography>
                         
                         {/* Options sélectionnées */}
@@ -139,13 +137,13 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                           <Box sx={{ mt: 1 }}>
                             {item.options.visual && item.options.visual !== 'without-visual' && (
                               <Typography variant="body2" className={styles.productOption}>
-                                • Avec visuel de publicité 
+                                <Translate text="• Avec visuel de publicité" lang={locale} /> 
                                 ( + <LocalizedPrice amount={2500} /> )
                               </Typography>
                             )}
                             {item.options.support && item.options.support.length > 0 && (
                               <Typography variant="body2" className={styles.productOption}>
-                                • Accompagnement personnalisé
+                                <Translate text="• Accompagnement personnalisé" lang={locale} /> 
                                 ( + <LocalizedPrice amount={150000} /> )
                               </Typography>
                             )}
@@ -210,7 +208,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                   }
                 }}
               >
-                Vider le panier
+                <Translate text="Vider le panier" lang={locale} /> 
               </Button>
               <Button
                 variant="outlined"
@@ -224,7 +222,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                   }
                 }}
               >
-                Continuer mes achats
+                <Translate text="Continuer mes achats" lang={locale} /> 
               </Button>
             </Box>
           </Grid>
@@ -238,13 +236,14 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                   fontWeight: 600,
                   color: 'var(--foreground)'
                 }}>
-                  Résumé de la commande
+                  <Translate text="Résumé de la commande" lang={locale} /> 
                 </Typography>
 
                 <Box sx={{ mb: 3 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2">
-                      Sous-total ({cart?.items?.length} {cart?.items?.length === 1 ? 'article' : 'articles'})
+                      <Translate text="Sous-total" lang={locale} /> 
+                      ({cart?.items?.length} {cart?.items?.length === 1 ? 'article' : 'articles'})
                     </Typography>
                     <Typography variant="body2">
                       <LocalizedPrice amount={cart?.totalPrice} />
@@ -252,10 +251,10 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2">
-                      Frais de livraison
+                      <Translate text="Frais de livraison" lang={locale} /> 
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'var(--success)' }}>
-                      Gratuit
+                      <Translate text="Gratuit" lang={locale} /> 
                     </Typography>
                   </Box>
                 </Box>
@@ -264,7 +263,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Total
+                    <Translate text="Total" lang={locale} /> 
                   </Typography>
                   <Typography variant="h6" sx={{ 
                     fontWeight: 600,
@@ -291,7 +290,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                     }
                   }}
                 >
-                  Procéder au paiement
+                  <Translate text="Procéder au paiement" lang={locale} /> 
                 </Button>
 
                 <Typography variant="body2" sx={{ 
@@ -300,7 +299,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                   color: 'var(--muted-foreground)',
                   fontSize: '0.875rem'
                 }}>
-                  Paiement sécurisé • Livraison numérique instantanée
+                  <Translate text="Paiement sécurisé • Livraison numérique instantanée" lang={locale} /> 
                 </Typography>
               </CardContent>
             </Card>

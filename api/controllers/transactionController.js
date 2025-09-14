@@ -27,6 +27,8 @@ const transactionController = {
         userId,
         method,
         paymentId,
+        totalAmountConvert,
+        currency
       } = req.body;
 
       // Vérifier si la propriété existe
@@ -51,11 +53,12 @@ const transactionController = {
         customer: userId,
         order: order._id,
         email: order.customer.email,
+        totalAmountConvert,
+        currency
       });
 
       await transaction.save();
 
-      // Mise à jour du statut de la reservation
       order.payments.push({
         transaction: transaction._id,
         amount,
@@ -65,9 +68,11 @@ const transactionController = {
 
       const monero = new MoneroPayment(process.env.MONERO_SECRET_KEY);
       const payment = await monero.initializePayment({
-        amount: 250,
-        currency: "XOF",
-        description: "Paiement pour la commande #"+order._id,
+        amount: 200,
+        // amount: order.totalAmount,
+        // currency: 'EUR',
+        currency: currency || 'XOF',
+        description: "Paiement pour la commande ORD-"+order._id?.toString().toUpperCase(),
         customer: {
           email: order.customer.email,
           first_name: order.customer.name,
@@ -78,12 +83,8 @@ const transactionController = {
           order_id: order._id,
           customer_id: userId,
         },
-        methods: ["mtn_bj", "moov_bj", "moov_bf", "moov_ci", 
-          "moov_ml", "moov_tg", "mtn_ci"],
       });
       
-      console.log(payment)
-
       if (payment.success) {
         // const ref = payment.data.reference;
         transaction.reference = payment.data.data.id;
@@ -105,7 +106,6 @@ const transactionController = {
   // Get status
   async getStatusPayment(req, res) {
     try {
-      console.log(req.body)
       const { paymentId, paymentStatus } = req.body;
       const transaction = await Transaction.findOne({ reference: paymentId });
       if (!transaction) {
@@ -158,7 +158,6 @@ const transactionController = {
       const monero = new MoneroPayment(process.env.MONERO_SECRET_KEY);
       const response = await monero.verifyPayment(transaction.reference);
       const status = response.data.data.status;
-      console.log(response)
 
       if (status === 'success') {
         transaction.status = 'success';
@@ -501,6 +500,7 @@ const sendOrderEmail = async (order) => {
   const fileNameContrat = fileContrat ? decodeURIComponent(path.basename(fileContrat)) : null;
   let fileContratLink = fileContrat ? `${process.env.API_URL}${fileNameContrat}` : null;
 
+  console.log("debu mail == ", order)
   if (!fileContratLink) {
         // générer le fichier
         const pdfFileName = await generatePDF({
@@ -531,9 +531,11 @@ const sendOrderEmail = async (order) => {
         console.log("fileContratLink ==", fileContratLink)
   }
   
+  console.log("debu mail 1 == ", order)
   order.productZip = fileZipLink;
   await order.save();
 
+  console.log("debu mail 2 == ", order)
   // Générer le mail HTML
   const html = `
   <!DOCTYPE html>
@@ -599,6 +601,7 @@ const sendOrderEmail = async (order) => {
   </html>
   `;
 
+  console.log("debu mail 3 == ", order)
   // Envoyer le mail
   const emailService = new EmailService();
   emailService.setSubject(`Commande ORD-${order?._id?.toString().toUpperCase()} confirmée sur Rafly`);
@@ -606,7 +609,9 @@ const sendOrderEmail = async (order) => {
   emailService.addTo(order.customer.email);
   emailService.setHtml(html);
 
+  console.log("debu mail 4 == ", order)
   await emailService.send();
+console.log("Email envoyé avec succès 22222")
 
   return { zipPath, fileContratLink };
 };

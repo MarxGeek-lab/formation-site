@@ -29,6 +29,8 @@ import { countries } from "@/data/country";
 import { country } from "@/data/countries";
 import VideoPlayer from "@/components/VideoPlayer";
 import VideoComponent from "@/components/VideoPlayer";
+import { translate } from "@/utils/translate";
+import { Translate } from "@/components/Translate";
 
 export default function Home({ params }: { params: { locale: string } }) {
   const { locale } = params;

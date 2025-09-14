@@ -46,6 +46,8 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { useAuthStore, useCommonStore, useOrderStore } from '@/contexts/GlobalContext';
 import { formatAmount } from '@/utils/formatAmount';
+import { Translate } from '@/components/Translate';
+import LocalizedPrice from '@/components/LocalizedPrice2';
 
 interface DashboardStats {
   totalOrders: number;
@@ -127,7 +129,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
       case 'pending':
         return 'warning';
       case 'confirmed':
-        return 'info';
+        return 'success';
       case 'shipped':
         return 'primary';
       case 'delivered':
@@ -199,7 +201,9 @@ export default function DashboardPage({ params }: { params: { locale: string } }
     return (
       <ProtectedRoute>
         <Container maxWidth="lg" sx={{ padding: '160px 0', textAlign: 'center' }}>
-          <Typography variant="h6">Chargement de votre tableau de bord...</Typography>
+          <Typography variant="h6">
+            <Translate text="Chargement de votre tableau de bord..." lang={locale} />
+          </Typography>
           <LinearProgress sx={{ mt: 2, maxWidth: 300, mx: 'auto' }} />
         </Container>
       </ProtectedRoute>
@@ -270,7 +274,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
               // fontSize: { xs: '1.75rem', sm: '2.125rem' }
             }}
           >
-            Tableau de bord
+            <Translate text="Tableau de bord" lang={locale} />
           </Typography>
         </Box>
         <Typography 
@@ -281,7 +285,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
             pl: { xs: 0.5, sm: 0 }
           }}
         >
-          Bienvenue ! Voici un aperçu de votre activité.
+          <Translate text="Bienvenue ! Voici un aperçu de votre activité." lang={locale} />
         </Typography>
       </Box>
       <Box 
@@ -310,7 +314,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
           </Avatar>
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {user?.fullName || 'Utilisateur'}
+              <Translate text={user?.fullName || 'Utilisateur'} lang={locale} />
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {user?.email}
@@ -329,7 +333,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
             fontWeight: 500
           }}
         >
-          Déconnexion
+          <Translate text="Déconnexion" lang={locale} />
         </Button>
       </Box>
 
@@ -356,12 +360,13 @@ export default function DashboardPage({ params }: { params: { locale: string } }
               onClick={() => router.push(`/${locale}/paiement`)}
               sx={{ whiteSpace: 'nowrap', fontWeight: 600, ml: 2 }}
             >
-              Finaliser
+              <Translate text="Finaliser" lang={locale} />
             </Button>
           }
         >
           <Typography sx={{ fontWeight: 500 }}>
-            Vous avez <strong>{cart.totalItems} article(s)</strong> dans votre panier pour un total de <strong>{cart.totalPrice.toFixed(2)} FCFA</strong>
+            <Translate text="Vous avez" lang={locale} /> <strong>{cart.totalItems} <Translate text="article(s)" lang={locale} /></strong> <Translate text="dans votre panier pour un total de" lang={locale} /> 
+            <strong><LocalizedPrice amount={cart.totalPrice} /></strong>
           </Typography>
         </Alert>
       )}
@@ -443,7 +448,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                       letterSpacing: 0.5,
                     }}
                   >
-                    {item.label}
+                    <Translate text={item.label} lang={locale} />
                   </Typography>
                 </Box>
               </CardContent>
@@ -451,30 +456,6 @@ export default function DashboardPage({ params }: { params: { locale: string } }
           </Grid2>
         ))}
       </Grid2>
-
-      <Alert 
-          severity="warning"
-          // icon={<InfoOutlinedIcon sx={{ fontSize: 24, mt: 0.5 }} />}
-          sx={{ 
-            mb: { xs: 2, sm: 3 },
-            borderRadius: 2,
-            background: 'rgba(255, 76, 60, 0.08)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 76, 60, 0.15)',
-            color: 'warning.dark',
-            boxShadow: 'none',
-            p: { xs: 1.5, sm: '12px 16px' },
-            alignItems: 'center',
-          }}
-          action={
-            <Button onClick={() => window.open('https://wa.me/22941559913', '_blank')} variant="contained" color="success">Contactez-nous</Button>
-          }
-        >
-          <Typography sx={{ fontWeight: 500 }}>
-            Si vous aviez commander un visuel, contactez-nous sur WhatsApp 
-
-          </Typography>
-        </Alert>
 
       <Grid2 container spacing={{ xs: 2, sm: 3 }}>
         {/* Actions rapides */}
@@ -537,14 +518,14 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                           fontSize: { xs: "0.9rem", sm: "0.95rem" },
                         }}
                       >
-                        {action.title}
+                        <Translate text={action.title} lang={locale} />
                       </Typography>
                       <Typography
                         variant="body2"
                         color="text.secondary"
                         sx={{ fontSize: { xs: "0.75rem", sm: "0.8rem" } }}
                       >
-                        {action.description}
+                        <Translate text={action.description} lang={locale} />
                       </Typography>
                     </Box>
 
@@ -594,7 +575,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                     fontSize: { xs: "1.15rem", sm: "1.25rem" },
                   }}
                 >
-                  Commandes récentes
+                  <Translate text="Commandes récentes" lang={locale} />
                 </Typography>
                 <Button
                   size="small"
@@ -606,7 +587,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                     fontWeight: 500,
                   }}
                 >
-                  Voir tout
+                  <Translate text="Voir tout" lang={locale} />
                 </Button>
               </Box>
 
@@ -623,7 +604,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                     sx={{ fontSize: 46, color: "text.secondary", mb: 1.5 }}
                   />
                   <Typography variant="body2" color="text.secondary">
-                    Aucune commande récente
+                    <Translate text="Aucune commande récente" lang={locale} />
                   </Typography>
                 </Box>
               ) : (
@@ -675,7 +656,8 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                             >
                               {order?.createdAt &&
                                 new Date(order?.createdAt).toLocaleDateString("fr-FR")}{" "}
-                              • {order?.items?.length} article(s)
+                              • {order?.items?.length} 
+                              <Translate text="article(s)" lang={locale} />
                             </Typography>
                           </Box>
                         </Box>
@@ -690,7 +672,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                               color: "text.primary",
                             }}
                           >
-                            {formatAmount(order?.totalAmount || 0)} FCFA
+                            <LocalizedPrice amount={order?.totalAmount || 0} />
                           </Typography>
                           <Chip
                             label={getStatusText(order?.status)}
@@ -727,18 +709,18 @@ export default function DashboardPage({ params }: { params: { locale: string } }
           p: 1
         },
       }}>
-      <DialogTitle>Déconnexion</DialogTitle>
+      <DialogTitle> <Translate text="Déconnexion" lang={locale} /></DialogTitle>
       <DialogContent> 
         <Typography variant="body2">
-          Voulez-vous vraiment vous déconnecter ?
+          <Translate text="Voulez-vous vraiment vous déconnecter ?" lang={locale} />
         </Typography>
       </DialogContent>
       <DialogActions>
         <Button variant="contained" color="error" onClick={logout}>
-          Oui
+          <Translate text="Oui" lang={locale} />
         </Button>
         <Button variant="outlined" color="primary" onClick={() => {setLogoutDialog(false)}}>
-          Non
+          <Translate text="Non" lang={locale} />
         </Button>
       </DialogActions>
     </Dialog>

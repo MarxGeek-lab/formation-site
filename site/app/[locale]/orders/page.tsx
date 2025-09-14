@@ -115,7 +115,7 @@ const OrdersPage = ({ params }: { params: { locale: string } }) => {
       case 'pending':
         return 'warning';
       case 'confirmed':
-        return 'info';
+        return 'success';
       case 'shipped':
         return 'primary';
       case 'delivered':

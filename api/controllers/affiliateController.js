@@ -90,7 +90,7 @@ const affiliateController = {
         try {
             console.log(req.body)
             const { userId } = req.params;
-            const { amount, method, country } = req.body;
+            const { amount, method, country, phone } = req.body;
             const user = await User.findById(userId);
             if (!user) return res.status(404).json({ error: "User not found" });
             
@@ -103,9 +103,12 @@ const affiliateController = {
                 amount,
                 method,
                 country,
+                phone,
                 status: "requested",
                 requestedAt: Date.now(),
             });
+
+            await payout.save();
 
             res.status(201).json(payout);
         } catch (err) {
@@ -116,9 +119,9 @@ const affiliateController = {
 
     updatePayoutAffiliate: async (req, res) => {
         try {
-            console.log(req.params)
+            console.log(req.body)
             const { id } = req.params;
-            const { amount, method } = req.body;
+            const { amount, method, country, phone } = req.body;
             const payout = await Payout.findById(id);
             if (!payout) return res.status(404).json({ error: "Payout not found" });
             
@@ -126,6 +129,8 @@ const affiliateController = {
             
             payout.amount = amount;
             payout.method = method;
+            payout.country = country;
+            payout.phone = phone;
             await payout.save();
 
             res.json(payout);
@@ -185,7 +190,7 @@ const affiliateController = {
             
             const payouts = await Payout.find({ 
                 affiliate: affiliate._id 
-            });
+            }).sort({requestedAt: -1});
 
             res.json(payouts);
         } catch (err) {

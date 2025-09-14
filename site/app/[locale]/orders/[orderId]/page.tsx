@@ -23,6 +23,8 @@ import { ArrowBack as ArrowBackIcon, Close as CloseIcon, Download as DownloadIco
 import { useRouter } from 'next/navigation';
 import { useAuthStore, useOrderStore } from '@/contexts/GlobalContext';
 import { formatAmount } from '@/utils/formatAmount';
+import { Translate } from '@/components/Translate';
+import LocalizedPrice from '@/components/LocalizedPrice2';
 
 const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string } }) => {
   const { locale, orderId } = params;
@@ -97,8 +99,33 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
             fontSize: { xs: '0.9rem', sm: '1rem' }
           }}
         >
-          Paiement effectué avec succès 🎉 Votre commande a été traitée avec succès.
-          Veuillez télécharger votre contrat et votre produit.
+          <Translate text="Paiement effectué avec succès 🎉 Votre commande a été traitée avec succès." lang={locale} />
+          <Translate text="Veuillez télécharger votre contrat et votre produit." lang={locale} />
+        </Alert>
+
+        <Alert
+          severity="warning"
+          // icon={<InfoOutlinedIcon sx={{ fontSize: 24, mt: 0.5 }} />}
+          sx={{ 
+            mb: { xs: 2, sm: 3 },
+            borderRadius: 2,
+            background: 'rgba(255, 76, 60, 0.08)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 76, 60, 0.15)',
+            color: 'warning.dark',
+            boxShadow: 'none',
+            p: { xs: 1.5, sm: '12px 16px' },
+            alignItems: 'center',
+          }}
+          action={
+            <Button onClick={() => window.open('https://wa.me/22941559913', '_blank')} variant="contained" color="success">
+              <Translate text="Contactez-nous" lang={locale} />
+            </Button>
+          }
+        >
+          <Typography sx={{ fontWeight: 500 }}>
+            <Translate text="Si vous aviez commander un visuel, contactez-nous sur WhatsApp" lang={locale} />
+          </Typography>
         </Alert>
 
         {/* <Alert 
@@ -121,14 +148,12 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
 
        
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-          {/* <IconButton onClick={() => router.back()}>
-            <ArrowBackIcon sx={{color: 'white'}} />
-          </IconButton> */}
           <Typography variant="h5" sx={{ 
             fontWeight: 700, 
             wordBreak: 'break-all' 
           }}>
-            Commande ORD-{order?._id.toString().toUpperCase()}
+            <Translate text="Commande" lang={locale} /> 
+            {'  '} ORD-{order?._id.toString().toUpperCase()}
           </Typography>
         </Box>
 
@@ -159,7 +184,7 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
         {/* Articles commandés */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="h6" sx={{ mb: 2 }}>
-            Articles ({order?.items.length})
+            <Translate text={`Articles (${order?.items.length})`} lang={locale} />
           </Typography>
           <Stack divider={<Divider />}>
             {order?.items.map((item: any) => (
@@ -172,7 +197,7 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
                 />
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                    {item.product.name}
+                    <Translate text={item.product.name} lang={locale} />
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {item.quantity} × {formatAmount(item?.price || 0)} FCFA
@@ -193,15 +218,17 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
             background: 'var(--primary-light)' }}>
           <Stack spacing={1}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography>Total produits</Typography>
+              <Typography><Translate text="Total produits" lang={locale} /></Typography>
               <Typography>
-                {formatAmount(order?.items?.reduce((total: number, item: any) => total + item?.price * item?.quantity, 0))} FCFA
+                <LocalizedPrice amount={order?.items?.reduce((total: number, item: any) => total + item?.price * item?.quantity, 0)} />
               </Typography>
             </Box>
             <Divider />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-              <Typography>Total payer</Typography>
-              <Typography>{formatAmount(order?.totalAmount || 0)} FCFA</Typography>
+              <Typography><Translate text="Total payer" lang={locale} /></Typography>
+              <Typography>
+                <LocalizedPrice amount={order?.totalAmount || 0} />
+              </Typography>
             </Box>
           </Stack>
         </Paper>
@@ -214,7 +241,7 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
               startIcon={<DownloadIcon />}
               onClick={() => window.open(order.productZip, '_blank')}
             >
-              Télécharger produits
+              <Translate text="Télécharger produits" lang={locale} />
             </Button>
           )}
           {order.paymentStatus === 'paid' && order.contrat && (
@@ -223,7 +250,7 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
               startIcon={<DownloadIcon />}
               onClick={() => window.open(order.contrat, '_blank')}
             >
-              Télécharger contrat
+              <Translate text="Télécharger contrat" lang={locale} />
             </Button>
           )}
         </Box>
@@ -243,7 +270,7 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
             fontSize: { xs: '0.9rem', sm: '1rem' }
           }}
         >
-          Votre compte utilisateur a été créé avec succès, veuillez réinitialiser votre mot de passe avec le email fourni lors de la commande.
+          <Translate text="Votre compte utilisateur a été créé avec succès, veuillez réinitialiser votre mot de passe avec le email fourni lors de la commande." lang={locale} />
         </Alert>
         )}
       </Container>

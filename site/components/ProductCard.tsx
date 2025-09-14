@@ -13,6 +13,7 @@ import { useAuthStore } from "@/contexts/AuthContext";
 import { formatPrice } from "@/utils/formatPrice";
 import { getLocalizedPrice } from "@/utils/LocalizedPrice";
 import ProductImage from './ProductImage';
+import { Translate } from './Translate';
 
 interface ProductCardProps {
   product: any;
@@ -154,7 +155,7 @@ export default function ProductCard({
                 }}
                 onClick={() => setOpenDemo(true)}
               >
-                Voir démo
+                <Translate text="Voir démo" lang={locale} />
               </Button>
           )}
         </div>
@@ -162,9 +163,11 @@ export default function ProductCard({
 
       <div className={styles.content}>
         <h3 className={styles.title}>
-          {locale === 'fr' ? product?.name : product?.nameEn || product?.name}
+          <Translate text={product?.name} lang={locale} />
         </h3>
-        <p className={styles.category}>{product?.category}</p>
+        <p className={styles.category}>
+          <Translate text={product?.category} lang={locale} />
+        </p>
         
         <div className={styles.priceSection}>
           {product?.pricePromo && product?.pricePromo !== 0 ? (
@@ -188,7 +191,9 @@ export default function ProductCard({
               <svg className={styles.checkIcon} viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
-              <span>Licence incluse</span>
+              <span>
+                <Translate text="Licence incluse" lang={locale} />
+              </span>
             </div>
           </div>
         </div>

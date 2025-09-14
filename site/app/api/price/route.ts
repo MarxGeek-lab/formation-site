@@ -1,27 +1,26 @@
 import { country } from "@/data/countries";
 import { NextResponse } from "next/server";
 
-const GEO_API_KEY = "16e677da8e1266894489896c6583a4b6"; // clé ipapi
-const EXCHANGE_API_KEY = "jwmX3rXnO2NUjayqCBPhGqMj0kkkqSe3"; // clé exchangeratesdata
-
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const amountParam = url.searchParams.get("amount");
   const amount = amountParam ? parseFloat(amountParam) : 0;
+  const cachedCurrencyParam = url.searchParams.get("cachedCurrency") || null;
+  const cachedCountryParam = url.searchParams.get("cachedCountry") || null;
 
   try {
     // 1️⃣ Détection IP et localisation
     console.log("🔍 Étape 1: Détection pays via ipapi");
     const ipRes = await fetch(
-      `http://api.ipapi.com/api/check?access_key=${GEO_API_KEY}`
+      `http://api.ipapi.com/api/check?access_key=${process.env.GEO_API_KEY}`
     );
     const ipData = await ipRes.json();
     console.log("📌 ipData == ", ipData);
 
     const userCountry = ipData.country_name;
-    const userCurrency =
-      country.find((c: any) => c.countryName === userCountry)?.currencyCode ||
-      "XOF"; // ex: "XOF", "EUR", "USD"
+    const userCurrency = ipData.currency.code;
+      // country.find((c: any) => c.countryName === userCountry)?.currencyCode ||
+      // "XOF";
 
     console.log("🌍 Pays détecté:", userCountry, "| Devise:", userCurrency);
 
@@ -38,6 +37,7 @@ export async function GET(req: Request) {
         price: formattedPrice,
         currency: "XOF",
         country: userCountry,
+        amount: amount,
         success: true,
       });
     }
@@ -46,7 +46,7 @@ export async function GET(req: Request) {
     console.log("🔄 Étape 2: Conversion de XOF vers", userCurrency);
     const exchangeRes = await fetch(
       `https://api.apilayer.com/exchangerates_data/convert?from=XOF&to=${userCurrency}&amount=${amount}`,
-      { headers: { apikey: EXCHANGE_API_KEY } }
+      { headers: { apikey: process.env.EXCHANGE_API_KEY || '' } }
     );
     const exchangeData = await exchangeRes.json();
     console.log("💱 exchangeData == ", exchangeData);
@@ -66,6 +66,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       price: formattedPrice,
       currency: userCurrency,
+      amount: exchangeData.result,
       country: userCountry,
       success: true,
     });
@@ -75,6 +76,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       price: amount + " XOF",
       currency: "XOF",
+      amount: amount,
       country: "Unknown",
       success: false,
       error: String(error),

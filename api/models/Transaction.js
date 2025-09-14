@@ -5,6 +5,13 @@ const TransactionSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  totalAmountConvert: {
+    type: Number,
+  },
+  currency: {
+    type: String,
+    required: true
+  },
   paymentNumber: {
     type: String,
     required: false

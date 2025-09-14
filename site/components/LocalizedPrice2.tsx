@@ -5,7 +5,7 @@ export default function LocalizedPrice({ amount }: { amount: number }) {
   const [price, setPrice] = useState<string>("...");
 
   useEffect(() => {
-    if (!amount || isNaN(amount)) {
+    if (isNaN(amount)) {
       return;
     }
     fetch(`/api/price?amount=${amount}`)

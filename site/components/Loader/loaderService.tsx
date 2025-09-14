@@ -7,7 +7,7 @@ import React from "react";
 let root: Root | null = null;
 
 const Loader: React.FC = () => (
-  <Backdrop open sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+  <Backdrop open sx={{ color: "#fff", zIndex: 19999 }}>
     <CircularProgress color="inherit" />
   </Backdrop>
 );

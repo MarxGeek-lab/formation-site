@@ -31,7 +31,8 @@ export default async function LocaleLayout({
   const {locale} = resolvedParams;
 
   async function getConfig() {
-    const res = await fetch("http://localhost:5000/api/settings");
+    console.log(process.env.API_URL)
+    const res = await fetch(`${process.env.API_URL}settings`);
     const data = await res.json(); // ✅ parse le JSON
     return data.fb_pixel_id;                   // retourne uniquement le data
   }

@@ -62,6 +62,15 @@ const orderSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    totalAmountConvert: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    currency: {
+      type: String,
+      required: true,
+    },
     subTotal: {
       type: Number,
       default: 12000,

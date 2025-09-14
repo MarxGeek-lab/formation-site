@@ -33,8 +33,11 @@ exports.createOrder = async (req, res) => {
       fullName,
       note,
       totalAmount,
+      totalAmountConvert,
+      currency,
       sessionId, // Ajouter sessionId pour lier avec le panier
     } = req.body;
+    console.log("totalAmountConvert == ", req.body)
 
     let customer_=customer;
     if (!items || items.length === 0) {
@@ -122,6 +125,8 @@ exports.createOrder = async (req, res) => {
       district,
       country,
       phoneNumber,
+      totalAmountConvert,
+      currency,
       affiliate: affiliate_ || null
     });
 

@@ -15,6 +15,8 @@ import { useCart } from '@/contexts/CartContext';
 import { useTracking } from '@/utils/trackingPixel';
 import LocalizedPrice from '@/components/LocalizedPrice2';
 import ProductImage from '@/components/ProductImage';
+import { Translate } from '@/components/Translate';
+import { TranslateHTML } from '@/components/TranslateHTML';
 
 export default function ProductPage({ params }: { params: { locale: string; slug: string } }) {
   const { product, getProductById, allProducts } = useProductStore();
@@ -198,7 +200,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                 {t('description')}
               </Typography>
               <Typography sx={{ mb: 3 }}>
-                <div dangerouslySetInnerHTML={{ __html: locale === "fr" ? product?.description : product?.descriptionEn }} />
+                <TranslateHTML html={product?.description} lang={locale} />
               </Typography>
 
               {locale === "fr" && product?.advantage?.length > 0 && (
@@ -209,7 +211,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                   <Box component="ul" className={styles.benefitsList}>
                     {product?.advantage?.map((benefit: string, index: number) => (
                       <Box component="li" key={index} sx={{ mb: 1 }}>
-                        <Typography>{benefit}</Typography>
+                        <Translate text={benefit} lang={locale} />
                       </Box>
                     ))}
                   </Box>
