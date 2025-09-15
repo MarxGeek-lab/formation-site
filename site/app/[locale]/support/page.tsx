@@ -11,12 +11,11 @@ import FAQSection from '@/components/FAQSection';
 import support from '@/assets/images/suport-1.webp'
 import support2 from '@/assets/images/suport-2.webp'
 import support3 from '@/assets/images/suport-3.webp'
-import users from '@/assets/images/Frame-12-1.png'
 
 import Miguel from '@/assets/images/miguel-ose.png';
 import Gloriel from '@/assets/images/gloriel-dossou.jpg';
 import Cresus from '@/assets/images/cresus-olatunde.jpg';
-import Cre from '@/assets/images/Design-sans-titre-16.webp'
+import Cre from '@/assets/images/josue.webp'
 
 export default function SupportPage({ params }: { params: { locale: string } }) {
   const { locale } = params;
