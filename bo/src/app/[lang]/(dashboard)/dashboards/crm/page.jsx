@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { Typography } from '@mui/material';
 import SalesChart from '@/components/SalesChart';
 import SalesByCountryChart from '@/components/SalesByCountryChart';
+import { formatAmount } from '@/utils/formatAmount';
 
 const DashboardCRM = () => {
   // Vars
@@ -38,7 +39,7 @@ const DashboardCRM = () => {
     },
     {
       title: 'Revenues',
-      stats: statss?.saleRevenues || 0,
+      stats: formatAmount(statss?.salesRevenue || 0)+" FCFA" || 0,
       trendNumber: 4.3,
       avatarIcon: 'tabler-wallet',
       gradient: 'linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)'
@@ -85,6 +86,8 @@ const DashboardCRM = () => {
       localStorage.setItem("accessToken", token);
     }
   },[searchParams]);
+
+  console.log("statss == ", statss)
 
   return (
     <Grid container spacing={6}>

@@ -11,10 +11,10 @@ import 'swiper/css';
 // import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 
-import Testimonial1 from '@/assets/images/testimonial-1.png';
-import Testimonial2 from '@/assets/images/testimonial-2.jpg';
-import Testimonial3 from '@/assets/images/testimonial-3.jpg';
-import Testimonial4 from '@/assets/images/testimonial-4.jpg';
+import julien from '@/assets/images/julien.webp';
+import Testimonial4 from '@/assets/images/positif.jpg';
+import aminata from '@/assets/images/aminata.webp';
+import josue from '@/assets/images/josue.webp';
 
 const testimonials = [
   {
@@ -22,56 +22,56 @@ const testimonials = [
     name: "Josué D.",
     username: "@josue.d",
     textKey: "testimonial1",
-    avatar: Testimonial1
+    avatar: josue
   },
   {
     id: 2,
     name: "Positif D.",
     username: "@positif",
     textKey: "testimonial2",
-    avatar: Testimonial2
+    avatar: Testimonial4
   },
   {
     id: 3,
     name: "Julien B.",
     username: "@julienjulien",
     textKey: "testimonial3",
-    avatar: Testimonial3
+    avatar: julien
   },
   {
     id: 4,
     name: "Aminata",
     username: "@aminaaa",
     textKey: "testimonial4",
-    avatar: Testimonial4
+    avatar: aminata
   },
   {
     id: 5,
     name: "Josué D.",
     username: "@josue.d",
     textKey: "testimonial1",
-    avatar: Testimonial1
+    avatar: josue
   },
   {
     id: 6,
     name: "Positif D.",
     username: "@positif",
     textKey: "testimonial2",
-    avatar: Testimonial2
+    avatar: Testimonial4
   },
   {
     id: 7,
     name: "Julien B.",
     username: "@julienjulien",
     textKey: "testimonial3",
-    avatar: Testimonial3
+    avatar: julien
   },
   {
     id: 8,
     name: "Aminata",
     username: "@aminaaa",
     textKey: "testimonial4",
-    avatar: Testimonial4
+    avatar: aminata
   }
 ];
 

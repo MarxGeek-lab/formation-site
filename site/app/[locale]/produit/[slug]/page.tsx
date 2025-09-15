@@ -203,7 +203,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                 <TranslateHTML html={product?.description} lang={locale} />
               </Typography>
 
-              {locale === "fr" && product?.advantage?.length > 0 && (
+              {product?.advantage?.length > 0 && (
                 <>  
                   <Typography variant="h4" className={styles.sectionTitle}>
                     {t('advantages')}
@@ -217,23 +217,6 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                   </Box>
                 </>
               )}
-
-              {locale === "en" && product?.advantageEn?.length > 0 && (
-                <>  
-                  <Typography variant="h4" className={styles.sectionTitle}>
-                    {t('advantages')}
-                  </Typography>
-                  <Box component="ul" className={styles.benefitsList}>
-                    {product?.advantageEn?.map((benefit: string, index: number) => (
-                      <Box component="li" key={index} sx={{ mb: 1 }}>
-                        <Typography>{benefit}</Typography>
-                      </Box>
-                    ))}
-                  </Box>
-                </>
-              )}
-
-            
             </Box>
           </Grid>
 

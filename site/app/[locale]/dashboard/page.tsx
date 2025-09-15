@@ -210,6 +210,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
     );
   }
 
+  console.log("stats == ", stats)
   const statsData = [
     {
       value: stats?.ordersCount || 0,
@@ -228,7 +229,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
       rgba: 'rgba(255, 152, 0,',
     },
     {
-      value: stats?.orderDelivered || 0,
+      value: stats?.orderConfirmed || 0,
       label: 'Total Achat',
       icon: <TrendingUpIcon />,
       color: 'success',
@@ -236,7 +237,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
       rgba: 'rgba(46, 125, 50,',
     },
     {
-      value: stats?.expense || 0,
+      value: stats?.expense ? formatAmount(stats?.expense || 0)+" FCFA" : 0,
       label: 'Mes dépenses',
       icon: <StarIcon sx={{ color: '#FFD700' }} />,
       color: 'inherit',
@@ -292,6 +293,8 @@ export default function DashboardPage({ params }: { params: { locale: string } }
         sx={{ 
           display: 'flex', 
           alignItems: 'center', 
+          flexWrap: 'wrap',
+          gap: 2,
           justifyContent: 'space-between',
           p: 2,
           mb: 2,
@@ -352,6 +355,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
             boxShadow: 'none',
             p: { xs: 1.5, sm: '12px 16px' },
             alignItems: 'center',
+            flexWrap: 'wrap'
           }}
           action={
             <Button 
@@ -395,10 +399,11 @@ export default function DashboardPage({ params }: { params: { locale: string } }
               <CardContent
                 sx={{
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: {xs: "flex-start", sm: "center"},
+                  flexDirection: {xs: 'column', sm: 'row'},
                   justifyContent: "flex-start",
                   gap: 2,
-                  p: { xs: 2, sm: 2.5 },
+                  p: { xs: 1, sm: 2.5 },
                   height: '100%'
                 }}
               >
@@ -426,11 +431,11 @@ export default function DashboardPage({ params }: { params: { locale: string } }
                 {/* Texte */}
                 <Box sx={{ textAlign: "left" }}>
                   <Typography
-                    variant="h4"
+                    variant="h5"
                     sx={{
                       fontWeight: 700,
                       lineHeight: 1.2,
-                      fontSize: { xs: "1.6rem", sm: "1.75rem" },
+                      fontSize: { xs: "1.2rem", sm: "1.5rem" },
                       background: `linear-gradient(135deg, ${item.gradient[0]}, ${item.gradient[1]})`,
                       backgroundClip: "text",
                       WebkitBackgroundClip: "text",

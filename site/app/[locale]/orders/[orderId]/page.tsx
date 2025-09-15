@@ -270,7 +270,8 @@ const OrderDetailPage = ({ params }: { params: { locale: string; orderId: string
             fontSize: { xs: '0.9rem', sm: '1rem' }
           }}
         >
-          <Translate text="Votre compte utilisateur a été créé avec succès, veuillez réinitialiser votre mot de passe avec le email fourni lors de la commande." lang={locale} />
+          <Translate text="Si vous avez un compte, connectez-vous pour voir vos commande. Sinon, 
+          un compte utilisateur a été créé pour vous, veuillez réinitialiser votre mot de passe avec le email fourni lors de la commande pour accéder à votre compte." lang={locale} />
         </Alert>
         )}
       </Container>

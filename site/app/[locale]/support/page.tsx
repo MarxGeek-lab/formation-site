@@ -132,7 +132,7 @@ export default function SupportPage({ params }: { params: { locale: string } }) 
             </div>
           </div>
           <p className={styles.teamContact}>
-            {t('team.contactText')} <a href="mailto:support@rafly.me">support@rafly.me</a>
+            {t('team.contactText')} <a href="mailto:contact@rafly.me">contact@rafly.me</a>
           </p>
         </div>
       </Container>

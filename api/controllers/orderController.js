@@ -179,7 +179,8 @@ exports.createOrder = async (req, res) => {
     const emailServiceAdmin = new EmailService();
     emailServiceAdmin.setSubject(`Nouvelle commande sur Rafly`);
     emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
-    emailServiceAdmin.addTo(process.env.EMAIL_HOST_USER);
+    // emailServiceAdmin.addTo('mgangbala610@gmail.com');
+    emailServiceAdmin.addTo('1enockbotoyiye@gmail.com');
     emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationOrderAdmin.html", templateData));
     await emailServiceAdmin.send();
 

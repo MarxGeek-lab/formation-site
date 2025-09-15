@@ -40,11 +40,47 @@ export default function Home({ params }: { params: { locale: string } }) {
   const router = useRouter();
   const t = useTranslations('Home');  
 
-   const [geo, setGeo] = useState<GeoInfo | null>(null);
-
-   console.log("currency == ", currency)
   return (
     <>
+        {/* Banner publicitaire */}
+        <Container maxWidth="lg" sx={{
+            mt: {xs: 6, sm: 8, md: 12}, 
+            position: 'relative'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: '-20%',
+              left: '-5%',
+              width: '50%',
+              height: '500px',
+              backgroundImage: `url(${vector1.src})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'left top',
+              backgroundRepeat: 'no-repeat',
+              zIndex: 1,
+              opacity: 0.8
+            }} />
+            <div style={{
+              position: 'absolute',
+              top: '-20%',
+              right: '-10%',
+              width: '50%',
+              height: '500px',
+              backgroundImage: `url(${vector2.src})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'left top',
+              backgroundRepeat: 'no-repeat',
+              zIndex: 1,
+              opacity: 0.8
+            }} />
+            <a style={{zIndex: 2, position: 'relative'}} href="https://chariow.com/fr?campaign=MCCD8DFZ" target="_blank" rel="noopener noreferrer">
+              <Image
+                src={banniere}
+                alt="Publicité Chariow"
+                className="w-full h-auto rounded-lg"
+              />
+            </a>
+          </Container> 
        {/* Hero Section */}
        <Container maxWidth="lg" sx={{
           // mt: {xs: 2, sm: 3, md: 5}, 
@@ -179,45 +215,7 @@ export default function Home({ params }: { params: { locale: string } }) {
         gap: {xs: '4rem', sm: '6rem'}
         }}>
 
-        {/* Banner publicitaire */}
-          {/* <Container maxWidth="lg" sx={{
-            mt: {xs: 2, sm: 3, md: 5}, 
-            position: 'relative'
-          }}>
-            <div style={{
-              position: 'absolute',
-              top: '-20%',
-              left: '-5%',
-              width: '50%',
-              height: '500px',
-              backgroundImage: `url(${vector1.src})`,
-              backgroundSize: 'contain',
-              backgroundPosition: 'left top',
-              backgroundRepeat: 'no-repeat',
-              zIndex: 1,
-              opacity: 0.8
-            }} />
-            <div style={{
-              position: 'absolute',
-              top: '-20%',
-              right: '-10%',
-              width: '50%',
-              height: '500px',
-              backgroundImage: `url(${vector2.src})`,
-              backgroundSize: 'contain',
-              backgroundPosition: 'left top',
-              backgroundRepeat: 'no-repeat',
-              zIndex: 1,
-              opacity: 0.8
-            }} />
-            <a style={{zIndex: 2, position: 'relative'}} href="https://chariow.com/fr?campaign=MCCD8DFZ" target="_blank" rel="noopener noreferrer">
-              <Image
-                src={banniere}
-                alt="Publicité Chariow"
-                className="w-full h-auto rounded-lg"
-              />
-            </a>
-          </Container> */}
+      
 
         {/* Features Section */}
           <Container maxWidth="lg">

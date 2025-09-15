@@ -322,7 +322,7 @@ const AffiliateBoard: React.FC<{ params: { locale: string } }> = ({ params }) =>
       {/* ✅ Stats en haut */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {statsData.map((stat, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, md: 3 }}>
+          <Grid key={index} size={{ xs: 6, sm: 6, md: 3 }}>
             <Card sx={{ 
               bgcolor: "var(--primary-light)", 
               color: "white", 
@@ -334,10 +334,15 @@ const AffiliateBoard: React.FC<{ params: { locale: string } }> = ({ params }) =>
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
+                px: {xs: 1, sm: 3}
               }}>
-                <Box display="flex" alignItems="center" gap={1}>
+                <Box display="flex"  gap={1}
+                sx={{
+                  flexDirection: {xs: "column", sm: "row"},
+                  alignItems: {xs: "flex-start", sm: "center"}
+                }}>
                   {stat.icon}
-                  <Typography variant="subtitle2">
+                  <Typography variant="subtitle2" whiteSpace={"nowrap"}>
                     <Translate text={stat.label} lang={locale} />
                   </Typography>
                 </Box>
@@ -348,7 +353,7 @@ const AffiliateBoard: React.FC<{ params: { locale: string } }> = ({ params }) =>
             </Card>
           </Grid>
         ))}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid size={{ xs: 6, sm: 6, md: 3 }}>
             <Card sx={{ 
               bgcolor: "var(--primary-light)", 
               color: "white", 
@@ -360,10 +365,15 @@ const AffiliateBoard: React.FC<{ params: { locale: string } }> = ({ params }) =>
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
+                px: {xs: 1, sm: 3}
               }}>
-                <Box display="flex" alignItems="center" gap={1}>
+                <Box display="flex" gap={1}
+                sx={{
+                  flexDirection: {xs: "column", sm: "row"},
+                  alignItems: {xs: "flex-start", sm: "center"}
+                }}>
                 <VerifiedUserSharp sx={{ fontSize: 30 }} />
-                  <Typography variant="subtitle2">
+                  <Typography variant="subtitle2" whiteSpace={"nowrap"}>
                     <Translate text="Nombre de filleuls" lang={locale} />
                   </Typography>
                 </Box>

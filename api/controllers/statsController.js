@@ -1,4 +1,3 @@
-const { default: mongoose, Types } = require('mongoose');
 const Product = require('../models/Product');
 const User = require('../models/User');
 const Order = require('../models/Order');
@@ -33,7 +32,7 @@ const statsController = {
           Product.countDocuments(),
         ]);
 
-        const salesRevenue = await Order.find({ status: "completed" })
+        const salesRevenue = await Order.find({ paymentStatus: "paid" })
           .populate('payments.transaction');
 
         const totalSalesRevenue = salesRevenue.reduce((total, order) => {
@@ -92,7 +91,7 @@ const statsController = {
         // Calculer les revenus pour les commandes de cet admin
         const salesRevenue = await Order.find({ 
           _id: { $in: adminOrderIds },
-          status: "completed" 
+          paymentStatus: "paid" 
         }).populate('payments.transaction');
 
         const totalSalesRevenue = salesRevenue.reduce((total, order) => {
@@ -137,7 +136,10 @@ const statsController = {
       const orderDelivered = await Order.countDocuments({ customer: userId, status: "delivered" });
       const orderCancelled = await Order.countDocuments({ customer: userId, status: "cancelled" });
 
-      const salesRevenue = await Order.find({ customer: userId, status: "completed" });
+      const salesRevenue = await Order.find({ customer: userId, status: "confirmed" })
+        .populate("payments.transaction")
+        .sort({createdAt: -1});
+
       const totalSalesRevenue = salesRevenue.reduce((total, order) => {
         return total + order.payments.reduce((paymentTotal, payment) => {
           return payment.transaction.status === "success" && payment.transaction.type === "payment" ? paymentTotal + payment.transaction.amount : paymentTotal;
