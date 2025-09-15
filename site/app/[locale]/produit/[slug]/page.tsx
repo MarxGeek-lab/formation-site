@@ -362,6 +362,30 @@ export default function ProductPage({ params }: { params: { locale: string; slug
                       };
                       
                       addToCart(cartItem);
+
+                      if (typeof window.fbq !== "undefined") {
+                        window.fbq('track', 'AddToCart', {
+                          content_name: product.name,
+                          content_ids: [product.id],
+                          content_type: 'product',
+                          value: calculateTotal(),
+                        });
+
+                        window.fbq('track', 'InitiateCheckout', {
+                          content_name: product.name,
+                          content_ids: [product.id],
+                          content_type: 'product',
+                          content: {
+                            id: product.id,
+                            quantity: 1,
+                            item_price: calculateTotal(),
+                            name: product.name,
+                            category: product.category,
+                          },
+                          value: calculateTotal(),
+                          currency: 'XOF',
+                        });
+                      }
                       
                       // Rediriger vers la page paiement
                       router.push(`/${locale}/paiement`);

@@ -135,6 +135,18 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   const handleSubmit = async () => {
     
     if (validateForm()) {
+
+  if (typeof window.fbq !== "undefined") {
+      window.fbq('track', 'Purchase', {
+        contents: cart.items.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+          item_price: item.price,
+        })),
+        value: calculateTotal(),
+      });
+    }
+
       showLoader()
       const { price, amount, currency } = await getLocalizedPrice(calculateTotal());
       console.log(amount, currency)

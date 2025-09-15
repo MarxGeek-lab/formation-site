@@ -21,6 +21,16 @@ export default function CartPage({ params }: { params: { locale: string } }) {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
 
   const handleCheckout = () => {
+    if (typeof window.fbq !== "undefined") {
+      window.fbq('track', 'InitiateCheckout', {
+        contents: cart.items.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+          item_price: item.price,
+        })),
+        value: cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      });
+    }
     router.push(`/${locale}/paiement`);
   };
 

@@ -58,6 +58,15 @@ export default function ProductCard({
         type: 'achat'
       });
 
+      if (typeof window.fbq !== "undefined") {
+        window.fbq('track', 'AddToCart', {
+          content_name: product.name,
+          content_ids: [product.id],
+          content_type: 'product',
+          value: finalPrice,
+        });
+      }
+
       // Show success notification
       addNotification({
         type: 'success',
