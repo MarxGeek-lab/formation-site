@@ -1,6 +1,7 @@
 const Affiliate = require("../models/Affiliate");
 const Payout = require("../models/Payout");
 const Referral = require("../models/Referral");
+const SiteSettings = require("../models/Settings");
 const User = require("../models/User");
 const { generateRefCode } = require("../utils/generateRefCode");
 const { encryptPassword } = require("../utils/helpers");
