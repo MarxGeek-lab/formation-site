@@ -68,8 +68,8 @@ const transactionController = {
 
       const monero = new MoneroPayment(process.env.MONERO_SECRET_KEY);
       const payment = await monero.initializePayment({
-        amount: 200,
-        // amount: order.totalAmount,
+        // amount: 200,
+        amount: order.totalAmount,
         // currency: 'EUR',
         currency: currency || 'XOF',
         description: "Paiement pour la commande ORD-"+order._id?.toString().toUpperCase(),
