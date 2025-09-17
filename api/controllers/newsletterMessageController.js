@@ -66,6 +66,7 @@ const newsletterMessageController = {
 
             // Configuration de l'email
             // if (byEmail) {
+            if (subscribers.length > 0) {
                 const emailService = new EmailService();
                 emailService.setFrom(process.env.EMAIL_HOST_USER, siteSettings?.websiteTitle);
                 emailService.addTo(subscribers.map(subscriber => subscriber.email));
@@ -80,7 +81,7 @@ const newsletterMessageController = {
                 }));
 
                 emailService.send();
-            // }
+            }
 
             // if (bySMS) {
             //     const result = await UniMessageService.sendMessage('+2290169816413', 'Votre code de vérification est 2048.');

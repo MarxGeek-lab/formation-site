@@ -206,7 +206,7 @@ const AddNewsletter = props => {
     if (files && files.length > 0) {
       const file = files[0];
   
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/web', 'image/jpg']; 
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']; 
       if (allowedTypes.includes(file.type)) {
         console.log('Fichier sélectionné :', file);
         setFile(file);
@@ -274,6 +274,7 @@ const AddNewsletter = props => {
             </Card>
           </Grid>
 
+          <Typography>Une image d'au plus 3 Mo</Typography>
           <div className='flex items-end gap-4'>
             <CustomTextField
               label='Image'
