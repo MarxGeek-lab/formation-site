@@ -8,7 +8,7 @@ const newsletterMessageSchema = new mongoose.Schema({
     },
     htmlContent: {
         type: String,
-        required: true
+        required: false
     },
     image: {
         type: String,
