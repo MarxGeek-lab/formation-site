@@ -1,16 +1,14 @@
-const { propertyKey, notificationsKey } = require("../constant");
 const Product = require("../models/Product");
-const { v4: uuidv4 } = require("uuid");
 const User = require("../models/User");
 const excel = require("exceljs");
 const path = require("path");
 const fs = require("fs");
-const Notifications = require("../models/Notifications");
-const EmailService = require("../services/emailService");
-const Admin = require("../models/Admin");
+const { EmailService } = require("../services/emailService");
 const { generateTemplateHtml } = require("../services/generateTemplateHtml");
 const Category = require("../models/Categories");
 const { getGreeting } = require("../utils/helpers");
+const SiteSettings = require("../models/Settings");
+const imageToBase64 = require("../utils/imageToBase64");
 // const { connectToRedis } = require("../config/redis_connection");
 
 const productController = {
@@ -28,7 +26,7 @@ const productController = {
         name, description, category, productType,
         isSubscriptionBased, subscriptionId, assignedAdminId,
         price, wholesalePrice, productStatus,
-        characteristics, advantage, withVisual,
+        characteristics, advantage, withVisual, sendMsg
       } = req.body;
 
       console.log('Données produit reçues:', req.body);
@@ -97,6 +95,32 @@ const productController = {
           });
           await newCategory.save();
         } 
+
+      // if (sendMsg) {
+        const settings = await SiteSettings.findOne({});
+        const message = settings.newProductMessage;
+
+        const users = await User.find({});
+        const emails = users.map(user => ({
+          email: user.email,
+          name: user.name
+        }));
+
+        for (const email of emails) {
+          const emailService = new EmailService();
+          emailService.setSubject("Nouveau produit ajouté sur Rafly");
+          emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+          emailService.addTo(email.email);
+          emailService.setHtml(generateTemplateHtml("templates/newProduct.html", {
+            message: message,
+            productName: name,
+            name: email.name,
+            productImage: newProduct.photos[0],
+            salutation: getGreeting(email.name)
+          }));
+          await emailService.send();
+        }
+      // }
 
       return res.status(201).json({
         success: true,

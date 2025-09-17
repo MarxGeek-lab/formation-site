@@ -38,7 +38,8 @@ const SubscriptionSchema = new mongoose.Schema({
   },
   relatedProducts: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
+    ref: 'Product',
+    required: false
   }],
   isPublished: {
     type: Boolean,

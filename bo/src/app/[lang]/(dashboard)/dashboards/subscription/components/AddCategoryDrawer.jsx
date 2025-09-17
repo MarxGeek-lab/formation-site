@@ -86,6 +86,7 @@ const AddCategoryDrawer = props => {
   const handleFormSubmit = async () => {
 
     if (title && description && price && priceEUR) {
+      cons
       const newData = {
         title,
         description,

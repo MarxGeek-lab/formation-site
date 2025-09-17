@@ -1,12 +1,13 @@
 const NewsletterMessage = require('../models/NewsletterMessage');
 const Newsletter = require('../models/Newsletter');
 const nodemailer = require('nodemailer');
-const EmailService = require('../services/emailService');
+const { EmailService } = require('../services/emailService');
 const path = require('path');
 const fs = require('fs');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
 const Notifications = require('../models/Notifications');
 const SiteSettings = require('../models/Settings');
+const UniMessageService = require('../services/uniMessageService');
 
 const newsletterMessageController = {
     // Créer un nouveau message
@@ -43,8 +44,8 @@ const newsletterMessageController = {
     // Envoyer un message
     sendMessage: async (req, res) => {
         try {
-            console.log("=== ", req.params)
-            const { id } = req.params;
+            console.log("=== ", req.body)
+            const { id, byEmail, bySMS } = req.body;
             const message = await NewsletterMessage.findById(id);
 
             if (!message) {
@@ -54,9 +55,9 @@ const newsletterMessageController = {
                 });
             }
 
-            if (message.status === 'published') {
-                return res.status(400).json({ msg: 'déjà publier' });
-            }
+            // if (message.status === 'published') {
+            //     return res.status(400).json({ msg: 'déjà publier' });
+            // }
 
             const siteSettings = await SiteSettings.findOne();
 
@@ -64,19 +65,27 @@ const newsletterMessageController = {
             const subscribers = await Newsletter.find({ isActive: true });
 
             // Configuration de l'email
-            const emailService = new EmailService();
-            emailService.setFrom(process.env.EMAIL_HOST_USER, siteSettings?.websiteTitle);
-            emailService.addTo(subscribers.map(subscriber => subscriber.email));
-            emailService.setSubject(message.subject);
-            emailService.setHtml(generateTemplateHtml('templates/newsletter.html', {
-                image: message.image,
-                content: message.htmlContent,
-                logoUrl: siteSettings?.logoUrl,
-                websiteTitle: siteSettings?.websiteTitle,
-                contactEmail: siteSettings?.supportEmail
-            }));
+            // if (byEmail) {
+                const emailService = new EmailService();
+                emailService.setFrom(process.env.EMAIL_HOST_USER, siteSettings?.websiteTitle);
+                emailService.addTo(subscribers.map(subscriber => subscriber.email));
+                emailService.setSubject(message.subject);
+                emailService.setHtml(generateTemplateHtml('templates/newsletter.html', {
+                    image: message.image,
+                    title: message.subject,
+                    content: message.htmlContent,
+                    logoUrl: siteSettings?.logoUrl,
+                    websiteTitle: siteSettings?.websiteTitle,
+                    contactEmail: siteSettings?.supportEmail
+                }));
 
-            emailService.send();
+                emailService.send();
+            // }
+
+            // if (bySMS) {
+            //     const result = await UniMessageService.sendMessage('+2290169816413', 'Votre code de vérification est 2048.');
+            //     console.log('Résultat:', result);
+            // }
 
             // Mise à jour de la date du dernier email pour l'abonné
             for (const subscriber of subscribers) {
@@ -99,6 +108,10 @@ const newsletterMessageController = {
                 });
                 await notification.save();
             }
+
+            // Envoie du SMS
+            // const result = await UniMessageService.sendMessage('+2290169816413', 'Votre code de vérification est 2048.');
+            // console.log('Résultat:', result);
 
             res.status(200).json({
                 success: true,

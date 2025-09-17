@@ -23,6 +23,6 @@ router.route('/messages/:id')
     .patch(auth, upload.single('images'), newsletterMessageController.updateMessage) // Mettre à jour un message spécifique
     .delete(auth, newsletterMessageController.deleteMessage);
 
-router.post('/messages/:id/send', auth, newsletterMessageController.sendMessage); // Envoyer un message spécifique
+router.post('/messages/send', auth, newsletterMessageController.sendMessage); // Envoyer un message spécifique
 
 module.exports = router;

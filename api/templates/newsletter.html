@@ -4,23 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
 </head>
 
-<body style="font-family: Poppins, sans-serif; margin: 0; padding: 0; line-height: 26px;">
-    <div style="max-width: 600px; margin: 0 auto; ">
+<body style="font-family: Poppins, sans-serif; margin: 0; padding: 0; line-height: 26px; background-color: #f4f4f4; color:#333;">
+    <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+
         <!-- En-tête avec logo et titre -->
-        <div style="background-color: #1f5bdc2a; text-align: center; padding: 20px; border-radius: 10px 10px 0 0;">
-            <img src="{{logoUrl}}" alt="Logo Rafly" style="max-width: 200px;">
+        <div style="background: #6c63ff; margin-bottom: 20px; color: white; text-align: center; padding: 25px;">
+            <h1 style="margin: 0; font-size: 26px;">📰 {{title}} ✨</h1>
         </div>
-        <img src="{{image}}" alt="" style="width: 100%;">
+
         <!-- Corps du message -->
         <div style="background-color: #ffffff; padding: 20px; border-radius: 0 0 10px 10px;">
-            <div style="font-size: 15px;">{{{content}}}</div>
+            <div style="font-size: 15px; margin-bottom: 15px;">
+                {{{content}}}
+            </div>
+
+             <!-- Image principale -->
+        <img src="{{image}}" alt="newsletter-image" style="width: 100%; max-height: 280px; object-fit: cover; display:block;">
+
+
             <p style="font-size: 15px; margin-top: 20px;">
-                Si vous avez des questions ou besoin d'assistance, vous pouvez nous contacter à : <strong>{{contactEmail}} </strong>.
+                ❓ Si vous avez des questions ou besoin d'assistance, vous pouvez nous contacter à : <strong>📧 contact@rafly.me</strong>.
             </p>
-            <p style="font-size: 16px;">Cordialement,</p>
-            <p style="font-size: 16px;">L'équipe <strong>{{websiteTitle}}</strong></p>
+
+            <p style="font-size: 16px; margin-top: 25px;">Cordialement,</p>
+            <p style="font-size: 16px;">💚 L'équipe <strong>Rafly</strong></p>
         </div>
     </div>
 </body>

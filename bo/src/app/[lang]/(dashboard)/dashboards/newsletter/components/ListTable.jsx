@@ -162,7 +162,7 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            {row.original?.status !== 'published' && (
+            {/* {row.original?.status !== 'published' && ( */}
               <>
                 <IconButton onClick={() => handleSend(row.original)}>
                   <i className={`tabler-${row.original?.isActive ? 'eye-off':'send'} text-primary`} />
@@ -172,7 +172,7 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
                 </IconButton>
               
               </>
-            )}
+            {/* )} */}
             <IconButton onClick={() => handleDelete(row.original)}>
               <i className='tabler-trash text-error' />
             </IconButton>
@@ -229,7 +229,8 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
     setMessageData(data);
   }
 
-  const handleAction = async () => {
+  const handleAction = async (options) => {
+    console.log(options)
     showLoader()
     setShowDialog(false);
     try {
@@ -237,7 +238,11 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
       if (action === 1) {
         res = await deleteMessage(messageData?._id);
       } else if (action === 2) {
-        res = await sendMessage(messageData?._id)
+        res = await sendMessage({
+          id: messageData?._id,
+          byEmail: options.byEmail,
+          bySMS: options.bySMS,
+        })
       }
       hideLoader();
 
@@ -266,7 +271,8 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
         <ConfirmationDialog
           title="Confirmation"
           message={msg}
-          onConfirm={handleAction}
+          checkbox={true}
+          onConfirm={(options) => handleAction(options)}
           onCancel={() => setShowDialog(false)}
         />
       )}

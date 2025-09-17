@@ -31,7 +31,7 @@ const EditorToolbar = ({ editor }) => {
   }
 
   return (
-    <div className='flex flex-wrap gap-x-3 gap-y-1 pbs-6 pbe-4 pli-6'>
+    <div className='flex w-full flex-wrap gap-x-3 gap-y-1 pbs-6 pbe-4 pli-6'>
       <CustomIconButton
         {...(editor.isActive('bold') && { color: 'primary' })}
         variant='tonal'

@@ -69,9 +69,9 @@ export const NewsletterProvider = ({ children }) => {
     }
   };
 
-  const sendMessage = async (id) => {
+  const sendMessage = async (formData) => {
     try {
-      const response = await api.post(`newsletter/messages/${id}/send`); // Remplacez par votre endpoint
+      const response = await api.post(`newsletter/messages/send`, formData); // Remplacez par votre endpoint
       return response.status;
     } catch (err) {
       return handleAxiosError(err) || 500

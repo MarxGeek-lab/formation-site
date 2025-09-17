@@ -188,6 +188,22 @@ const siteSettingsSchema = new mongoose.Schema({
     }
   },
 
+  // Message automatique pour les nouveaux produits
+  newProductMessage: {
+    type: String,
+    default: 'Nouveau produit ajouté !'
+  },
+
+  byEmail: {
+    type: Boolean,
+    default: true
+  },
+
+  bySMS: {
+    type: Boolean,
+    default: false
+  },
+
   percentAffiliate: { type: Number, default: 10 },
 
   // Ajoutez d'autres paramètres selon vos besoins

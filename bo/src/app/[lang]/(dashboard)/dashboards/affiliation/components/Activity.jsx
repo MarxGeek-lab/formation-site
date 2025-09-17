@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Card from '@mui/material/Card'
 import TablePagination from '@mui/material/TablePagination'
 import Typography from '@mui/material/Typography'
-import { Box, Chip, InputAdornment } from '@mui/material'
+import { Box, CardContent, Chip, InputAdornment, MenuItem } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 
 // Third-party Imports
@@ -27,6 +27,8 @@ import CustomTextField from '@core/components/mui/TextField'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
 
 import tableStyles from '@core/styles/table.module.css'
+import CustomAvatar from '@/@core/components/mui/Avatar'
+import { formatAmount } from '@/utils/formatAmount'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -62,10 +64,38 @@ const columnHelper = createColumnHelper()
 const ActivityHistoryTable = ({ activities }) => {
   const [data, setData] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [selectedAffiliate, setSelectedAffiliate] = useState('all')
+  const [affiliates, setAffiliates] = useState([]);
+  const [earnings, setEarnings] = useState(0);
 
   useEffect(() => {
     setData(activities || [])
-  }, [activities])
+
+    if (activities?.length > 0) {
+      // Supposons que chaque affiliate a un id unique
+      const uniqueAffiliatesMap = new Map();
+
+      activities.forEach(activity => {
+        const affiliate = activity.affiliate;
+        if (affiliate && !uniqueAffiliatesMap.has(affiliate.id)) {
+          uniqueAffiliatesMap.set(affiliate.id, affiliate);
+        }
+      });
+
+      const uniqueAffiliates = Array.from(uniqueAffiliatesMap.values());
+      setAffiliates(uniqueAffiliates);
+    }
+
+    const filteredData = activities.filter(activity => {
+      if (selectedAffiliate === 'all') return true
+      return activity.affiliate._id === selectedAffiliate
+    })
+    setData(filteredData)
+
+    const totalEarnings = filteredData.reduce((acc, p) => p.status === "paid" ? acc + p.amount : acc, 0);
+    setEarnings(totalEarnings);
+
+  }, [activities, selectedAffiliate])
 
   const columns = useMemo(() => [
     columnHelper.accessor('affiliate', {
@@ -144,14 +174,46 @@ const ActivityHistoryTable = ({ activities }) => {
       <Typography variant='h5' className='mb-5'>Historique des activités</Typography>
 
       <Card>
-        {/* <div className='flex flex-wrap justify-between gap-4 p-6'>
-          <DebouncedInput
-            value={globalFilter ?? ''}
-            onChange={value => setGlobalFilter(String(value))}
-            placeholder='Rechercher'
-            className='w-[350px]'
-          />
-        </div> */}
+        <CardContent>
+          <Typography variant='subtitle1' mb={2}>Filtrer par affilié</Typography>
+            <CustomTextField
+              select
+              id='select-status'
+              value={selectedAffiliate}
+              onChange={e => setSelectedAffiliate(e.target.value)}
+              slotProps={{
+                select: { displayEmpty: true }
+              }}
+              className='w-[250px] text-sm'
+            >
+              <MenuItem value='all'>Tout</MenuItem>
+              {affiliates?.map((affiliate, index) => (
+                <MenuItem key={index} value={affiliate._id}>{affiliate.user.name}</MenuItem>
+              ))}
+            </CustomTextField>
+
+          <Card sx={{
+            background: '#5F3AFC', 
+            boxShadow: 'none',
+            border: '1px solid rgb(207, 207, 207)',
+            borderBottom: '2px solid #5F3AFC',
+            width: '250px',
+            mt: 2
+          }}>
+            <CardContent className=' h-[100px] flex items-center justify-between gap-2'>
+              <div className='flex flex-col items-start gap-1'>
+                <Typography variant='h6' color="white" whiteSpace={'nowrap'}>
+                  {formatAmount(earnings || 0)} FCFA</Typography>
+                <Typography fontSize={14} className="mt-2" color="white" whiteSpace={'nowrap'}>
+                  Total des ventes
+                </Typography>
+              </div>
+              <CustomAvatar color='#ffffff02' skin='#ffffff02'  variant='rounded' size={42}>
+                <i className={"tabler-wallet"} style={{ color: '#5F3AFC' }} />
+              </CustomAvatar>
+            </CardContent>
+          </Card>
+        </CardContent>
         <div className='overflow-x-auto'>
           <table className={tableStyles.table}>
             <thead style={{ backgroundColor: '#F5F5F5' }}>

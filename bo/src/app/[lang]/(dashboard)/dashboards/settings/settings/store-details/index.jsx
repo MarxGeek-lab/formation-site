@@ -2,12 +2,11 @@
 
 import Grid from '@mui/material/Grid2';
 import { useEffect, useState } from 'react';
-import { Button, Card, CardHeader, CardContent, TextField, Switch, FormControlLabel, Typography, Divider, Box, InputAdornment } from '@mui/material';
+import { Button, Card, CardHeader, CardContent, TextField, Switch, FormControlLabel, Typography, Divider, Box, InputAdornment, FormGroup, Checkbox } from '@mui/material';
 import { useAuthStore, useSiteSettingsStore } from '@/contexts/GlobalContext';
 import api from '@/configs/api';
 import { hideLoader, showLoader } from '@/components/Loader/loaderService';
 import { showToast } from '@/components/ToastNotification/ToastNotification';
-import SocialLinks from './SocialLinks';
 import CustomTextField from '@/@core/components/mui/TextField';
 
 const StoreDetails = () => {
@@ -66,6 +65,10 @@ const StoreDetails = () => {
     minCartValue: 0
   })
 
+  const [newProductMessage, setNewProductMessage] = useState('')
+  const [byEmail, setByEmail] = useState(true);
+  const [bySMS, setBySMS] = useState(false);
+
   const prepareDataForBackend = () => {
     const formData = new FormData();
 
@@ -113,6 +116,10 @@ const StoreDetails = () => {
       formData.append('currency', currency);
     }
 
+    if (newProductMessage) {
+      formData.append('newProductMessage', newProductMessage);
+    }
+
     if (logoFile) {
       formData.append('images', logoFile);
     }
@@ -149,6 +156,9 @@ const StoreDetails = () => {
     if (cartReminderSettings) {
       formData.append('cartReminderSettings', JSON.stringify(cartReminderSettings));
     }
+
+    formData.append('byMail', byEmail);
+    formData.append('bySMS', bySMS);
 
     return formData;
   };
@@ -201,6 +211,7 @@ const StoreDetails = () => {
         setWebsiteTitle(data?.websiteTitle);
         setFbPixelId(data?.fb_pixel_id)
         setPercentAffiliate(data?.percentAffiliate)
+        setNewProductMessage(data?.newProductMessage)
         
         // Charger les paramètres de relance de panier
         if (data?.cartReminderSettings) {
@@ -319,9 +330,44 @@ const StoreDetails = () => {
               />
             </Grid>
           </Grid>
+
+          <CardHeader 
+            title={
+              <Typography variant="h5" fontWeight={600} gutterBottom>
+                Configuration du message pour des nouvelles produits
+              </Typography>
+            }
+          />
+
+          <CardContent> 
+            <CustomTextField
+              fullWidth
+              multiline
+              rows={4}
+              value={newProductMessage}
+              onChange={(e) => setNewProductMessage(e.target.value)}
+              label="Message pour des nouvelles produits"
+            />
+
+            <Typography>Envoyé la notification par :</Typography>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox checked={byEmail} onChange={e => setByEmail(e.target.checked)} />}
+                label="Envoyer par Email"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={bySMS} onChange={e => setBySMS(e.target.checked)} />}
+                label="Envoyer par SMS"
+              />
+            </FormGroup>
+          </CardContent>
           
           <CardHeader 
-            title="Configuration des Relances de Panier"
+            title={
+              <Typography variant="h5" fontWeight={600} gutterBottom>
+                Configuration des Relances de Panier
+              </Typography>
+            }
             subheader="Configurez les délais et messages pour les paniers abandonnés"
           />
           <CardContent>

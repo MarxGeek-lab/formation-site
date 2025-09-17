@@ -20,9 +20,9 @@ exports.update = async (req, res) => {
     try {
         const subscription = await Subscription.findById(req.params.id);
         if (!subscription) return res.status(404).send();
-
+console.log(req.body)
         await subscription.updateOne(
-            { ...req.body },
+            { ...req.body, product: req.body.product || null },
             {new: true}
         );
 
