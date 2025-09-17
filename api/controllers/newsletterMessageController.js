@@ -8,6 +8,7 @@ const { generateTemplateHtml } = require('../services/generateTemplateHtml');
 const Notifications = require('../models/Notifications');
 const SiteSettings = require('../models/Settings');
 const UniMessageService = require('../services/uniMessageService');
+const User = require('../models/User');
 
 const newsletterMessageController = {
     // Créer un nouveau message
@@ -62,27 +63,27 @@ const newsletterMessageController = {
             const siteSettings = await SiteSettings.findOne();
 
             // Récupérer tous les abonnés actifs
-            const subscribers = await Newsletter.find({ isActive: true });
+            const subscribers = await User.find({ isActive: true });
 
             // Configuration de l'email
             // if (byEmail) {
             if (subscribers.length > 0) {
-                const emailService = new EmailService();
-                emailService.setFrom(process.env.EMAIL_HOST_USER, siteSettings?.websiteTitle);
-                emailService.addTo(subscribers.map(subscriber => subscriber.email));
-                emailService.setSubject(message.subject);
-                emailService.setHtml(generateTemplateHtml('templates/newsletter.html', {
-                    image: message.image,
-                    title: message.subject,
-                    content: message.htmlContent,
-                    logoUrl: siteSettings?.logoUrl,
-                    websiteTitle: siteSettings?.websiteTitle,
-                    contactEmail: siteSettings?.supportEmail
-                }));
+                for (const subscriber of subscribers) {
+                    const emailService = new EmailService();
+                    emailService.setFrom(process.env.EMAIL_HOST_USER, siteSettings?.websiteTitle);
+                    emailService.addTo(subscriber.email);
+                    emailService.setSubject(message.subject);
+                    emailService.setHtml(generateTemplateHtml('templates/newsletter.html', {
+                        image: message.image,
+                        title: message.subject,
+                        content: message.htmlContent,
+                        websiteTitle: 'Rafly',
+                        contactEmail: 'contact@rafly.com'
+                    }));
 
-                emailService.send();
+                    emailService.send();
+                }
             }
-
             // if (bySMS) {
             //     const result = await UniMessageService.sendMessage('+2290169816413', 'Votre code de vérification est 2048.');
             //     console.log('Résultat:', result);
