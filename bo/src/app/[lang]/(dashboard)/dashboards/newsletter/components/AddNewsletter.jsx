@@ -181,15 +181,15 @@ const AddNewsletter = props => {
         if (res === 201) {
           handleReset();
           fetchNewsletterMessage();
-          showToast('Administrateur ajouté avec succès', 'success', 5000);
+          showToast('Message ajouté avec succès', 'success', 5000);
         } else if (res === 200) {
           fetchNewsletterMessage();
           setMessageData(null)
           handleReset();
-          showToast('Administrateur mise à jour', 'success', 5000);
+          showToast('Message modifié avec succès', 'success', 5000);
         }
         else if (res === 400) {
-          showToast('Cet administrateur existe déjà.', 'error', 5000);
+          showToast('Cet message existe déjà.', 'error', 5000);
         } else {
           showToast('Une erreur est survenue. Veuillez réessayer.', 'error', 5000);
         }

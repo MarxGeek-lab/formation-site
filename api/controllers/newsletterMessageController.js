@@ -190,13 +190,6 @@ const newsletterMessageController = {
                 });
             }
 
-            if (message.status === 'published') {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Impossible de modifier un message déjà envoyé'
-                });
-            }
-
             // Suppression des images
             const uploadDir = path.join(__dirname, '..', 'uploads', 'pictures');
             if (image) {
