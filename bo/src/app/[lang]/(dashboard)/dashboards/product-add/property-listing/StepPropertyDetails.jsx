@@ -190,8 +190,7 @@ const StepPropertyDetails = ({
   const handleCategoryChange = (e) => {
     const value = e.target.value;
     setCategory(value);
-    setSubCategory('');
-    setCustomCategory('');
+    // setCustomCategory('');
     if (value !== 'Autres') {
       setCustomService('');
     }
@@ -201,7 +200,6 @@ const StepPropertyDetails = ({
     if (category) {
       if (category === 'Autres') {
         setShowCustomService(true);
-        setSubCategories(['Autres']);
       } else {
         setShowCustomService(false);
         const selectedCategory = allCategories.find(item => item.name === category);

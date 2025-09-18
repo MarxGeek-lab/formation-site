@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/authenticateAdminToken');
 
 const adminController = require('../controllers/admin/adminController');
-// const userController = require('../controllers/userController');
+const userController = require('../controllers/userController');
 // const paymentController = require('../controllers/transactionController');
 const categoryController = require('../controllers/categoryController');
 const upload = require('../middleware/multer');
@@ -43,8 +43,8 @@ router.route('/:id')
 
 // router.put('/transaction/:id/:adminId', auth, paymentController.updateWithdrawableAmount);
 
-// router.put('/desactive-user/:id', auth, userController.desactiveUser);
-// router.put('/delete-user/:id', auth, userController.deleteUser);
+router.put('/desactive-user/:id', auth, userController.desactiveUser);
+router.delete('/delete-user/:id', auth, userController.deleteUser);
 
 
 router.put('/category/:id', auth, categoryController.updateCategory);

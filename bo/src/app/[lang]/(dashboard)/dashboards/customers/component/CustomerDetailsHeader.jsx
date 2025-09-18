@@ -8,8 +8,10 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import { hideLoader, showLoader } from '@/components/Loader/loaderService'
 import { showToast } from '@/components/ToastNotification/ToastNotification'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const CustomerDetailHeader = ({ customerId, customer }) => {
+  const router = useRouter()
   const { desactiveUser, deleteUser } = useAdminStore()
   const [openDelete, setOpenDelete] = useState(false)
   const [openDesactive, setOpenDesactive] = useState(false)
@@ -22,6 +24,9 @@ const CustomerDetailHeader = ({ customerId, customer }) => {
       hideLoader()
       if (status === 200) {
         setOpenDelete(false)
+        setTimeout(() => {
+          router.back();
+        }, 1000);
         showToast("Utilisateur supprimé avec succès", "success", 5000)
       } else {
         showToast("Une erreur est survenue", "error", 5000)

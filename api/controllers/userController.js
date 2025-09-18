@@ -271,7 +271,6 @@ const userController = {
     }
   },
   
-
   resendActivationCode: async (req, res) => {
     const { email } = req.body;
     console.log(req.body);
@@ -473,6 +472,7 @@ const userController = {
   // Désactiver un utilisateur
   desactiveUser: async (req, res) => {
     try {
+      console.log(req.params)
       // Désactivation de l'utilisateur par ID
       const user = await User.findOneAndUpdate(
         { _id: req.params.id },
@@ -487,6 +487,7 @@ const userController = {
 
       return res.status(200).json({ message: 'Utilisateur désactivé avec succès' });
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ message: 'Erreur lors de la désactivation de l\'utilisateur', error });
     }
   },
@@ -494,6 +495,7 @@ const userController = {
   // Marquer un utilisateur comme supprimé
   deleteUser: async (req, res) => {
     try {
+      console.log(req.params)
       // Marquer l'utilisateur comme supprimé par ID
       const userExisting = await User.findOneAndUpdate(
         { _id: req.params.id },
@@ -508,6 +510,7 @@ const userController = {
 
       return res.status(200).json({ message: 'Utilisateur marqué comme supprimé avec succès' });
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ message: 'Erreur lors de la suppression de l\'utilisateur', error });
     }
   },

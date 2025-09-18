@@ -159,7 +159,7 @@ const InvoiceListTable = ({ paymentsData }) => {
             {getAvatar({ avatar: row.original?.customer?.picture, name: row.original?.customer?.name })}
             <div className='flex flex-col'>
               <Typography className='font-medium' color='text.primary'>
-                {row.original?.customer.name}
+                {row.original?.customer?.name}
               </Typography>
               <Typography variant='body2'>{row.original?.customer?.email}</Typography>
             </div>
