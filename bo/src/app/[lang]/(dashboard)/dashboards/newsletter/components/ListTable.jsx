@@ -46,6 +46,7 @@ import { getInitials } from '@/utils/getInitials'
 import AddNewsletter from './AddNewsletter'
 import { useNewsletterStore } from '@/contexts/NewsletterContext'
 import SearchIcon from '@mui/icons-material/Search'
+import UserSelectionDialog from './UserSelectionDialog'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -90,7 +91,7 @@ const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...prop
 // Column Definitions
 const columnHelper = createColumnHelper()
 
-const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
+const ListTable = ({ customers, fetchNewsletterMessage, NewsletterMessages }) => {
   // States
   const { sendMessage, deleteMessage } = useNewsletterStore();
 
@@ -100,9 +101,12 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
   const [globalFilter, setGlobalFilter] = useState('');
   const [message, setMessage] = useState(null);
   const [msg, setMsg] = useState(null);
-  const [messageData, setMessageData] = useState('');
+  const [messageData, setMessageData] = useState(null);
   const [action, setAction] = useState(0);
   const [showDialog, setShowDialog] = useState(false);
+
+  const [selectUserDialog, setSelectUserDialog] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const handleEdit = (id) => {
     const t = data.find(item => item._id === id);
@@ -119,23 +123,23 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
       columnHelper.accessor('title', {
         header: 'Titre',
         cell: ({ row }) => (
-          <div className='is-[100px] text-wrap'>
-              <Typography >{row.original?.subject}</Typography>
+          <div className='is-[100px] text-wrap word-break'>
+              <Typography sx={{wordBreak: 'break-all'}}>{row.original?.subject}</Typography>
           </div>
         )
       }),
       columnHelper.accessor('date', {
         header: 'Message',
         cell: ({ row }) => (
-          <Typography>
-            <div className='is-[200px] text-wrap' dangerouslySetInnerHTML={{__html: row.original?.htmlContent}} />
+          <Typography sx={{width: '300px'}}>
+            <div className='is-[350px] text-wrap' dangerouslySetInnerHTML={{__html: row.original?.htmlContent}} />
           </Typography>
         )
       }),
       columnHelper.accessor('subject', {
         header: 'Image',
         cell: ({ row }) => (
-          <div className='is-[100px] text-wrap'>
+          <div className='is-[60px] text-wrap'>
             <img src={row.original?.image} width={60} height={60} className='rounded bg-actionHover' />
           </div>
         )
@@ -143,7 +147,7 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
       columnHelper.accessor('create', {
         header: 'Date de création',
         cell: ({ row }) => (
-          <Typography>
+          <Typography variant='body2'>
             {new Date(row.original?.createdAt).toLocaleString()}
           </Typography>
         )
@@ -164,7 +168,10 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
           <div className='flex items-center'>
             {/* {row.original?.status !== 'published' && ( */}
               <>
-                <IconButton onClick={() => handleSend(row.original)}>
+                <IconButton onClick={() => {
+                  setSelectUserDialog(true)
+                  setMessageData(row.original)
+                }}>
                   <i className={`tabler-${row.original?.isActive ? 'eye-off':'send'} text-primary`} />
                 </IconButton>
                 <IconButton onClick={() => handleEdit(row.original?._id)}>
@@ -229,41 +236,38 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
     setMessageData(data);
   }
 
-  const handleAction = async (options) => {
-    console.log(options)
-    showLoader()
-    setShowDialog(false);
-    try {
-      let res;
-      if (action === 1) {
-        res = await deleteMessage(messageData?._id);
-      } else if (action === 2) {
-        res = await sendMessage({
+  const handleAction = async ({ sendToAll, userIds, byEmail, bySMS }) => {
+    console.log({ sendToAll, userIds, byEmail, bySMS })
+    console.log(messageData)  
+
+    if (messageData && messageData?._id) {
+      showLoader();
+      setSelectUserDialog(false);
+    
+      try {
+        const res = await sendMessage({
           id: messageData?._id,
-          byEmail: options.byEmail,
-          bySMS: options.bySMS,
-        })
-      }
-      hideLoader();
-
-      if (res === 200) {
-        fetchNewsletterMessage();
-        setMessageData(null);
-
-        if (action === 1) {
-          showToast('Newsletter supprimé !', 'success', 5000);
-        } else if (action === 2) {
-          showToast(`Newsletter envoyé avec succès.`, 'success', 5000);
+          sendToAll,
+          userIds,
+          byEmail: true,
+          bySMS: false,
+        });
+    
+        hideLoader();
+        if (res === 200) {
+          fetchNewsletterMessage();
+          setMessageData(null);
+          showToast("Newsletter envoyé avec succès.", "success", 5000);
+        } else {
+          showToast("Une erreur est survenue. Veuillez réessayer", "error", 5000);
         }
-      } else if (res === 400) {
-        showToast('Ce newsletter est publié. Vous ne pouvez que le supprimer');
-      } else {
-        showToast('Une erreur est survenue. Veuillez réessayer', 'error', 5000);
+      } catch (err) {
+        hideLoader();
+        console.error(err);
+        showToast("Erreur lors de l'envoi", "error", 5000);
       }
-    } catch (error) {
-      console.log(error);
     }
-  }
+  };
 
   return (
     <>
@@ -366,6 +370,15 @@ const ListTable = ({ fetchNewsletterMessage, NewsletterMessages }) => {
         handleClose={() => setAddCategoryOpen(!addCategoryOpen)}
         fetchNewsletterMessage={fetchNewsletterMessage}
         setMessageData={setMessage}
+      />
+      <UserSelectionDialog
+        open={selectUserDialog}
+        onClose={() => setSelectUserDialog(false)}
+        onConfirm={(options) => {
+          console.log(options)
+          handleAction(options)
+        }}
+        users={customers}
       />
     </>
   )

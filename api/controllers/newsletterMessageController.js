@@ -9,6 +9,7 @@ const Notifications = require('../models/Notifications');
 const SiteSettings = require('../models/Settings');
 const UniMessageService = require('../services/uniMessageService');
 const User = require('../models/User');
+const { getGreeting } = require('../utils/helpers');
 
 const newsletterMessageController = {
     // Créer un nouveau message
@@ -45,8 +46,7 @@ const newsletterMessageController = {
     // Envoyer un message
     sendMessage: async (req, res) => {
         try {
-            console.log("=== ", req.body)
-            const { id, byEmail, bySMS } = req.body;
+            const { id, sendToAll, userIds } = req.body;
             const message = await NewsletterMessage.findById(id);
 
             if (!message) {
@@ -56,26 +56,23 @@ const newsletterMessageController = {
                 });
             }
 
-            // if (message.status === 'published') {
-            //     return res.status(400).json({ msg: 'déjà publier' });
-            // }
-
-            const siteSettings = await SiteSettings.findOne();
-
-            // Récupérer tous les abonnés actifs
-            const subscribers = await User.find({ isActive: true });
-
+            let subscribers = await User.find({ isActive: true });
+            if (!sendToAll) {
+                subscribers = await User.find({ _id: { $in: userIds } });
+            }
             // Configuration de l'email
             // if (byEmail) {
             if (subscribers.length > 0) {
                 for (const subscriber of subscribers) {
                     const emailService = new EmailService();
-                    emailService.setFrom(process.env.EMAIL_HOST_USER, siteSettings?.websiteTitle);
+                    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
                     emailService.addTo(subscriber.email);
                     emailService.setSubject(message.subject);
                     emailService.setHtml(generateTemplateHtml('templates/newsletter.html', {
                         image: message.image,
                         title: message.subject,
+                        name: subscriber.name,
+                        salutation: getGreeting(),
                         content: message.htmlContent,
                         websiteTitle: 'Rafly',
                         contactEmail: 'contact@rafly.com'
@@ -84,32 +81,10 @@ const newsletterMessageController = {
                     emailService.send();
                 }
             }
-            // if (bySMS) {
-            //     const result = await UniMessageService.sendMessage('+2290169816413', 'Votre code de vérification est 2048.');
-            //     console.log('Résultat:', result);
-            // }
-
-            // Mise à jour de la date du dernier email pour l'abonné
-            for (const subscriber of subscribers) {
-                subscriber.lastEmailSent = new Date();
-                await subscriber.save();
-            }
 
             message.status = 'published';
             message.publishedDate = new Date();
             await message.save();
-
-            // Notifications
-            for (const subscriber of subscribers) {
-                const notification = new Notifications({
-                    message: `Newsletter`,
-                    user: subscriber._id,
-                    type: 'user',
-                    activity: 'newsletter',
-                    read: false
-                });
-                await notification.save();
-            }
 
             // Envoie du SMS
             // const result = await UniMessageService.sendMessage('+2290169816413', 'Votre code de vérification est 2048.');

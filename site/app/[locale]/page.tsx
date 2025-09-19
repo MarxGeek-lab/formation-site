@@ -73,11 +73,12 @@ export default function Home({ params }: { params: { locale: string } }) {
               zIndex: 1,
               opacity: 0.8
             }} />
-            <a style={{zIndex: 19999, position: 'relative'}} href="https://chariow.com/fr?campaign=MCCD8DFZ" target="_blank" rel="noopener noreferrer">
+            <a style={{zIndex: 1999, position: 'relative'}} href="https://chariow.com/fr?campaign=MCCD8DFZ" target="_blank" rel="noopener noreferrer">
               <Image
                 src={banniere}
                 alt="Publicité Chariow"
                 className="w-full h-auto rounded-lg"
+                style={{zIndex: 1999, position: 'relative'}}
               />
             </a>
           </Container> 
@@ -92,7 +93,7 @@ export default function Home({ params }: { params: { locale: string } }) {
           // border: '1px solid red',
           
         }}>
-          <div style={{
+          {/* <div style={{
             position: 'absolute',
             top: -30,
             left: '15%',
@@ -115,8 +116,8 @@ export default function Home({ params }: { params: { locale: string } }) {
             backgroundPosition: 'left center',
             backgroundRepeat: 'no-repeat',
             opacity: 0.8
-          }} />
-          <div style={{
+          }} /> */}
+          {/* <div style={{
             position: 'absolute',
             top: 0,
             right: 0,
@@ -127,7 +128,7 @@ export default function Home({ params }: { params: { locale: string } }) {
             backgroundPosition: 'right center',
             backgroundRepeat: 'no-repeat',
             opacity: 0.8
-          }} />
+          }} /> */}
           <Grid container spacing={6} alignItems="center"
             sx={{position: 'relative', zIndex: 2}}>
             <Grid size={{ xs: 12 }} sx={{
