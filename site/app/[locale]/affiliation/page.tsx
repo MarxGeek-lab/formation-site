@@ -198,8 +198,8 @@ export default function AffiliationPage({ params }: { params: { locale: string }
       <Container maxWidth="lg">
         <h2 className="rafly-title">{t('videos.title')}</h2>
         
-        <Grid container spacing={4} sx={{px: {xs: 0, sm: 0, md: 20}, mt: 6}}>
-          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid container spacing={4} sx={{ mt: 6, px: {xs: 2, sm: 6}}}>
+          <Grid size={{ xs: 12, sm: 6, md: 6 }}>
             <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
               <iframe
                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
@@ -212,7 +212,7 @@ export default function AffiliationPage({ params }: { params: { locale: string }
             </div>
           </Grid>
           
-          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 6 }}>
             <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
               <iframe
                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
@@ -225,11 +225,35 @@ export default function AffiliationPage({ params }: { params: { locale: string }
             </div>
           </Grid>
           
-          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 6 }}>
             <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
               <iframe
                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
                 src="https://www.youtube.com/embed/ZXStk9yjeFw"
+                title="Video 3"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+              <iframe
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                src="https://www.youtube.com/embed/fIdNG5zv00c?si=5fHUTdSqh1kYFGqq"
+                title="Video 3"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+              <iframe
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                src="https://www.youtube.com/embed/zezisDhK9zg?si=I1bb7iiJDWRcYW0k"
                 title="Video 3"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

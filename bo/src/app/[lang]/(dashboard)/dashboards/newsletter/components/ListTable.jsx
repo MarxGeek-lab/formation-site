@@ -123,16 +123,16 @@ const ListTable = ({ customers, fetchNewsletterMessage, NewsletterMessages }) =>
       columnHelper.accessor('title', {
         header: 'Titre',
         cell: ({ row }) => (
-          <div className='is-[100px] text-wrap word-break'>
-              <Typography sx={{wordBreak: 'break-all'}}>{row.original?.subject}</Typography>
+          <div className='is-[250px] text-wrap word-break'>
+              <Typography variant='body1' sx={{wordBreak: 'break-all'}}>{row.original?.subject}</Typography>
           </div>
         )
       }),
       columnHelper.accessor('date', {
         header: 'Message',
         cell: ({ row }) => (
-          <Typography sx={{width: '300px'}}>
-            <div className='is-[350px] text-wrap' dangerouslySetInnerHTML={{__html: row.original?.htmlContent}} />
+          <Typography sx={{width: '600px'}} variant='body1'>
+            <div className='is-[600px] text-wrap' dangerouslySetInnerHTML={{__html: row.original?.htmlContent}} />
           </Typography>
         )
       }),

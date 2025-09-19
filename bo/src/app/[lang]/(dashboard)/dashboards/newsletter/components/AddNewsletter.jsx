@@ -142,11 +142,7 @@ const AddNewsletter = props => {
       Underline
     ],   
     immediatelyRender: false,
-    content: description || `
-      <p>
-        Entrer la description de la propriété...
-      </p>
-    `,
+    content: description,
     
     onUpdate: ({ editor }) => {
       setDescription(editor.getHTML()); // Récupère le contenu en HTML
@@ -154,10 +150,13 @@ const AddNewsletter = props => {
   })
 
   useEffect(() => {
-    if (editor) {
+    if (!editor) return;
+  
+    const currentContent = editor.getHTML(); // ou getJSON() si tu utilises JSON
+    if (description !== currentContent) {
       editor.commands.setContent(description);
     }
-  }, [description])
+  }, [description, editor]);
 
   // Handle Form Submit
   const handleFormSubmit = async () => {
