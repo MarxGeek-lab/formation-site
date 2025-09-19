@@ -153,6 +153,12 @@ const AddNewsletter = props => {
     },
   })
 
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(description);
+    }
+  }, [description])
+
   // Handle Form Submit
   const handleFormSubmit = async () => {
 

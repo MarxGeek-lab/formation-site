@@ -1,9 +1,15 @@
+import CustomTextField from "@/@core/components/mui/TextField";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Checkbox, List, ListItem, ListItemText, FormControlLabel } from "@mui/material";
 import { useState } from "react";
 
 const UserSelectionDialog = ({ open, onClose, onConfirm, users }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [sendToAll, setSendToAll] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
 
   const handleToggle = (id) => {
     setSelectedUsers(prev =>
@@ -11,10 +17,20 @@ const UserSelectionDialog = ({ open, onClose, onConfirm, users }) => {
     );
   };
 
+  const filteredUsers = search ? users.filter(user => user.name.toLowerCase().includes(search.toLowerCase())) : users;
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Choisir les destinataires</DialogTitle>
+      
       <DialogContent>
+      <CustomTextField
+        label="Rechercher"
+        value={search}
+        onChange={handleSearchChange}
+        variant="outlined"
+        fullWidth
+      />
         <FormControlLabel
           control={
             <Checkbox
@@ -29,7 +45,7 @@ const UserSelectionDialog = ({ open, onClose, onConfirm, users }) => {
         />
         {!sendToAll && (
           <List>
-            {users.map(user => (
+            {filteredUsers.map(user => (
               <ListItem key={user._id} button onClick={() => handleToggle(user._id)}>
                 <Checkbox checked={selectedUsers.includes(user._id)} />
                 <ListItemText sx={{fontSize: '13px'}} primary={user.name || user.email} />
