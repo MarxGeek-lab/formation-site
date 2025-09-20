@@ -22,7 +22,7 @@ const affiliateController = {
             refCode = generateRefCode();
         }
 
-        const baseUrl = process.env.URL_APP || "https://app.rafly.me";
+        const baseUrl = process.env.URL_APP || "https://rafly.me";
         let affiliate = await Affiliate.findOne({ user: user._id });
         if (!affiliate) {
             const settings = await SiteSettings.findOne();
@@ -312,7 +312,7 @@ const affiliateController = {
                     const affiliate = await Affiliate.create({ 
                         user: existingUser._id, 
                         refCode: code,
-                        referralLink: `${process.env.URL_APP || "https://app.rafly.me/fr"}?ref=${code}`,
+                        referralLink: `${process.env.URL_APP || "https://rafly.me/fr"}?ref=${code}`,
                         commissionRate: 0.1,
                     });
                     await affiliate.save();
@@ -331,7 +331,7 @@ const affiliateController = {
             const affiliate = await Affiliate.create({ 
                 user: user._id, 
                 refCode: code,
-                referralLink: `${process.env.URL_APP || "https://app.rafly.me/fr"}?ref=${code}`,
+                referralLink: `${process.env.URL_APP || "https://rafly.me/fr"}?ref=${code}`,
                 commissionRate: 0.1,
             });
             await affiliate.save();
