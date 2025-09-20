@@ -94,7 +94,7 @@ const AddCategoryDrawer = props => {
         features,
         duration: duration,
         admin: user?._id,
-        products: products.map(item => item._id),
+        products: products,
       }
 
       showLoader();
