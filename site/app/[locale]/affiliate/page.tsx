@@ -291,7 +291,7 @@ const AffiliateBoard: React.FC<{ params: { locale: string } }> = ({ params }) =>
     },
     {
       label: "Commission",
-      value: (affiliateProfile?.commissionRate * 100).toFixed(0),
+      value: affiliateProfile?.commissionRate+"%",
       icon: <MonetizationOnIcon sx={{ fontSize: 30 }} />,
     },
     // {
