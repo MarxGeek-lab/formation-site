@@ -114,7 +114,7 @@ const ProductCategoryTable = ({ fetchSubscription, allSubscriptions }) => {
   useEffect(() => {
     setData(allSubscriptions)
   },[allSubscriptions]);
-
+console.log(allSubscriptions)
   const columns = useMemo(
     () => [
       columnHelper.accessor('title', {
@@ -180,9 +180,9 @@ const ProductCategoryTable = ({ fetchSubscription, allSubscriptions }) => {
       columnHelper.accessor('product', {
         header: 'Produit lié',
         cell: ({ row }) => (
-          <Typography variant='body2' color='text.primary'>
-            {row.original?.product?.name}
-          </Typography>
+          <Typography variant="body2" color="text.primary">
+          {row.original?.relatedProducts?.map((item) => item.name).join(" | ")}
+        </Typography>        
         )
       }),
       columnHelper.accessor('date', {

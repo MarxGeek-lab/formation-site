@@ -6,7 +6,10 @@ exports.create = async (req, res) => {
         const verify = await Subscription.findOne({ title: req.body.title });
         if (verify) return res.status(409).send();
 
-        const newPlan = new Subscription({ ...req.body });
+        const newPlan = new Subscription({ 
+            ...req.body,
+            relatedProducts: req.body.products || []
+        });
         await newPlan.save();
 
         return res.status(201).json(newPlan);
@@ -22,7 +25,7 @@ exports.update = async (req, res) => {
         if (!subscription) return res.status(404).send();
 console.log(req.body)
         await subscription.updateOne(
-            { ...req.body, product: req.body.product || null },
+            { ...req.body, relatedProducts: req.body.products || [] },
             {new: true}
         );
 
@@ -67,7 +70,7 @@ exports.publishOrUnpublish = async (req, res) => {
 
 exports.getAllSubscription = async (req, res) => {
     try {
-        const subscriptions = await Subscription.find().populate('product');
+        const subscriptions = await Subscription.find().populate('relatedProducts');
 
         return res.json(subscriptions)
     } catch (error) {

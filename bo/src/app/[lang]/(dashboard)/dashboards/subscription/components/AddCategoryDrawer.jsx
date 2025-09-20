@@ -33,7 +33,7 @@ const AddCategoryDrawer = props => {
   const [features, setFeatures] = useState([])
   const [newFeature, setNewFeature] = useState('')
   const [duration, setDuration] = useState('')
-  const [product, setProduct] = useState('')
+  const [products, setProducts] = useState([])
  
   const featuresArray = [
     'Accès à 3 produits gagnants',
@@ -94,7 +94,7 @@ const AddCategoryDrawer = props => {
         features,
         duration: duration,
         admin: user?._id,
-        product,
+        products: products.map(item => item._id),
       }
 
       showLoader();
@@ -309,27 +309,33 @@ const AddCategoryDrawer = props => {
             </div>
           </Grid>
 
-           <Grid size={{ xs: 12, md: 6 }}>
-              <CustomTextField
-                select
-                fullWidth
-                value={product || ''}
-                onChange={(e) =>  setProduct(e.target.value)}
-                label={
-                  <Typography variant="subtitle2" className="mb-2">
-                    Produit lié directement <span className="text-red-500">*</span>
-                  </Typography>
-                }
-                placeholder="Sélectionner un produit *"
-              >
-                <MenuItem value="">Aucun</MenuItem>
-                {allProducts.map((product, index) => (
-                  <MenuItem key={index} value={product._id}>
-                    {product.name}
-                  </MenuItem>
-                ))}
-              </CustomTextField>
-            </Grid>
+          <Grid size={{ xs: 12 }}>
+            <Typography variant="subtitle2" className="mb-2">
+              Produits liés <span className="text-red-500">*</span>
+            </Typography>
+
+            <CustomAutocomplete
+              fullWidth
+              multiple
+              value={allProducts.filter(p => products.includes(p._id))}
+              onChange={(event, value) => setProducts(value.map(v => v._id))}
+              options={allProducts}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <CustomTextField {...params} placeholder="Sélectionner un ou plusieurs produits" />
+              )}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    label={option.name}
+                    size="small"
+                    {...getTagProps({ index })}
+                    key={option._id}
+                  />
+                ))
+              }
+            />
+          </Grid>
 
           {/* <Grid size={{ xs: 12 }}>
             <CustomAutocomplete
