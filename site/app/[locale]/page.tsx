@@ -63,7 +63,7 @@ export default function Home({ params }: { params: { locale: string } }) {
             <div style={{
               position: 'absolute',
               top: '-20%',
-              right: '-10%',
+              right: '0%',
               width: '50%',
               height: '500px',
               backgroundImage: `url(${vector2.src})`,
