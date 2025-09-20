@@ -289,11 +289,11 @@ const AffiliateBoard: React.FC<{ params: { locale: string } }> = ({ params }) =>
       value: withdrawStats?.totalWithdraw || 0,
       icon: <PaidIcon sx={{ fontSize: 30 }} />,
     },
-    {
-      label: "Commission",
-      value: affiliateProfile?.commissionRate+"%",
-      icon: <MonetizationOnIcon sx={{ fontSize: 30 }} />,
-    },
+    // {
+    //   label: "Commission",
+    //   value: affiliateProfile?.commissionRate,
+    //   icon: <MonetizationOnIcon sx={{ fontSize: 30 }} />,
+    // },
     // {
     //   label: "Conversions",
     //   value: affiliateStats?.conversions ?? 0,
@@ -354,6 +354,36 @@ const AffiliateBoard: React.FC<{ params: { locale: string } }> = ({ params }) =>
           </Grid>
         ))}
         <Grid size={{ xs: 6, sm: 6, md: 3 }}>
+            <Card sx={{ 
+              bgcolor: "var(--primary-light)", 
+              color: "white", 
+              borderLeft: '4px solid var(--primary)',
+              // borderTopLeftRadius: '12px',
+              // borderBottomLeftRadius: '12px',
+              }}>
+              <CardContent sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                px: {xs: 1, sm: 3}
+              }}>
+                <Box display="flex" gap={1}
+                sx={{
+                  flexDirection: {xs: "column", sm: "row"},
+                  alignItems: {xs: "flex-start", sm: "center"}
+                }}>
+                <VerifiedUserSharp sx={{ fontSize: 30 }} />
+                  <Typography variant="subtitle2" whiteSpace={"nowrap"}>
+                    <Translate text="Taux commissions" lang={locale} />
+                  </Typography>
+                </Box>
+                <Typography variant="h6" sx={{mt: 1}}>
+                  {affiliateProfile?.commissionRate} %
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid size={{ xs: 6, sm: 6, md: 3 }}>
             <Card sx={{ 
               bgcolor: "var(--primary-light)", 
               color: "white", 

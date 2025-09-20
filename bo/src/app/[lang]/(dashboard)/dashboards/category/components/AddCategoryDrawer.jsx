@@ -33,11 +33,11 @@ const AddCategoryDrawer = props => {
   // Handle Form Submit
   const handleFormSubmit = async data => {
     if (categoryFr) {
-      const newData = new FormData();
-      newData.append('nameFr', categoryFr);
-      newData.append('nameEn', categoryEn);
-      newData.append('isActive', true);
-      
+      const newData = {
+        nameFr: categoryFr,
+        nameEn: categoryEn,
+        isActive: isActive
+      };
       showLoader();
 
       try {

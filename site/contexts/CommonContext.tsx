@@ -92,7 +92,6 @@ export const CommonProvider = ({ children }: CommonProviderProps) => {
     try {
       const response = await axios.get(`${API_URL}categories`);
       setAllCategories(response.data);
-      console.log(response.data)
     } catch (err) {
       console.log(err)
     } 

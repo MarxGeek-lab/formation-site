@@ -17,7 +17,7 @@ const AffiliateSchema = new mongoose.Schema({
     ref: "User"
   }],
   referralLink: { type: String },
-  commissionRate: { type: Number, default: 0.1 },
+  commissionRate: { type: Number, default: 10 },
   balance: { type: Number, default: 0 },
   paid: { type: Number, default: 0 },
   meta: { type: mongoose.Schema.Types.Mixed },
