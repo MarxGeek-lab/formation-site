@@ -24,6 +24,7 @@ exports.update = async (req, res) => {
         const subscription = await Subscription.findById(req.params.id);
         if (!subscription) return res.status(404).send();
 console.log(req.body)
+console.log(req.body.products.map(item => item?._id))
         await subscription.updateOne(
             { ...req.body, relatedProducts: req.body.products || [] },
             {new: true}

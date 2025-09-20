@@ -180,9 +180,17 @@ console.log(allSubscriptions)
       columnHelper.accessor('product', {
         header: 'Produit lié',
         cell: ({ row }) => (
-          <Typography variant="body2" color="text.primary">
-          {row.original?.relatedProducts?.map((item) => item.name).join(" | ")}
-        </Typography>        
+        <div className='flex flex-wrap items-center gap-2'>
+          {row.original?.relatedProducts?.map((item, index) => (
+            <Chip 
+            key={index}
+            label={item.name}
+            color='secondary'
+            variant='tonal'
+            size='small'
+          />
+          ))}
+        </div>        
         )
       }),
       columnHelper.accessor('date', {
