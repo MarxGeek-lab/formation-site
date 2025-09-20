@@ -56,7 +56,7 @@ const newsletterMessageController = {
                 });
             }
 
-            let subscribers = await User.find({ isActive: true });
+            let subscribers = await User.find();
             if (!sendToAll) {
                 subscribers = await User.find({ _id: { $in: userIds } });
             }
