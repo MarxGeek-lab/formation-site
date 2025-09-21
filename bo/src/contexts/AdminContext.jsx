@@ -125,11 +125,7 @@ export const AdminProvider = ({ children }) => {
 
     const createCategory = async (formData) => {
         try {
-          const response = await api.post("admin/category", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
+          const response = await api.post("admin/category", formData);
           return response.status;
         } catch (error) {
           return handleAxiosError(error);
@@ -138,11 +134,7 @@ export const AdminProvider = ({ children }) => {
 
     const updateCategory = async (id, formData) => {
         try {
-          const response = await api.put(`admin/category/${id}`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
+          const response = await api.put(`admin/category/${id}`, formData);
           return response.status;
         } catch (error) {
           return handleAxiosError(error);
