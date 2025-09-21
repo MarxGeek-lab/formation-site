@@ -108,7 +108,7 @@ exports.getCategory = async (req, res) => {
 exports.updateCategory = async (req, res) => {
   try {
     const { nameEn, nameFr, isActive } = req.body;
-
+    console.log(req.body)
     const category = await Category.findById(req.params.id);
     if (!category) {
       return res.status(404).json({
@@ -142,6 +142,7 @@ exports.updateCategory = async (req, res) => {
 // Supprimer une catégorie par ID
 exports.deleteCategory = async (req, res) => {
   try {
+    console.log(req.params.id)
     await Category.findByIdAndDelete(req.params.id);
     
     res.status(200).json({
