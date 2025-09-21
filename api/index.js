@@ -8,7 +8,6 @@ const app = express();
 
 const routes = require("./routes/index");
 const generatePDF = require("./services/generateContrat");
-const { initReservationCron } = require('./crons/reservationCron');
 const cartAbandonmentCron = require('./crons/cartAbandonmentCron');
 const cartReminderCron = require('./crons/cartReminderCron');
 
