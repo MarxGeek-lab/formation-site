@@ -39,7 +39,7 @@ router.route('/:id')
   .delete(auth, adminController.deleteAdmin);
 
 // router.get('/user-info/:id', auth, adminController.getUserDataById);
-// router.put('/update-status/:id', auth, adminController.updateStatusAdmin);
+router.put('/update-status/:id', auth, adminController.updateStatusAdmin);
 
 // router.put('/transaction/:id/:adminId', auth, paymentController.updateWithdrawableAmount);
 
@@ -49,6 +49,6 @@ router.delete('/delete-user/:id', auth, userController.deleteUser);
 
 router.put('/category/:id', auth, categoryController.updateCategory);
 
-// router.delete('/category/:id', auth, categoryController.deleteCategory);
+router.delete('/category/:id', auth, categoryController.deleteCategory);
 
 module.exports = router;
