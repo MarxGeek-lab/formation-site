@@ -3,7 +3,7 @@ const Withdrawal = require("../models/Withdrawal");
 const Notifications = require("../models/Notifications");
 const User = require("../models/User");
 const commonService = require("../services/commonService");
-const EmailService = require("../services/emailService");
+const { EmailService } = require("../services/emailService");
 const { generateTemplateHtml } = require("../services/generateTemplateHtml");
 const { getGreeting } = require("../utils/helpers");
 

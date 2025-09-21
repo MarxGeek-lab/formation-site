@@ -1,7 +1,6 @@
 const Transaction = require('../models/Transaction');
 const Product = require('../models/Product');
 const User = require('../models/User');
-const {EmailService} = require('../services/emailService');
 const axios = require('axios');
 const { getStatusPayment, getGreeting } = require('../utils/helpers');
 const Order = require('../models/Order');
@@ -14,6 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
 const generatePDF = require('../services/generateContrat');
+const { EmailService } = require('../services/emailService');
 
 require('dotenv').config();
 

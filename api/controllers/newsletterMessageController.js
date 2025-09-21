@@ -1,7 +1,6 @@
 const NewsletterMessage = require('../models/NewsletterMessage');
 const Newsletter = require('../models/Newsletter');
 const nodemailer = require('nodemailer');
-const { EmailService } = require('../services/emailService');
 const path = require('path');
 const fs = require('fs');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
@@ -10,6 +9,7 @@ const SiteSettings = require('../models/Settings');
 const UniMessageService = require('../services/uniMessageService');
 const User = require('../models/User');
 const { getGreeting } = require('../utils/helpers');
+const { EmailService } = require('../services/emailService');
 
 const newsletterMessageController = {
     // Créer un nouveau message

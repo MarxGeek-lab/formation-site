@@ -1,4 +1,4 @@
-const EmailService = require("../services/emailService");
+const { EmailService } = require("../services/emailService");
 
 const sendNotificationByMail = async (subject, message, email = "arnaudaboha91@gmail.com") => {
     try {

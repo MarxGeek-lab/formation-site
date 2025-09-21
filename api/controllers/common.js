@@ -2,7 +2,7 @@
 const Notifications = require("../models/Notifications");
 const Product = require("../models/Product");
 const SiteSettings = require("../models/Settings");
-const EmailService = require("../services/emailService");
+const { EmailService } = require("../services/emailService");
 const { generateTemplateHtml } = require("../services/generateTemplateHtml");
 
 const controllers = {

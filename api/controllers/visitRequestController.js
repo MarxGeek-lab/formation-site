@@ -1,7 +1,7 @@
 const VisitRequest = require('../models/VisitRequest');
 const Product = require('../models/Product');
 const User = require('../models/User');
-const EmailService = require('../services/emailService');
+const { EmailService } = require("../services/emailService");;
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
 
 /**

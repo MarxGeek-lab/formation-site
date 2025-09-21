@@ -3,12 +3,12 @@ const User = require("../models/User");
 const excel = require("exceljs");
 const path = require("path");
 const fs = require("fs");
-const { EmailService } = require("../services/emailService");
 const { generateTemplateHtml } = require("../services/generateTemplateHtml");
 const Category = require("../models/Categories");
 const { getGreeting } = require("../utils/helpers");
 const SiteSettings = require("../models/Settings");
 const imageToBase64 = require("../utils/imageToBase64");
+const { EmailService } = require("../services/emailService");
 // const { connectToRedis } = require("../config/redis_connection");
 
 const productController = {

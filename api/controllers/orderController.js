@@ -3,7 +3,6 @@ const Order = require('../models/Order');
 const Product = require('../models/Product'); // Optionnel si tu veux valider les produits
 const SiteSettings = require('../models/Settings');
 const User = require('../models/User');
-const { EmailService } = require('../services/emailService');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
 const generatePDF = require('../services/generateContrat');
 const { getGreeting, generateVerificationCode } = require('../utils/helpers');
@@ -12,6 +11,7 @@ const Affiliate = require('../models/Affiliate');
 const Referral = require('../models/Referral');
 const path = require('path');
 const fs = require('fs');
+const { EmailService } = require('../services/emailService');
 
 require('dotenv').config();
 

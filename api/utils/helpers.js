@@ -1,7 +1,7 @@
 const crypto = require("node:crypto");
-const EmailService = require("../services/emailService");
 const { generateTemplateHtml } = require("../services/generateTemplateHtml");
-const axios = require("axios")
+const axios = require("axios");
+const { EmailService } = require("../services/emailService");
 require("dotenv").config();'f'
 
 function generateVerificationCode() {
