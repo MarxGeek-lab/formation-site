@@ -120,7 +120,7 @@ const transactionController = {
         return res.status(404).json({ message: 'Commande non trouvée' });
       }
 
-      await sendOrderEmail(order);
+      // await sendOrderEmail(order);
 
       // Enrégistrement de la commission
       let referral = null;
@@ -144,6 +144,9 @@ const transactionController = {
           referral.status = 'paid';
           await referral.save();
         }
+
+        const expiredAt = order.typeOrder === 'abonnement' ? new Date(new Date().getTime() + JSON.parse(order.items[0].subscription)?.duration * 24 * 60 * 60 * 1000) : '';
+        order.subscriptionExpiredAt = expiredAt;
 
         await sendOrderEmail(order);
 
@@ -464,7 +467,6 @@ const transactionController = {
 const sendOrderEmail = async (order) => {
   const items = order.items || [];
   const products = items.map(item => item.product);
-console.log("items == ", items)
 
   const isSubscription = order.typeOrder === 'abonnement';
 
@@ -513,7 +515,7 @@ console.log("items == ", items)
   const fileNameContrat = fileContrat ? decodeURIComponent(path.basename(fileContrat)) : null;
   let fileContratLink = fileContrat ? `${process.env.API_URL}${fileNameContrat}` : null;
 
-  console.log("debu mail == ", order)
+  console.log("debu mail == ")
   if (!fileContratLink) {
         // générer le fichier
         const pdfFileName = await generatePDF({
@@ -544,11 +546,11 @@ console.log("items == ", items)
         console.log("fileContratLink ==", fileContratLink)
   }
   
-  console.log("debu mail 1 == ", order)
+  console.log("debu mail 1 == " )
   order.productZip = fileZipLink;
   await order.save();
 
-  console.log("debu mail 2 == ", order)
+  console.log("debu mail 2 == ")
   // Générer le mail HTML
   const html = `
   <!DOCTYPE html>
@@ -614,7 +616,7 @@ console.log("items == ", items)
   </html>
   `;
 
-  console.log("debu mail 3 == ", order)
+  console.log("debu mail 3 == ")
   // Envoyer le mail
   const emailService = new EmailService();
   emailService.setSubject(`${isSubscription ? 'Abonnement ':'Commande '} ORD-${order?._id?.toString().toUpperCase()} confirmée sur Rafly`);
@@ -622,7 +624,7 @@ console.log("items == ", items)
   emailService.addTo(order?.customer?.email || order?.email);
   emailService.setHtml(html);
 
-  console.log("debu mail 4 == ", order)
+  console.log("debu mail 4 == ")
   await emailService.send();
 console.log("Email envoyé avec succès 22222")
 

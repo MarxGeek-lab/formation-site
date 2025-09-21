@@ -188,7 +188,7 @@ const ActivityHistoryTable = ({ activities }) => {
             >
               <MenuItem value='all'>Tout</MenuItem>
               {affiliates?.map((affiliate, index) => (
-                <MenuItem key={index} value={affiliate._id}>{affiliate.user.name}</MenuItem>
+                <MenuItem key={index} value={affiliate._id}>{affiliate?.user?.name}</MenuItem>
               ))}
             </CustomTextField>
 

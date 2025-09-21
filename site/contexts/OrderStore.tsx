@@ -17,8 +17,10 @@ interface Order {
 
 interface OrderStore {
   orders: any[];
+  ordersSubscription: any[];
   createOrder: (order: any) => Promise<{ data: any; status: number }>;
   getUserOrders: (customerId: string) => Promise<{ data: any[] | null; status: number }>;
+  getUserOrdersSubscription: (customerId: string) => Promise<{ data: any[] | null; status: number }>;
   getOrderById: (id: string) => Promise<{ data: Order | null; status: number }>;
   updateOrderStatus: (id: string, status: string) => Promise<{ data: any; status: number }>;
   markAsDelivered: (id: string) => Promise<{ data: any; status: number }>;
@@ -28,8 +30,10 @@ interface OrderStore {
 
 const OrderContext = createContext<OrderStore>({
   orders: [],
+  ordersSubscription: [],
   createOrder: async () => ({ data: null, status: 500 }),
   getUserOrders: async () => ({ data: null, status: 500 }),
+  getUserOrdersSubscription: async () => ({ data: null, status: 500 }),
   getOrderById: async () => ({ data: null, status: 500 }),
   updateOrderStatus: async () => ({ data: null, status: 500 }),
   markAsDelivered: async () => ({ data: null, status: 500 }),
@@ -41,6 +45,7 @@ export const useOrderStore = () => useContext(OrderContext);
 
 export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [ordersSubscription, setOrdersSubscription] = useState<Order[]>([]);
 
   const createOrder = async (order: any): Promise<{ data: any; status: number }> => {
     try {
@@ -52,18 +57,19 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getUserOrders = async (customerId: string): Promise<{ data: Order[] | null; status: number }> => {
-    const affiliateCookie = document.cookie.split(';').find((c) =>
-      c.trim().startsWith("affiliate_ref=")
-    );
-    console.log("affiliateCookie == ", affiliateCookie?.split("=")[1])
     try {
-      const response = await axiosInstanceUser.get(`${API_URL}orders/user/${customerId}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Affiliate-Ref': affiliateCookie?.split("=")[1],
-        },
-      });
+      const response = await axiosInstanceUser.get(`${API_URL}orders/user/${customerId}`);
       setOrders(response.data);
+      return { data: response.data, status: response.status };
+    } catch (error) {
+      return { data: null, status: handleAxiosError(error) };
+    }
+  };
+
+  const getUserOrdersSubscription = async (customerId: string): Promise<{ data: Order[] | null; status: number }> => {
+    try {
+      const response = await axiosInstanceUser.get(`${API_URL}orders/user/${customerId}/subscription`);
+      setOrdersSubscription(response.data);
       return { data: response.data, status: response.status };
     } catch (error) {
       return { data: null, status: handleAxiosError(error) };
@@ -117,8 +123,10 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
 
   const data: OrderStore = {
     orders,
+    ordersSubscription,
     createOrder,
     getUserOrders,
+    getUserOrdersSubscription,
     getOrderById,
     updateOrderStatus,
     markAsDelivered,

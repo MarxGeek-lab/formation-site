@@ -112,7 +112,7 @@ exports.createOrder = async (req, res) => {
         category: product?.category,
         subscription: isSubscription ? JSON.parse(item.subscription) : '',
         nameSubs: isSubscription ? JSON.parse(item.subscription)?.title : '',
-        productList: isSubscription ? JSON.stringify(JSON.parse(item.subscription).products) : [],
+        productList: isSubscription ? JSON.stringify(JSON.parse(item.subscription).products) : "",
         type: item.type || 'achat',
       })
     }
@@ -124,6 +124,8 @@ exports.createOrder = async (req, res) => {
         affiliate_ = affiliate._id;
       }
     }
+
+    const expiredAt = typeOrder === 'abonnement' ? new Date(new Date().getTime() + JSON.parse(items[0].subscription)?.duration * 24 * 60 * 60 * 1000) : '';
 
     const order = new Order({
       customer: customer_,
@@ -140,7 +142,8 @@ exports.createOrder = async (req, res) => {
       totalAmountConvert,
       currency,
       affiliate: affiliate_ || null,
-      typeOrder
+      typeOrder,
+      subscriptionExpiredAt: expiredAt,
     });
 
     const savedOrder = await order.save();
@@ -243,6 +246,20 @@ exports.getUserOrders = async (req, res) => {
 
     const orders = await Order.find({ customer: customerId })
       .populate('items.product', 'name price photos')
+      .populate('payments.transaction')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des commandes', error: error.message });
+  }
+};
+
+exports.getUserOrdersSubscription = async (req, res) => {
+  try {
+    const customerId = req.params.customerId;
+
+    const orders = await Order.find({ customer: customerId, typeOrder: 'abonnement' })
       .populate('payments.transaction')
       .sort({ createdAt: -1 });
 

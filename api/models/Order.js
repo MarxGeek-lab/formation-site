@@ -147,7 +147,10 @@ const orderSchema = new mongoose.Schema(
     typeOrder: {
       type: String,
       defaut: 'buy'
-    }
+    },
+    subscriptionExpiredAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

@@ -4,6 +4,7 @@ const orderController = require('../controllers/orderController');
 
 router.post('/', orderController.createOrder);
 router.get('/user/:customerId', orderController.getUserOrders);
+router.get('/user/:customerId/subscription', orderController.getUserOrdersSubscription);
 router.get('/:id', orderController.getOrderById);
 router.patch('/:id/status', orderController.updateOrderStatus);
 router.patch('/:id/deliver', orderController.markAsDelivered);

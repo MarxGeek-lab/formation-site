@@ -185,7 +185,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
       title: 'Mes Abonnements',
       description: 'Abonnements actifs',
       icon: <FavoriteIcon />,
-      action: () => router.push(`/${locale}/orders`),
+      action: () => router.push(`/${locale}/abonnements`),
       color: '#e91e63',
     },
     {
