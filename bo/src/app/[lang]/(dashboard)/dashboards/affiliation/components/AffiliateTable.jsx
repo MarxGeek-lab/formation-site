@@ -109,7 +109,7 @@ const AffiliateTable = ({ fetchAffiliates, allAffiliates }) => {
           </CustomAvatar>
           <div className='flex flex-col items-start'>
             <Typography variant='body2' color='text.primary'>#{row.original?._id?.slice(0,6).toUpperCase()}</Typography>
-            <Typography variant='body2' color='text.primary'>{row.original?.user?.name}</Typography>
+            <Typography variant='body2' color='text.primary'>{row.original?.user?.name || 'Admin'}</Typography>
           </div>
         </div>
       )

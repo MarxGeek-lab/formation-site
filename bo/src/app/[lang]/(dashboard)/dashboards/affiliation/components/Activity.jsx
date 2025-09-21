@@ -103,8 +103,8 @@ const ActivityHistoryTable = ({ activities }) => {
       cell: ({ row }) => (
         <div className='flex flex-col gap-1'>
           <Typography variant='subtitle1' fontWeight='bold'>Code : {row.original.affiliate?.refCode || '-'}</Typography>
-          <Typography variant='body2'>{row.original.affiliate?.user?.name || '-'}</Typography>
-          <Typography variant='body2'>{row.original.affiliate?.user?.email || '-'}</Typography>
+          <Typography variant='body2'>{row.original.affiliate?.user?.name || 'Admin'}</Typography>
+          <Typography variant='body2'>{row.original.affiliate?.user?.email || 'Admin'}</Typography>
         </div>
       )
     }),
