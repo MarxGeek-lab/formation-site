@@ -18,12 +18,12 @@ const AdminSchema = new mongoose.Schema({
   },
   permissions: [{
     type: String,
-    enum: [
-      "all", "dashboard","users","orders","categories",
-      "settings","subscriptions","payments","newsletter",
-      "reviews", "admin", "customers", "add_products",
-      "view_products", "codePromo", "cart", "tracking"
-    ]
+    // enum: [
+    //   "all", "dashboard","users","orders","categories",
+    //   "settings","subscriptions","payments","newsletter",
+    //   "reviews", "admin", "customers", "add_products",
+    //   "view_products", "codePromo", "cart", "tracking"
+    // ]
   }],
   isActive: { 
     type: Boolean, 

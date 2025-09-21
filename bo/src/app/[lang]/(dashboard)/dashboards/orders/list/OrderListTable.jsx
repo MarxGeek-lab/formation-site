@@ -64,7 +64,7 @@ export const paymentStatus = {
 export const ordersStatus = {
   delivered: { color: 'success', text: 'Délivré' },
   pending: { color: 'warning', text: 'En attente' },
-  confirmed: { color: 'info', text: 'Confirmé' },
+  confirmed: { color: 'success', text: 'Confirmé' },
   shipped: { color: 'warning', text: 'Envoi' },
   cancelled: { color: 'error', text: 'Annulé' }
 }
