@@ -4,11 +4,11 @@ export async function POST(req: Request) {
   try {
     const { text, targetLang } = await req.json();
 
-    return NextResponse.json({
-      text,
-      targetLang,
-      success: true,
-    });
+    // return NextResponse.json({
+    //   text,
+    //   targetLang,
+    //   success: true,
+    // });
     // appel direct vers DeepL (clé jamais exposée côté client)
     const res = await fetch("https://api.deepl.com/v2/translate", {
       method: "POST",
