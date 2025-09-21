@@ -215,6 +215,8 @@ const StepPropertyDetails = ({
     getAllAdmin();
   }, []);
 
+  console.log("assignedAdminId == ", assignedAdminId)
+
   useEffect(() => {
     editor?.commands.setContent(description);
     editorEn?.commands.setContent(descriptionEn);
@@ -477,7 +479,7 @@ const StepPropertyDetails = ({
         >
           <MenuItem value="">Aucun</MenuItem>
           {allAdmin?.map((admin) => (
-            <MenuItem key={admin._id} value={admin._id}>
+            <MenuItem key={admin?._id} value={admin?._id}>
               {admin?.name} - {admin?.email}
             </MenuItem>
           ))}

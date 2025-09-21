@@ -19,8 +19,7 @@ export default function ProductCard({
   const router = useRouter();
   const [openDemo, setOpenDemo] = useState(false);
 
-console.log("image == ", demoVideo2)
-console.log("image2 == ", demoVideo)
+
   return (
     <div className={styles.productCard}>
       <div className={styles.imageContainer}>

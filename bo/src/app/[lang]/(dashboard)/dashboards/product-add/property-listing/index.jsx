@@ -189,9 +189,9 @@ const PropertyListingWizard = () => {
       // Attribution admin
       if (assignedAdminId)  {
         if (product) {
-          formData.append("assignedAdminId", assignedAdminId?._id);
+          formData.append("assignedAdminId", assignedAdminId);
         } else {
-                formData.append("assignedAdminId", assignedAdminId);
+          formData.append("assignedAdminId", assignedAdminId);
         }
       } 
 
@@ -302,7 +302,7 @@ const PropertyListingWizard = () => {
           
           // Statut et admin
           if (isValid(data.productStatus)) setProductStatus(data.productStatus);
-          if (data.assignedAdminId) setAssignedAdminId(data.assignedAdminId);
+          if (data.assignedAdminId) setAssignedAdminId(data.assignedAdminId?._id);
           
           // Images du produit
           if (data.photos?.length > 0) {
