@@ -36,6 +36,7 @@ exports.createOrder = async (req, res) => {
       totalAmountConvert,
       currency,
       sessionId, // Ajouter sessionId pour lier avec le panier
+      typeOrder
     } = req.body;
     console.log("totalAmountConvert == ", req.body)
 
@@ -91,17 +92,28 @@ exports.createOrder = async (req, res) => {
     }
 
     const productItems = []
+    // const itemsProduct = typeOrder === 'abonnement' ? 
     for(const item of items){
       const product = await Product.findById(item.id);
-      if (!product) {
-        return res.status(404).json({ message: 'Produit introuvable' });
+
+      if (item.type !== 'abonnement') {
+        if (!product) {
+          return res.status(404).json({ message: 'Produit introuvable' });
+        }
       }
+
+      const isSubscription = item.type === 'abonnement' || item.subscription;
+      
       productItems.push({
-        product: product._id,
-        quantity: item.quantity,
+        product: isSubscription ? null : product._id,
+        quantity: isSubscription ? 1 : item.quantity,
         price: item?.price || product.price || 0,
         options: item?.options,
         category: product?.category,
+        subscription: isSubscription ? JSON.parse(item.subscription) : '',
+        nameSubs: isSubscription ? JSON.parse(item.subscription)?.title : '',
+        productList: isSubscription ? JSON.stringify(JSON.parse(item.subscription).products) : [],
+        type: item.type || 'achat',
       })
     }
 
@@ -127,7 +139,8 @@ exports.createOrder = async (req, res) => {
       phoneNumber,
       totalAmountConvert,
       currency,
-      affiliate: affiliate_ || null
+      affiliate: affiliate_ || null,
+      typeOrder
     });
 
     const savedOrder = await order.save();
@@ -519,14 +532,14 @@ const generateContrat = async (orderId) => {
                   .populate('customer')
                   .populate('items.product')
 
-
+    console.log(order?.customer)
     // générer le fichier
     const pdfFileName = await generatePDF({
-      clientName: order?.customer?.name,
-      clientEmail: order.customer.email,
+      clientName: order?.customer?.name || order?.email,
+      clientEmail: order.customer?.email,
       orderNumber: 'ORD-' + order._id.toString().toUpperCase(),
       purchaseDate: order.createdAt.toLocaleDateString(),
-      productName: order.items.map(i => i.product.name).join(', '),
+      productName: order.typeOrder === 'abonnement' ? order?.items[0].subscription?.title : order.items.map(i => i.product.name).join(', '),
       licenceType: 'Licence de revente'
     });
 

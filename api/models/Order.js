@@ -12,18 +12,29 @@ const orderSchema = new mongoose.Schema(
         product: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Product',
-          required: true,
+          required: false,
         },
         quantity: {
           type: Number,
-          required: true,
+          required: false,
           min: 1,
         },
         price: {
           type: Number,
-          required: true,
+          required: false,
           min: 0,
         },
+        subscription: {
+          type: Object,
+          required: false,
+        },
+        productList: {
+          type: String
+        },
+        options: {
+          type: Object,
+          required: false,
+        }
       },
     ],
     shippingAddress: {
@@ -133,6 +144,10 @@ const orderSchema = new mongoose.Schema(
       ref: "Affiliate", 
       default: null 
     },
+    typeOrder: {
+      type: String,
+      defaut: 'buy'
+    }
   },
   {
     timestamps: true,

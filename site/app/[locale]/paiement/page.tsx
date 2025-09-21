@@ -51,7 +51,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     paymentMethod: 'mobile_money',
     acceptTerms: false,
     promoCode: '',
-    
   });
   const [showPromoInput, setShowPromoInput] = useState(false);
   const [promoDiscount, setPromoDiscount] = useState(0);
@@ -63,7 +62,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
   const [paymentId, setPaymentId] = useState('');
-
 
 
   // Charger les données du panier depuis le contexte
@@ -151,6 +149,17 @@ export default function PaiementPage({ params }: { params: { locale: string } })
       const { price, amount, currency } = await getLocalizedPrice(calculateTotal());
       console.log(amount, currency)
       
+      let items = cart.items[0].type === 'abonnement' || cart.items[0].subscription ? 
+              JSON.parse(cart.items[0].subscription)?.products?.map ((item: any) => ({
+                id: item._id,
+                title: item.title,
+                price: item.price,
+                quantity: item.quantity,
+                image: item.image,
+                category: item.category,
+                options: item.options,
+                type: item.type,
+              })) : cart.items;
       const orderData = {
         items: cart.items,
         fullName: formData.firstName + ' ' + formData.lastName,
@@ -168,6 +177,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
         price,
         customer: user?._id,
         sessionId: cart?.sessionId,
+        typeOrder: cart?.items[0].subscription || cart?.items[0].type === 'abonnement' ? 'abonnement': 'achat'
       }
   
       try {
@@ -327,6 +337,8 @@ export default function PaiementPage({ params }: { params: { locale: string } })
       setPromoDiscount(0);
     }
   }
+
+  console.log("cartItems == ", cartItems)
 
   useEffect(() => {
     getStatusPaiement()
@@ -673,14 +685,14 @@ export default function PaiementPage({ params }: { params: { locale: string } })
 
                           {item.subscription && (
                             <Box>
-                            <Typography sx={{ 
-                              display: 'block',
-                              color: 'var(--primary)',
-                              fontSize: '0.95rem',
-                              mb: 0
-                            }}>
-                              {item.subscription.title}
-                            </Typography>
+                              <Typography sx={{ 
+                                display: 'block',
+                                color: 'var(--primary)',
+                                fontSize: '0.95rem',
+                                mb: 0
+                              }}>
+                                {JSON.parse(item.subscription).title}
+                              </Typography>
                             </Box>
                           )}
                           
@@ -720,7 +732,12 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                               {t('quantity')}: {item.quantity}
                             </Typography> */}
                             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                              <LocalizedPrice amount={item?.price} />
+                              {item.subscription && (
+                                <LocalizedPrice amount={item.price} />
+                              )}
+                              {!item.subscription && (
+                                <LocalizedPrice amount={item?.price} />
+                              )}
                             </Typography>
                           </Box>
                         </Box>

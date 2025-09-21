@@ -92,7 +92,7 @@ export default function PricingSection({locale}: {locale: string }) {
       clearCart();
 
       try { 
-        const product = subscriptionPlans[0]?.product || subscriptionPlans[1]?.product || subscriptionPlans[2]?.product;
+        const product = plan[0]?.product;
         const price = plan.price;
 
         // Ajouter au panier (synchronisation automatique avec backend)
