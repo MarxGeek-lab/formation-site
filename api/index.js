@@ -10,7 +10,6 @@ const routes = require("./routes/index");
 const generatePDF = require("./services/generateContrat");
 const { initReservationCron } = require('./crons/reservationCron');
 const cartAbandonmentCron = require('./crons/cartAbandonmentCron');
-const reservationCron = require('./crons/reservationCron');
 const cartReminderCron = require('./crons/cartReminderCron');
 
 app.set('trust proxy', true); 
