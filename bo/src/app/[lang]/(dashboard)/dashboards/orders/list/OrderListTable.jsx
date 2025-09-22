@@ -121,6 +121,7 @@ const OrderListTable = ({ orderData, showHeader }) => {
     setFilteredData(orderData);
   }, [orderData]);
 
+  console.log(orderData)
   const columns = useMemo(
     () => [
       columnHelper.accessor('id', {
@@ -128,7 +129,6 @@ const OrderListTable = ({ orderData, showHeader }) => {
         cell: ({ row }) => (
           <div className='flex items-center gap-4' style={{ width: '' }}>
             <Typography variant='body1'>ORD-{row.original?._id?.toString().slice(0, 6).toUpperCase()}</Typography>
-            <Typography variant='body1'>ORD-{row.original?._id}</Typography>
           </div>
         )
       }),
@@ -140,6 +140,24 @@ const OrderListTable = ({ orderData, showHeader }) => {
               <Chip 
               label={row.original?.typeOrder} 
               color={row.original?.typeOrder === 'abonnement' ? 'primary' : 'success'} />
+            </Typography>
+          </div>
+        )
+      }),
+      columnHelper.accessor('product', {
+        header: 'Product',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-4' style={{ width: '' }}>
+            <Typography variant='body1'>
+              {row.original.typeOrder === "achat" ? row.original?.items?.map(item => (
+                <Typography variant='body2' className='font-medium' color='text.primary'>
+                  {item?.product?.name}
+                </Typography>
+              )): (
+                <Typography variant='body2' className='font-medium' color='text.primary'>
+                  {row?.original?.items?.[0]?.subscription?.title}
+                </Typography>
+              )}
             </Typography>
           </div>
         )

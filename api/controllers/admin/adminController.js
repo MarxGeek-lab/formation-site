@@ -451,6 +451,7 @@ const adminController = {
         orders = await Order.find()
           .populate('customer')
           .populate('payments.transaction')
+          .populate('items.product')
           .sort({ createdAt: -1 });
       }
       // Si l'utilisateur est admin, il ne voit que les commandes contenant ses produits
@@ -467,6 +468,7 @@ const adminController = {
         })
           .populate('customer')
           .populate('payments.transaction')
+          .populate('items.product')
           .sort({ createdAt: -1 });
       } else {
         // Si le rôle n'est ni super_admin ni admin

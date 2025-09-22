@@ -943,7 +943,7 @@ exports.checkPendingOrdersPaymentStatus = async () => {
             console.log(`📋 Statut reçu: ${status} pour la transaction ${transaction.reference}`);
             // console.log(response.data.data)
             // Mettre à jour selon le statut
-            if (status === 'success' && transaction.status !== 'success') {
+            if (status === 'success') {
               // Marquer la transaction comme réussie
               transaction.status = 'success';
               transaction.completedAt = new Date();
@@ -1013,14 +1013,17 @@ exports.checkPendingOrdersPaymentStatus = async () => {
               console.log(`✅ Commande ${order._id} mise à jour avec succès - Statut: ${order.status}`);
               updatedCount++;
               
-            } else if (status === 'failed' && transaction.status !== 'failed') {
+            } else if (["cancelled", "failed"].includes(status)) {
               // Marquer la transaction comme échouée
               transaction.status = 'failed';
+              order.status = 'cancelled';
+              order.paymentStatus = 'failed';
               await transaction.save();
+              await order.save();
               
               console.log(`❌ Transaction ${transaction.reference} marquée comme échouée`);
-              
-            } else if (status === 'pending') {
+              updatedCount++;
+            } else if (status) {
               console.log(`⏳ Transaction ${transaction.reference} toujours en attente`);
             }
           }
@@ -1039,7 +1042,6 @@ exports.checkPendingOrdersPaymentStatus = async () => {
       updatedOrders: updatedCount,
       errors: errorCount
     };
-    
   } catch (error) {
     console.error('❌ Erreur dans le cron de vérification des paiements:', error);
     return {

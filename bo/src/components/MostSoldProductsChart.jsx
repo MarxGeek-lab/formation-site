@@ -37,7 +37,7 @@ const MostSoldProductsChart = () => {
   const fetchMostSoldProducts = async () => {
     try {
       setLoading(true)
-      await getMostSoldProducts(10)
+      await getMostSoldProducts(100)
     } catch (error) {
       console.error('Erreur lors de la récupération des produits les plus vendus:', error)
     } finally {
@@ -129,7 +129,7 @@ const MostSoldProductsChart = () => {
                       </TableCell>
                       <TableCell align="right">
                         <Typography variant="body2" fontWeight="medium">
-                          {product.totalRevenue.toLocaleString()} FCFA
+                          {product?.totalRevenue?.toLocaleString()} FCFA
                         </Typography>
                       </TableCell>
                       <TableCell align="right">

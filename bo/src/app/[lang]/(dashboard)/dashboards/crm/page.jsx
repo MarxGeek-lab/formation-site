@@ -88,7 +88,6 @@ const DashboardCRM = () => {
     }
   },[searchParams]);
 
-  console.log("statss == ", statss)
 
   return (
     <Grid container spacing={6}>

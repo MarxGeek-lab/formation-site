@@ -148,7 +148,7 @@ const transactionController = {
         const expiredAt = order.typeOrder === 'abonnement' ? new Date(new Date().getTime() + JSON.parse(order.items[0].subscription)?.duration * 24 * 60 * 60 * 1000) : '';
         order.subscriptionExpiredAt = expiredAt;
 
-        await sendOrderEmail(order);
+        await this.sendOrderEmail(order);
 
         console.log("Email envoyé avec succès");
 
@@ -178,7 +178,7 @@ const transactionController = {
           await referral.save();
         }
 
-        await sendOrderEmail(order);
+        await this.sendOrderEmail(order);
         console.log("Email envoyé avec succès");
 
         await order.save();
@@ -188,6 +188,9 @@ const transactionController = {
         transaction.status = 'pending';
       } else {
         transaction.status = 'failed';
+        order.status = 'cancelled';
+        order.paymentStatus = 'failed';
+        await order.save();
       }
 
       await transaction.save();
@@ -460,176 +463,177 @@ const transactionController = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
+
+  async sendOrderEmail(order) {
+    const items = order.items || [];
+    const products = items.map(item => item.product);
   
-};
-
-const sendOrderEmail = async (order) => {
-  const items = order.items || [];
-  const products = items.map(item => item.product);
-
-  const isSubscription = order.typeOrder === 'abonnement';
-
-  // Récupérer tous les fichiers produits
-  let fileSale = [];
-  if (!isSubscription) {
-    fileSale = products
-    .filter(product => product && product.saleDocument)
-    .map(product => product.saleDocument);
-  } else {
-    console.log("product abo == ", order.items[0].subscription?.relatedProducts)
-    fileSale = order.items[0].subscription?.relatedProducts?.map(item => item.saleDocument);
-    console.log('fileSale abo == ', fileSale)
-  }
-
-  const allFiles = fileSale.flat(); // tout mettre dans un seul tableau
-  const fileContrat = order.contrat || null;
-
-  // Créer le ZIP des fichiers produits
-  const zipDir = path.join(__dirname, "../uploads/zips");
-  if (!fs.existsSync(zipDir)) fs.mkdirSync(zipDir, { recursive: true });
-
-  const startNameFile = order.typeOrder === 'abonnement' ? 'abonnement-rafly-ORD-':'produits-rafly-ORD-';
-  const zipPath = path.join(zipDir, `${startNameFile}${order._id}_${new Date().toISOString()}.zip`);
-  const output = fs.createWriteStream(zipPath);
-  const archive = archiver("zip", { zlib: { level: 9 } });
-  archive.pipe(output);
-
-  const basePath = path.join(__dirname, "../uploads/documents");
-
-  for (const fileUrl of allFiles) {
-    const fileName = decodeURIComponent(path.basename(fileUrl));
-    const filePath = path.join(basePath, fileName);
-
-    if (fs.existsSync(filePath)) {
-      archive.file(filePath, { name: fileName });
+    const isSubscription = order.typeOrder === 'abonnement';
+  
+    // Récupérer tous les fichiers produits
+    let fileSale = [];
+    if (!isSubscription) {
+      fileSale = products
+      .filter(product => product && product.saleDocument)
+      .map(product => product.saleDocument);
     } else {
-      console.log("File not found:", filePath);
+      console.log("product abo == ", order.items[0].subscription?.relatedProducts)
+      fileSale = order.items[0].subscription?.relatedProducts?.map(item => item.saleDocument);
+      console.log('fileSale abo == ', fileSale)
     }
-  }
-
-  await archive.finalize();
-
-  const fileNameZip = decodeURIComponent(path.basename(zipPath));
-  const fileZipLink = `${process.env.API_URL}${fileNameZip}`;
-  const fileNameContrat = fileContrat ? decodeURIComponent(path.basename(fileContrat)) : null;
-  let fileContratLink = fileContrat ? `${process.env.API_URL}${fileNameContrat}` : null;
-
-  console.log("debu mail == ")
-  if (!fileContratLink) {
-        // générer le fichier
-        const pdfFileName = await generatePDF({
-          clientName: order?.customer?.name,
-          clientEmail: order.customer.email,
-          orderNumber: 'ORD-' + order._id.toString().toUpperCase(),
-          purchaseDate: order.createdAt.toLocaleDateString(),
-          productName: order.typeOrder === 'abonnement' ? order?.items[0].nameSubs : order.items.map(i => i.product.name).join(', '),
-          licenceType: 'Licence de revente'
-        });
+  
+    const allFiles = fileSale.flat(); // tout mettre dans un seul tableau
+    const fileContrat = order.contrat || null;
+  
+    // Créer le ZIP des fichiers produits
+    const zipDir = path.join(__dirname, "../uploads/zips");
+    if (!fs.existsSync(zipDir)) fs.mkdirSync(zipDir, { recursive: true });
+  
+    const startNameFile = order.typeOrder === 'abonnement' ? 'abonnement-rafly-ORD-':'produits-rafly-ORD-';
+    const zipPath = path.join(zipDir, `${startNameFile}${order._id}_${new Date().toISOString()}.zip`);
+    const output = fs.createWriteStream(zipPath);
+    const archive = archiver("zip", { zlib: { level: 9 } });
+    archive.pipe(output);
+  
+    const basePath = path.join(__dirname, "../uploads/documents");
+  
+    for (const fileUrl of allFiles) {
+      const fileName = decodeURIComponent(path.basename(fileUrl));
+      const filePath = path.join(basePath, fileName);
+  
+      if (fs.existsSync(filePath)) {
+        archive.file(filePath, { name: fileName });
+      } else {
+        console.log("File not found:", filePath);
+      }
+    }
+  
+    await archive.finalize();
+  
+    const fileNameZip = decodeURIComponent(path.basename(zipPath));
+    const fileZipLink = `${process.env.API_URL}${fileNameZip}`;
+    const fileNameContrat = fileContrat ? decodeURIComponent(path.basename(fileContrat)) : null;
+    let fileContratLink = fileContrat ? `${process.env.API_URL}${fileNameContrat}` : null;
+  
+    console.log("debu mail == ")
+    if (!fileContratLink) {
+          // générer le fichier
+          const pdfFileName = await generatePDF({
+            clientName: order?.customer?.name,
+            clientEmail: order.customer.email,
+            orderNumber: 'ORD-' + order._id.toString().toUpperCase(),
+            purchaseDate: order.createdAt.toLocaleDateString(),
+            productName: order.typeOrder === 'abonnement' ? order?.items[0].nameSubs : order.items.map(i => i.product.name).join(', '),
+            licenceType: 'Licence de revente'
+          });
+      
+          console.log('PDF généré à :', pdfFileName.filename);
+      
+          // Chemin du fichier PDF
+          const pdfFilePath = path.join(__dirname, "../uploads/contrat/", pdfFileName.filename); 
+      
+          // Vérifier si le fichier existe
+          if (!fs.existsSync(pdfFilePath)) {
+            console.error("❌ Le fichier PDF n'existe pas !");
+          } else {
+              console.log("✅ Le fichier PDF existe !");
+          }
+      
+          const contratFile = process.env.API_URL+pdfFileName.filename;
+          order.contrat = contratFile;
+          fileContratLink = contratFile;
+  
+          console.log("fileContratLink ==", fileContratLink)
+    }
     
-        console.log('PDF généré à :', pdfFileName.filename);
-    
-        // Chemin du fichier PDF
-        const pdfFilePath = path.join(__dirname, "../uploads/contrat/", pdfFileName.filename); 
-    
-        // Vérifier si le fichier existe
-        if (!fs.existsSync(pdfFilePath)) {
-          console.error("❌ Le fichier PDF n'existe pas !");
-        } else {
-            console.log("✅ Le fichier PDF existe !");
-        }
-    
-        const contratFile = process.env.API_URL+pdfFileName.filename;
-        order.contrat = contratFile;
-        fileContratLink = contratFile;
-
-        console.log("fileContratLink ==", fileContratLink)
+    console.log("debu mail 1 == " )
+    order.productZip = fileZipLink;
+    await order.save();
+  
+    console.log("debu mail 2 == ")
+    // Générer le mail HTML
+    const html = `
+    <!DOCTYPE html>
+    <html lang="fr">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Email Confirmation</title>
+      </head>
+      <body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f7f7f7;">
+        <table style="margin: 0 auto;" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
+          <tr>
+            <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background: #5E3AFC;">
+              <img src="https://api.rafly.me/logo/icon.webp" alt="Logo" style="width:40px; height:auto;" />
+              <h3 style="color: #fff; font-size: 24px;">Rafly</h3>
+            </td>
+          </tr>
+  
+          <tr>
+            <td align="center">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+                <tr>
+                  <td style="padding:30px; text-align:center;">
+                    <h2 style="margin-bottom:15px; color:#333;">Merci pour votre ${isSubscription ? 'abonnement ':'achat '} 🎉</h2>
+                    <p style="color:#555; font-size:16px; margin-bottom:25px;">
+                      Votre ${isSubscription ? 'abonnement ':'commande '} a bien été enregistrée et traitée. Vous pouvez télécharger vos fichiers en utilisant les boutons ci-dessous :
+                    </p>
+                    <p style="color:#555; font-size:16px; margin-bottom:25px;">
+                      Veuillez noter que si vous n'avez encore un compte utilisateur, un compte vous a été créer automatiquement avec le email fourni lors de votre achat.
+                      Réinitialisez le mot de passe pour vous connecter.
+                    </p>
+  
+                    <!-- Button Produits -->
+                    <a href="${fileZipLink}" 
+                       target="_blank"
+                       download="${startNameFile}${order._id}_${new Date().toISOString()}.zip"
+                       style="display:inline-block; background:#007bff; color:#fff; padding:12px 20px; border-radius:6px; text-decoration:none; font-size:16px; font-weight:bold; margin-bottom:15px;">
+                       📄 Télécharger Produits (PDF)
+                    </a>
+                    <br />
+  
+                    <!-- Button Contrat -->
+                    ${fileContratLink ? `
+                    <a href="${fileContratLink}" 
+                       target="_blank"
+                       download="contrat-rafly-ORD-${order._id}_${new Date().toISOString()}.pdf"
+                       style="display:inline-block; background:#28a745; color:#fff; padding:12px 20px; border-radius:6px; text-decoration:none; font-size:16px; font-weight:bold;">
+                       📑 Télécharger Contrat (PDF)
+                    </a>` : ''}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+  
+          <tr>
+            <td align="center" style="padding:20px; font-size:12px; color:#888;">
+              © 2025 Rafly. Tous droits réservés.
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
+    `;
+  
+    console.log("debu mail 3 == ")
+    // Envoyer le mail
+    const emailService = new EmailService();
+    emailService.setSubject(`${isSubscription ? 'Abonnement ':'Commande '} ORD-${order?._id?.toString().toUpperCase()} confirmée sur Rafly`);
+    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+    emailService.addTo(order?.customer?.email || order?.email);
+    emailService.setHtml(html);
+  
+    console.log("debu mail 4 == ")
+    await emailService.send();
+  console.log("Email envoyé avec succès 22222")
+  
+    return { zipPath, fileContratLink };
   }
   
-  console.log("debu mail 1 == " )
-  order.productZip = fileZipLink;
-  await order.save();
-
-  console.log("debu mail 2 == ")
-  // Générer le mail HTML
-  const html = `
-  <!DOCTYPE html>
-  <html lang="fr">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Email Confirmation</title>
-    </head>
-    <body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f7f7f7;">
-      <table style="margin: 0 auto;" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
-        <tr>
-          <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background: #5E3AFC;">
-            <img src="https://api.rafly.me/logo/icon.webp" alt="Logo" style="width:40px; height:auto;" />
-            <h3 style="color: #fff; font-size: 24px;">Rafly</h3>
-          </td>
-        </tr>
-
-        <tr>
-          <td align="center">
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-              <tr>
-                <td style="padding:30px; text-align:center;">
-                  <h2 style="margin-bottom:15px; color:#333;">Merci pour votre ${isSubscription ? 'abonnement ':'achat '} 🎉</h2>
-                  <p style="color:#555; font-size:16px; margin-bottom:25px;">
-                    Votre ${isSubscription ? 'abonnement ':'commande '} a bien été enregistrée et traitée. Vous pouvez télécharger vos fichiers en utilisant les boutons ci-dessous :
-                  </p>
-                  <p style="color:#555; font-size:16px; margin-bottom:25px;">
-                    Veuillez noter que si vous n'avez encore un compte utilisateur, un compte vous a été créer automatiquement avec le email fourni lors de votre achat.
-                    Réinitialisez le mot de passe pour vous connecter.
-                  </p>
-
-                  <!-- Button Produits -->
-                  <a href="${fileZipLink}" 
-                     target="_blank"
-                     download="${startNameFile}${order._id}_${new Date().toISOString()}.zip"
-                     style="display:inline-block; background:#007bff; color:#fff; padding:12px 20px; border-radius:6px; text-decoration:none; font-size:16px; font-weight:bold; margin-bottom:15px;">
-                     📄 Télécharger Produits (PDF)
-                  </a>
-                  <br />
-
-                  <!-- Button Contrat -->
-                  ${fileContratLink ? `
-                  <a href="${fileContratLink}" 
-                     target="_blank"
-                     download="contrat-rafly-ORD-${order._id}_${new Date().toISOString()}.pdf"
-                     style="display:inline-block; background:#28a745; color:#fff; padding:12px 20px; border-radius:6px; text-decoration:none; font-size:16px; font-weight:bold;">
-                     📑 Télécharger Contrat (PDF)
-                  </a>` : ''}
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <tr>
-          <td align="center" style="padding:20px; font-size:12px; color:#888;">
-            © 2025 Rafly. Tous droits réservés.
-          </td>
-        </tr>
-      </table>
-    </body>
-  </html>
-  `;
-
-  console.log("debu mail 3 == ")
-  // Envoyer le mail
-  const emailService = new EmailService();
-  emailService.setSubject(`${isSubscription ? 'Abonnement ':'Commande '} ORD-${order?._id?.toString().toUpperCase()} confirmée sur Rafly`);
-  emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
-  emailService.addTo(order?.customer?.email || order?.email);
-  emailService.setHtml(html);
-
-  console.log("debu mail 4 == ")
-  await emailService.send();
-console.log("Email envoyé avec succès 22222")
-
-  return { zipPath, fileContratLink };
 };
+
 
 
 module.exports = transactionController; 
