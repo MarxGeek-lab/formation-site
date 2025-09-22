@@ -13,6 +13,7 @@ const path = require('path');
 const fs = require('fs');
 const archiver = require('archiver');
 const { EmailService } = require('../services/emailService');
+const Transaction = require('../models/Transaction');
 
 require('dotenv').config();
 
@@ -145,6 +146,7 @@ exports.createOrder = async (req, res) => {
       affiliate: affiliate_ || null,
       typeOrder,
       subscriptionExpiredAt: expiredAt,
+      fromOrder: 'from site'
     });
 
     const savedOrder = await order.save();
@@ -178,7 +180,7 @@ exports.createOrder = async (req, res) => {
     const templateData = {
       fullname: user.fullName,
       amount: totalAmount,
-      orderId: savedOrder._id,
+      orderId: "ORD-" + savedOrder._id.toString().slice(0, 6).toUpperCase(),
       status: statusObj[savedOrder.status],
       createdAt: savedOrder.createdAt,
       nbItems: savedOrder.items.length,
@@ -203,7 +205,7 @@ exports.createOrder = async (req, res) => {
 
     const notification = new Notifications({
       type: 'order',
-      message: `Nouvelle commande sur Rafly. ID: ORD-${savedOrder._id}`,
+      message: `Nouvelle commande sur Rafly. ID: ORD-${savedOrder._id.toString().slice(0, 6).toUpperCase()}`,
       user: null,
       data: JSON.stringify(savedOrder),
     });
@@ -333,7 +335,8 @@ exports.createOrderByAdmin = async (req, res) => {
       status: autoConfirm ? 'confirmed' : 'pending',
       paymentStatus: autoConfirm ? 'paid' : 'pending',
       paidAmount: autoConfirm ? totalAmount : 0,
-      completedAt: autoConfirm ? new Date() : null
+      completedAt: autoConfirm ? new Date() : null,
+      fromOrder: 'from admin'
     });
 
     const savedOrder = await order.save();
@@ -347,14 +350,8 @@ exports.createOrderByAdmin = async (req, res) => {
           amount: totalAmount,
           type: 'payment',
           status: 'completed',
-          paymentMethod: 'cash',
+          paymentMethod: 'Monero',
           paymentDate: new Date(),
-          paymentDetails: {
-            amount: totalAmount,
-            currency: 'XOF',
-            paymentMethod: 'cash',
-            paymentDate: new Date(),
-          },
         });
 
         await transaction.save();
@@ -400,7 +397,7 @@ exports.createOrderByAdmin = async (req, res) => {
     const templateData = {
       fullname: user.name,
       amount: totalAmount,
-      orderId: savedOrder._id,
+      orderId: "ORD-" + savedOrder._id?.toString().slice(0, 6).toUpperCase(),
       status: statusObj[savedOrder.status],
       createdAt: savedOrder.createdAt,
       nbItems: savedOrder.items.length,
@@ -509,7 +506,7 @@ const sendOrderEmailByAdmin = async (order, admin) => {
     const pdfFileName = await generatePDF({
       clientName: order?.customer?.name,
       clientEmail: order.customer.email,
-      orderNumber: 'ORD-' + order._id.toString().toUpperCase(),
+      orderNumber: 'ORD-' + order._id.toString().slice(0, 6).toUpperCase(),
       purchaseDate: order.createdAt.toLocaleDateString(),
       productName: order.typeOrder === 'abonnement' ? order?.items[0].nameSubs : order.items.map(i => i.product.name).join(', '),
       licenceType: 'Licence de revente'
@@ -940,8 +937,11 @@ exports.checkPendingOrdersPaymentStatus = async () => {
             const response = await monero.verifyPayment(transaction.reference);
             const status = response.data.data.status;
             
+            if (transaction.reference === 'py_rpat3sggtd8a') {
+              console.log(response.data.data)
+            }
             console.log(`📋 Statut reçu: ${status} pour la transaction ${transaction.reference}`);
-            
+            // console.log(response.data.data)
             // Mettre à jour selon le statut
             if (status === 'success' && transaction.status !== 'success') {
               // Marquer la transaction comme réussie
@@ -954,6 +954,7 @@ exports.checkPendingOrdersPaymentStatus = async () => {
               order.status = 'confirmed';
               order.paidAmount = order.totalAmount;
               order.completedAt = new Date();
+              console.log("order updated", order._id)
               
               // Gérer l'expiration d'abonnement si applicable
               if (order.typeOrder === 'abonnement') {
@@ -1025,7 +1026,7 @@ exports.checkPendingOrdersPaymentStatus = async () => {
           }
         }
       } catch (orderError) {
-        console.error(`❌ Erreur lors du traitement de la commande ${order._id}:`, orderError.message);
+        console.error(`❌ Erreur lors du traitement de la commande ${order._id}:`, orderError);
         errorCount++;
       }
     }

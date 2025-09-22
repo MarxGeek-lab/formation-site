@@ -28,16 +28,17 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import InputAdornment from '@mui/material/InputAdornment'
 
 // Context Imports
-import { useAuthStore, useProductStore, useUserStore, useSubscriptionContext, useAdminStore, useCustomerStore, usePropertyStore } from '@/contexts/GlobalContext'
+import { useAuthStore, useSubscriptionContext, useCustomerStore, usePropertyStore } from '@/contexts/GlobalContext'
 import api from '@/configs/api'
+import { showToast } from '@/components/ToastNotification/ToastNotification'
+import { Close } from '@mui/icons-material'
+import { hideLoader, showLoader } from '@/components/Loader/loaderService'
 
 // API Imports
 
 const CreateOrder = () => {
   const { user } = useAuthStore()
-  const { products, fetchProducts } = useProductStore()
-    const { getAllProducts, allProducts } = usePropertyStore();
-  const { users, fetchUsers } = useUserStore()
+  const { getAllProducts, allProducts } = usePropertyStore();
   const { subscriptionPlans, fetchSubscription } = useSubscriptionContext() 
 
   // Form State
@@ -67,8 +68,6 @@ const CreateOrder = () => {
   
   useEffect(() => {
     if (user) {
-      fetchProducts()
-      fetchUsers()
       fetchSubscription()
       fetchCustomers()
       getAllProducts();
@@ -100,6 +99,13 @@ const CreateOrder = () => {
 //     }, [user])
   
     const handleAddProduct = (product) => {
+      // Vérifier s'il y a déjà des abonnements dans le panier
+      const hasSubscriptions = selectedItems.some(item => item.type === 'abonnement')
+      if (hasSubscriptions) {
+        showToast("Impossible d\'ajouter des produits quand il y a déjà un abonnement dans le panier", "error")
+        return
+      }
+
       const existingItem = selectedItems.find(item => item.id === product._id && item.type === 'achat')
       if (existingItem) {
         setSelectedItems(prev => 
@@ -122,8 +128,30 @@ const CreateOrder = () => {
     }
   
     const handleAddSubscription = (subscription) => {
+      // Vérifier s'il y a déjà des produits d'achat dans le panier
+      const hasPurchaseItems = selectedItems.some(item => item.type === 'achat')
+      if (hasPurchaseItems) {
+        showToast("Impossible d\'ajouter un abonnement quand il y a déjà des produits d\'achat dans le panier", "error")
+        return
+      }
+
+      // Vérifier s'il y a déjà un abonnement dans le panier
+      const hasSubscription = selectedItems.some(item => item.type === 'abonnement')
+      if (hasSubscription) {
+        showToast("Un seul abonnement peut être ajouté par commande", "error")
+        return
+      }
+
       const existingItem = selectedItems.find(item => item.id === subscription._id && item.type === 'abonnement')
-      if (!existingItem) {
+      if (existingItem) {
+        setSelectedItems(prev => 
+          prev.map(item => 
+            item.id === subscription._id && item.type === 'abonnement'
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          )
+        )
+      } else {
         setSelectedItems(prev => [...prev, {
           id: subscription._id,
           name: subscription.title,
@@ -171,6 +199,8 @@ const CreateOrder = () => {
         throw new Error('Veuillez ajouter au moins un produit ou abonnement')
       }
 
+      showLoader();
+
       // Prepare items for API
       const items = selectedItems.map(item => ({
         id: item.id,
@@ -189,16 +219,19 @@ const CreateOrder = () => {
       }
 
       const response = await api.post('/orders/admin/create', orderData)
-      
+      hideLoader();
+
       if (response.data.success) {
-        setSuccess(`Commande ${autoConfirm ? 'créée et confirmée' : 'créée'} avec succès! ID: ORD-${response.data.order._id}`)
+        showToast(`Commande ${autoConfirm ? 'créée et confirmée' : 'créée'} avec succès! ID: ORD-${response.data.order._id?.toString().slice(0, 6).toUpperCase()}`, "success")
         // Reset form
         setSelectedUser(null)
         setSelectedItems([])
         setNote('')
         setAutoConfirm(false)
-      }
+      }     
     } catch (err) {
+      hideLoader();
+      showToast("Erreur lors de la création de la commande. Veuillez réessayer", "error")
       setError(err.response?.data?.message || err.message || 'Erreur lors de la création de la commande')
     } finally {
       setLoading(false)
@@ -376,7 +409,7 @@ const CreateOrder = () => {
                             color="error"
                             onClick={() => handleRemoveItem(item.id, item.type)}
                           >
-                            &times;
+                            <Close />
                           </Button>
                         </Box>
                       </Box>

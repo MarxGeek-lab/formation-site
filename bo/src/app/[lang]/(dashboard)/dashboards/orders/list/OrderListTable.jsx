@@ -71,8 +71,8 @@ export const ordersStatus = {
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const searchValue = value.toLowerCase();
-  const name = row.original?.name?.toLowerCase() || '';
-  const id = "#"+row.original?._id?.toString().slice(0, 6).toUpperCase() || '';
+  const name = row.original?.customer?.name?.toLowerCase() || '';
+  const id = "ORD-"+row.original?._id?.toString().slice(0, 6).toUpperCase() || '';
 
   return name.includes(searchValue) || id.includes(searchValue.toUpperCase());
 }
@@ -127,7 +127,20 @@ const OrderListTable = ({ orderData, showHeader }) => {
         header: 'ID Commande',
         cell: ({ row }) => (
           <div className='flex items-center gap-4' style={{ width: '' }}>
-            <Typography variant='body1'>{row.original?._id}</Typography>
+            <Typography variant='body1'>ORD-{row.original?._id?.toString().slice(0, 6).toUpperCase()}</Typography>
+            <Typography variant='body1'>ORD-{row.original?._id}</Typography>
+          </div>
+        )
+      }),
+      columnHelper.accessor('id', {
+        header: 'Type',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-4' style={{ width: '' }}>
+            <Typography variant='body1'>
+              <Chip 
+              label={row.original?.typeOrder} 
+              color={row.original?.typeOrder === 'abonnement' ? 'primary' : 'success'} />
+            </Typography>
           </div>
         )
       }),
@@ -190,6 +203,17 @@ const OrderListTable = ({ orderData, showHeader }) => {
           <Typography variant='body2'>
             {dayjs(row.original?.createdAt).format('DD/MM/YYYY HH:mm:ss')} 
           </Typography>
+        )
+      }),
+      columnHelper.accessor('statuss', {
+        header: 'Origine',
+        cell: ({ row }) => (
+        <Chip
+            label={row.original?.fromOrder === "from admin" ? "admin" : "site"}
+            variant='outlined'
+            color={row.original?.fromOrder === "from admin" ? "primary" : "success"}
+            size='small'
+          /> 
         )
       }),
      columnHelper.accessor('actions', {

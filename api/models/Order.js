@@ -151,6 +151,10 @@ const orderSchema = new mongoose.Schema(
     subscriptionExpiredAt: {
       type: Date,
     },
+    fromOrder: {
+      type: String,
+      default: 'from site'
+    }
   },
   {
     timestamps: true,
