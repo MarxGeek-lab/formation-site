@@ -67,6 +67,7 @@ const ActivityHistoryTable = ({ activities }) => {
   const [selectedAffiliate, setSelectedAffiliate] = useState('all')
   const [affiliates, setAffiliates] = useState([]);
   const [earnings, setEarnings] = useState(0);
+  const [stats, setStats] = useState([]);
 
   useEffect(() => {
     setData(activities || [])
@@ -86,6 +87,8 @@ const ActivityHistoryTable = ({ activities }) => {
       setAffiliates(uniqueAffiliates);
     }
 
+    console.log(activities)
+
     const filteredData = activities.filter(activity => {
       if (selectedAffiliate === 'all') return true
       return activity.affiliate._id === selectedAffiliate
@@ -93,8 +96,24 @@ const ActivityHistoryTable = ({ activities }) => {
     setData(filteredData)
 
     const totalEarnings = filteredData.reduce((acc, p) => p.status === "paid" ? acc + p.amount : acc, 0);
+    const totalCommission = filteredData.reduce((acc, p) => p.status === "paid" ? acc + p.commissionAmount : acc, 0);
     setEarnings(totalEarnings);
 
+    const stats = [
+      {
+        label: "Total des ventes",
+        value: filteredData.length,
+      },
+      {
+        label: "Gains",
+        value: formatAmount(totalEarnings || 0),
+      },
+      {
+        label: "Commission",
+        value: formatAmount(totalCommission || 0),
+      },
+    ]
+    setStats(stats);
   }, [activities, selectedAffiliate])
 
   const columns = useMemo(() => [
@@ -104,11 +123,19 @@ const ActivityHistoryTable = ({ activities }) => {
         <div className='flex flex-col gap-1'>
           <Typography variant='subtitle1' fontWeight='bold'>Code : {row.original.affiliate?.refCode || '-'}</Typography>
           <Typography variant='body2'>{row.original.affiliate?.user?.name || 'Admin'}</Typography>
-          <Typography variant='body2'>{row.original.affiliate?.user?.email || 'Admin'}</Typography>
         </div>
       )
     }),
-    columnHelper.accessor('type', {
+    columnHelper.accessor('prod', {
+      header: 'Produit',
+      cell: ({ row }) => (
+        <div className='flex flex-col gap-1 word-break'>
+          <Typography variant='body2'>
+            {row.original?.order?.items?.map(item => item.name).join(' | ') || '-'}</Typography>
+        </div>
+      )
+    }),
+     columnHelper.accessor('type', {
       header: 'Type',
       cell: ({ row }) => (
         <div className='flex flex-col gap-1'>
@@ -192,27 +219,28 @@ const ActivityHistoryTable = ({ activities }) => {
               ))}
             </CustomTextField>
 
-          <Card sx={{
-            background: '#5F3AFC', 
-            boxShadow: 'none',
-            border: '1px solid rgb(207, 207, 207)',
-            borderBottom: '2px solid #5F3AFC',
-            width: '250px',
-            mt: 2
-          }}>
-            <CardContent className=' h-[100px] flex items-center justify-between gap-2'>
+          <Box className='flex flex-wrap gap-2'>
+            {stats?.map((stat, index) => (
+              <Card sx={{
+                background: '#5F3AFC', 
+                boxShadow: 'none',
+                border: '1px solid rgb(207, 207, 207)',
+                borderBottom: '2px solid #5F3AFC',
+                width: '180px',
+                mt: 2
+              }}>
+            <CardContent className=' h-[90px] flex items-center justify-between gap-2'>
               <div className='flex flex-col items-start gap-1'>
                 <Typography variant='h6' color="white" whiteSpace={'nowrap'}>
-                  {formatAmount(earnings || 0)} FCFA</Typography>
-                <Typography fontSize={14} className="mt-2" color="white" whiteSpace={'nowrap'}>
-                  Total des ventes
+                  {stat.value}</Typography>
+                <Typography fontSize={13} className="mt-2" color="white" whiteSpace={'nowrap'}>
+                  {stat.label}
                 </Typography>
               </div>
-              <CustomAvatar color='#ffffff02' skin='#ffffff02'  variant='rounded' size={42}>
-                <i className={"tabler-wallet"} style={{ color: '#5F3AFC' }} />
-              </CustomAvatar>
             </CardContent>
           </Card>
+          ))}
+          </Box>
         </CardContent>
         <div className='overflow-x-auto'>
           <table className={tableStyles.table}>
