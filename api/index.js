@@ -10,6 +10,7 @@ const routes = require("./routes/index");
 const generatePDF = require("./services/generateContrat");
 const cartAbandonmentCron = require('./crons/cartAbandonmentCron');
 const cartReminderCron = require('./crons/cartReminderCron');
+const { startPaymentStatusCron } = require('./crons/paymentStatusCron');
 
 app.set('trust proxy', true); 
 
@@ -47,6 +48,7 @@ app.use("/", express.static("uploads/contrats"));
 // initReservationCron();
 cartAbandonmentCron.start();
 cartReminderCron.start();
+startPaymentStatusCron();
 
 // Gestion globale des erreurs 
 app.use(errorHandler);

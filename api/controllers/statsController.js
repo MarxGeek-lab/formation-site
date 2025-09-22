@@ -556,7 +556,142 @@ const statsController = {
       });
     }
   },
- 
+
+  async getMostSoldProducts(req, res) {
+    try {
+      const { limit = 10 } = req.query;
+      const role = req.user?.role;
+
+      let productIds = [];
+      let matchCondition = { paymentStatus: 'paid' };
+
+      // Si l'utilisateur est admin, récupérer ses produits
+      if (role === 'admin') {
+        const adminId = req.user?._id;
+        if (!adminId) {
+          return res.status(400).json({ message: "ID administrateur manquant" });
+        }
+        const adminProducts = await Product.find({ assignedAdminId: adminId }).select('_id');
+        productIds = adminProducts.map(product => product._id);
+        matchCondition['items.product'] = { $in: productIds };
+      } else if (role === 'super_admin') {
+        // Super admin voit tous les produits
+        const products = await Product.find().select('_id');
+        productIds = products.map(product => product._id);
+        matchCondition['items.product'] = { $in: productIds };
+      } else {
+        return res.status(403).json({ message: "Accès non autorisé" });
+      }
+
+      // Pipeline d'agrégation pour calculer les produits les plus vendus
+      const pipeline = [
+        {
+          $match: matchCondition
+        },
+        {
+          $unwind: '$items'
+        },
+        {
+          $match: {
+            'items.product': { $in: productIds }
+          }
+        },
+        {
+          $group: {
+            _id: '$items.product',
+            totalQuantitySold: { $sum: '$items.quantity' },
+            totalRevenue: { $sum: { $multiply: ['$items.quantity', '$items.price'] } },
+            totalOrders: { $sum: 1 },
+            averagePrice: { $avg: '$items.price' }
+          }
+        },
+        {
+          $lookup: {
+            from: 'products',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'productDetails'
+          }
+        },
+        {
+          $unwind: '$productDetails'
+        },
+        {
+          $project: {
+            productId: '$_id',
+            productName: '$productDetails.name',
+            productImage: '$productDetails.photos',
+            category: '$productDetails.category',
+            totalQuantitySold: 1,
+            totalRevenue: { $round: ['$totalRevenue', 0] },
+            totalOrders: 1,
+            averagePrice: { $round: ['$averagePrice', 0] },
+            _id: 0
+          }
+        },
+        {
+          $sort: { totalQuantitySold: -1 }
+        },
+        {
+          $limit: parseInt(limit)
+        }
+      ];
+
+      const mostSoldProducts = await Order.aggregate(pipeline);
+
+      // Calculer les statistiques globales pour les pourcentages
+      const totalStatsQuery = [
+        {
+          $match: matchCondition
+        },
+        {
+          $unwind: '$items'
+        },
+        {
+          $match: {
+            'items.product': { $in: productIds }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            totalQuantity: { $sum: '$items.quantity' },
+            totalRevenue: { $sum: { $multiply: ['$items.quantity', '$items.price'] } }
+          }
+        }
+      ];
+
+      const totalStats = await Order.aggregate(totalStatsQuery);
+      const globalStats = totalStats[0] || { totalQuantity: 0, totalRevenue: 0 };
+
+      // Ajouter les pourcentages
+      const productsWithPercentages = mostSoldProducts.map(product => ({
+        ...product,
+        quantityPercentage: globalStats.totalQuantity > 0 
+          ? Math.round((product.totalQuantitySold / globalStats.totalQuantity) * 100 * 100) / 100 
+          : 0,
+        revenuePercentage: globalStats.totalRevenue > 0 
+          ? Math.round((product.totalRevenue / globalStats.totalRevenue) * 100 * 100) / 100 
+          : 0
+      }));
+
+      res.status(200).json({
+        mostSoldProducts: productsWithPercentages,
+        totalQuantitySold: globalStats.totalQuantity,
+        totalRevenue: Math.round(globalStats.totalRevenue),
+        topProductsCount: mostSoldProducts.length
+      });
+
+    } catch (error) {
+      console.error('Erreur dans getMostSoldProducts:', error);
+      res.status(500).json({ 
+        message: "Erreur lors de la récupération des produits les plus vendus",
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
+    }
+  },
+
+  // ... rest of your code
 };
 
-module.exports = statsController; 
+module.exports = statsController;

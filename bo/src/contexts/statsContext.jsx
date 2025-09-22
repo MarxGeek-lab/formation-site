@@ -5,14 +5,17 @@ import api from "@/configs/api";
 
 export const StatsStore = createContext({
     stats: null,
+    mostSoldProducts: null,
     getStatsByOwner: async () => ({ data: null, status: 500 }),
     getBalanceByOwner: async () => ({ data: null, status: 500 }),
+    getMostSoldProducts: async () => ({ data: null, status: 500 }),
 });
 
 export const useStatsStore = () => useContext(StatsStore);
 
 export const StatsProvider = ({ children }) => {
     const [stats, setStats] = useState(null);
+    const [mostSoldProducts, setMostSoldProducts] = useState(null);
 
     const getStatsByOwner = async () => {
         try {
@@ -35,11 +38,24 @@ export const StatsProvider = ({ children }) => {
         }
     };
 
+    const getMostSoldProducts = async (limit = 10) => {
+        try {
+            const response = await api.get(`stats/most-sold-products?limit=${limit}`);
+            setMostSoldProducts(response.data);
+            return { data: response.data, status: response.status };
+        } catch (error) {
+            console.log(error)
+            return { data: null, status: handleAxiosError(error) };
+        }
+    };
+
     
     const data = { 
         stats,
+        mostSoldProducts,
         getStatsByOwner,
-        getBalanceByOwner
+        getBalanceByOwner,
+        getMostSoldProducts
     };
 
     return <StatsStore.Provider value={data}>{children}</StatsStore.Provider>;

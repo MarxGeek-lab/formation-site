@@ -19,7 +19,6 @@ export default function ProductCard({
   const router = useRouter();
   const [openDemo, setOpenDemo] = useState(false);
 
-
   return (
     <div className={styles.productCard}>
       <div className={styles.imageContainer}>

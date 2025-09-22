@@ -100,9 +100,16 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           </SubMenu>
         )}
         {(permissions?.includes('orders') || permissions?.includes('all')) && (
-          <MenuItem href={`/${locale}/dashboards/orders/list`} icon={<i className='tabler-list' />}>
-            Mes Commandes
-          </MenuItem>
+          <SubMenu label={'Gestion des commandes'} icon={<i className='tabler-list' />}>
+            <MenuItem href={`/${locale}/dashboards/orders/list`} icon={<i className='tabler-eye' />}>
+              Voir les commandes
+            </MenuItem>
+            {(permissions?.includes('admin_order_creation') || permissions?.includes('all')) && (
+              <MenuItem href={`/${locale}/dashboards/orders/create`} icon={<i className='tabler-plus' />}>
+                Créer une commande
+              </MenuItem>
+            )}
+          </SubMenu>
         )}
         {(permissions?.includes('payments') || permissions?.includes('all')) && (
           <MenuItem href={`/${locale}/dashboards/payments/list`} icon={<i className='tabler-credit-card' />}>

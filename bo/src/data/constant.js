@@ -318,6 +318,7 @@ export const permissionsArray2 = [
   { value: 'admin', label: 'Gérer les administrateurs' },
   { value: 'tracking', label: 'Gérer les traçages' },
   { value: 'cart', label: 'Gérer les paniers abandonnés' },
+  { value: 'admin_order_creation', label: 'Créer des commandes' },
 ];
 
 export const colors = {

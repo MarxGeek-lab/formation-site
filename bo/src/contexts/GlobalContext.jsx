@@ -18,50 +18,56 @@ import { OrderProvider } from "./orderStore";
 import { SubscriptionProvider } from "./SubscriptionContext";
 import { PromoCodeProvider } from "./PromoContext";
 import { AdminAffiliationProvider } from "./AffiliationContext";
+import { UserProvider } from "./UserStore";
+import { ProductProvider } from "./ProductStore";
 
 export const GlobalStoreProvider = ({ children }) => {
     return (
         <AuthProvider>  
             <AdminProvider>
-                <OrderProvider>
-                <NewsletterProvider>
-                <PromoCodeProvider>
-                <SiteSettingsProvider>
-                    <SubscriptionProvider>
-                <WithdrawalProvider>
-                    <AnnoncesProvider>
-                <ReservationProvider>
-                     <PropertyProvider> 
-                     <StatsProvider>
-                        {/* <RentalProvider>  */}
-                            <CustomerProvider>
-                                <MessagesProvider>
-                                    <ReviewProvider>
-                                        <HelpCenterProvider>
-                                            <CommonProvider>
-                                                <WalletProvider>
-                                                    <PaymentProvider>  
-                                                        <AdminAffiliationProvider>   
-                                                    {children}
-                                                    </AdminAffiliationProvider>
-                                                    </PaymentProvider>
-                                                </WalletProvider>
-                                            </CommonProvider>
-                                        </HelpCenterProvider>
-                                    </ReviewProvider>
-                                </MessagesProvider>
-                            </CustomerProvider>
-                         {/* </RentalProvider> */}
-                         </StatsProvider> 
-                    </PropertyProvider> 
-                </ReservationProvider>
-                </AnnoncesProvider>
-                </WithdrawalProvider>
-                </SubscriptionProvider>
-                </SiteSettingsProvider>
-                </PromoCodeProvider>
-                </NewsletterProvider>
-                </OrderProvider>
+                <UserProvider>
+                    <ProductProvider>
+                        <OrderProvider>
+                        <NewsletterProvider>
+                        <PromoCodeProvider>
+                        <SiteSettingsProvider>
+                            <SubscriptionProvider>
+                        <WithdrawalProvider>
+                            <AnnoncesProvider>
+                        <ReservationProvider>
+                             <PropertyProvider> 
+                             <StatsProvider>
+                                {/* <RentalProvider>  */}
+                                    <CustomerProvider>
+                                        <MessagesProvider>
+                                            <ReviewProvider>
+                                                <HelpCenterProvider>
+                                                    <CommonProvider>
+                                                        <WalletProvider>
+                                                            <PaymentProvider>  
+                                                                <AdminAffiliationProvider>   
+                                                            {children}
+                                                            </AdminAffiliationProvider>
+                                                            </PaymentProvider>
+                                                        </WalletProvider>
+                                                    </CommonProvider>
+                                                </HelpCenterProvider>
+                                            </ReviewProvider>
+                                        </MessagesProvider>
+                                    </CustomerProvider>
+                                 {/* </RentalProvider> */}
+                                 </StatsProvider> 
+                            </PropertyProvider> 
+                        </ReservationProvider>
+                        </AnnoncesProvider>
+                        </WithdrawalProvider>
+                        </SubscriptionProvider>
+                        </SiteSettingsProvider>
+                        </PromoCodeProvider>
+                        </NewsletterProvider>
+                        </OrderProvider>
+                    </ProductProvider>
+                </UserProvider>
             </AdminProvider>
         </AuthProvider>
     );
@@ -87,3 +93,5 @@ export { useOrderStore } from "./orderStore";
 export { useSubscriptionContext } from "./SubscriptionContext";
 export { usePromoCodeStore } from "./PromoContext";
 export { useAdminAffiliationStore } from "./AffiliationContext";
+export { useUserStore } from "./UserStore";
+export { useProductStore } from "./ProductStore";

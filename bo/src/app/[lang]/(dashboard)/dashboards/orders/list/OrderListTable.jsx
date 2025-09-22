@@ -126,8 +126,8 @@ const OrderListTable = ({ orderData, showHeader }) => {
       columnHelper.accessor('id', {
         header: 'ID Commande',
         cell: ({ row }) => (
-          <div className='flex items-center gap-4' style={{ width: '80px' }}>
-            <Typography variant='body2'>#{row.original?._id?.toString().slice(0, 6).toUpperCase()}</Typography>
+          <div className='flex items-center gap-4' style={{ width: '' }}>
+            <Typography variant='body1'>{row.original?._id}</Typography>
           </div>
         )
       }),

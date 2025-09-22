@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { Typography } from '@mui/material';
 import SalesChart from '@/components/SalesChart';
 import SalesByCountryChart from '@/components/SalesByCountryChart';
+import MostSoldProductsChart from '@/components/MostSoldProductsChart';
 import { formatAmount } from '@/utils/formatAmount';
 
 const DashboardCRM = () => {
@@ -106,6 +107,9 @@ const DashboardCRM = () => {
       </Grid>
       <Grid size={{ xs: 12 }}>
         <SalesByCountryChart />
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <MostSoldProductsChart />
       </Grid>
     </Grid>
   )

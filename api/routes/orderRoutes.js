@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
+const authAdmin = require('../middleware/authenticateAdminToken');
 
 router.post('/', orderController.createOrder);
+router.post('/admin/create', authAdmin, orderController.createOrderByAdmin);
 router.get('/user/:customerId', orderController.getUserOrders);
 router.get('/user/:customerId/subscription', orderController.getUserOrdersSubscription);
 router.get('/:id', orderController.getOrderById);
