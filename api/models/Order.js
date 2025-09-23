@@ -75,12 +75,12 @@ const orderSchema = new mongoose.Schema(
     },
     totalAmountConvert: {
       type: Number,
-      required: true,
+      required: false,
       min: 0,
     },
     currency: {
       type: String,
-      required: true,
+      default: 'XOF'
     },
     subTotal: {
       type: Number,
