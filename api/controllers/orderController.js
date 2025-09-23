@@ -349,7 +349,7 @@ exports.createOrderByAdmin = async (req, res) => {
           order: savedOrder._id,
           amount: totalAmount,
           type: 'payment',
-          status: 'completed',
+          status: 'success',
           paymentMethod: 'Monero',
           paymentDate: new Date(),
         });
