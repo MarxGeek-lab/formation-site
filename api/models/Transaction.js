@@ -10,7 +10,7 @@ const TransactionSchema = new mongoose.Schema({
   },
   currency: {
     type: String,
-    required: true
+    default: 'XOF'
   },
   paymentNumber: {
     type: String,
