@@ -33,7 +33,6 @@ const statsController = {
         ]);
 
         const salesRevenue = await Order.find({ 
-          _id: { $in: adminOrderIds },
           paymentStatus: "paid" 
         });
 
