@@ -32,9 +32,27 @@ const statsController = {
           Product.countDocuments(),
         ]);
 
-        const salesRevenue = await Order.find({paymentStatus: 'paid'});
-        const totalSalesRevenue = salesRevenue.reduce((total, order) => total + order.totalAmount, 0);
-    
+        const salesRevenue = await Order.find({ 
+          _id: { $in: adminOrderIds },
+          paymentStatus: "paid" 
+        });
+
+        const totalSalesRevenue = salesRevenue.reduce((total, order) => {
+          return total + (order.totalAmount || 0);
+        }, 0);
+
+        console.log({
+          countOrders: ordersCount,
+          countOrdersPending: ordersPending,
+          countOrdersConfirmed: ordersConfirmed,
+          countOrdersShipped: ordersShipped,
+          countOrdersDelivered: ordersDelivered,
+          countOrdersCancelled: ordersCancelled,
+          salesRevenue: totalSalesRevenue,
+          usersCount: usersCount,
+          userVisitCount: userVisitCount,
+          productsCount: productsCount,
+        })
         return res.status(200).json({
           countOrders: ordersCount,
           countOrdersPending: ordersPending,
