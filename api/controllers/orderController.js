@@ -1051,6 +1051,17 @@ exports.checkPendingOrdersPaymentStatus = async () => {
   }
 };
 
+(async () => {
+  const { default: MoneroPayment } = require('../services/servicePayment');
+const monero = new MoneroPayment(process.env.MONERO_SECRET_KEY);
+
+console.log(`🔍 Vérification du paiement py_m4xplrrldsyt pour la commande`);
+
+const response = await monero.verifyPayment("py_4uh2trssyqah");
+const status = response.data.data;
+console.log(status)
+})
+
 // générer le contrat
 const generateContrat = async (orderId) => {
   try {

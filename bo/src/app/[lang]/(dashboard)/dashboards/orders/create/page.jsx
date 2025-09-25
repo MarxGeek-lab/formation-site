@@ -106,6 +106,11 @@ const CreateOrder = () => {
         return
       }
 
+      if (orderType === 'abonnement') {
+        showToast("Impossible d\'ajouter un produit quand le type de commande est abonnement", "error")
+        return
+      }
+
       const existingItem = selectedItems.find(item => item.id === product._id && item.type === 'achat')
       if (existingItem) {
         setSelectedItems(prev => 
@@ -132,6 +137,11 @@ const CreateOrder = () => {
       const hasPurchaseItems = selectedItems.some(item => item.type === 'achat')
       if (hasPurchaseItems) {
         showToast("Impossible d\'ajouter un abonnement quand il y a déjà des produits d\'achat dans le panier", "error")
+        return
+      }
+
+      if (orderType === 'achat') {
+        showToast("Impossible d\'ajouter un abonnement quand le type de commande est achat", "error")
         return
       }
 

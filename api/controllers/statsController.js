@@ -33,7 +33,7 @@ const statsController = {
   
         // Calcul direct du revenu total via aggregation
         const revenueResult = await Order.aggregate([
-          { $match: { paymentStatus: "paid" } },
+          { $match: { paymentStatus: "paid", fromOrder: { $nin: ["from admin"] } } },
           { $group: { _id: null, total: { $sum: "$totalAmount" } } }
         ]);
   
@@ -338,7 +338,8 @@ const statsController = {
   
           const query = {
             createdAt: { $gte: startHour, $lt: endHour },
-            paymentStatus: 'paid'
+            paymentStatus: 'paid',
+            fromOrder: { $nin: ["from admin"] }
           };
   
           if (role === 'admin') {
@@ -364,7 +365,8 @@ const statsController = {
   
           const query = {
             createdAt: { $gte: startOfDay, $lte: endOfDay },
-            paymentStatus: 'paid'
+            paymentStatus: 'paid',
+            fromOrder: { $nin: ["from admin"] }
           };
   
           if (role === 'admin') {
@@ -387,7 +389,8 @@ const statsController = {
   
           const query = {
             createdAt: { $gte: startOfMonth, $lte: endOfMonth },
-            paymentStatus: 'paid'
+            paymentStatus: 'paid',
+            fromOrder: { $nin: ["from admin"] }
           };
   
           if (role === 'admin') {
@@ -664,9 +667,6 @@ async getMostSoldProducts(req, res) {
     });
   }
 }
-
-
-
 
   // ... rest of your code
 };
