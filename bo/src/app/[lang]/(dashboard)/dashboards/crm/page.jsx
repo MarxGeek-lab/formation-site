@@ -59,7 +59,6 @@ const DashboardCRM = () => {
       try {
         const { data, status } = await getStatsByOwner();
         if (data) {
-          console.log(data)
           setStats(data);
         }
       } catch (error) {

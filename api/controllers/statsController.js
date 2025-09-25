@@ -7,8 +7,7 @@ const statsController = {
 
   async getStatsByOwner(req, res) {
     try {
-
-      // Si l'utilisateur est super_admin, on renvoie les statistiques globales
+      // Cas super_admin : stats globales
       if (req.user.role === 'super_admin') {
         const [
           ordersCount,
@@ -31,16 +30,16 @@ const statsController = {
           UserVisit.countDocuments(),
           Product.countDocuments(),
         ]);
-
-        const salesRevenue = await Order.find({ 
-          paymentStatus: "paid" 
-        });
-
-        const totalSalesRevenue = salesRevenue.reduce((total, order) => {
-          return total + (order.totalAmount || 0);
-        }, 0);
-
-        console.log({
+  
+        // Calcul direct du revenu total via aggregation
+        const revenueResult = await Order.aggregate([
+          { $match: { paymentStatus: "paid" } },
+          { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+        ]);
+  
+        const totalSalesRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
+  
+        const result = {
           countOrders: ordersCount,
           countOrdersPending: ordersPending,
           countOrdersConfirmed: ordersConfirmed,
@@ -48,39 +47,45 @@ const statsController = {
           countOrdersDelivered: ordersDelivered,
           countOrdersCancelled: ordersCancelled,
           salesRevenue: totalSalesRevenue,
-          usersCount: usersCount,
-          userVisitCount: userVisitCount,
-          productsCount: productsCount,
-        })
-        return res.status(200).json({
-          countOrders: ordersCount,
-          countOrdersPending: ordersPending,
-          countOrdersConfirmed: ordersConfirmed,
-          countOrdersShipped: ordersShipped,
-          countOrdersDelivered: ordersDelivered,
-          countOrdersCancelled: ordersCancelled,
-          salesRevenue: totalSalesRevenue,
-          usersCount: usersCount,
-          userVisitCount: userVisitCount,
-          productsCount: productsCount,
-        });
+          usersCount,
+          userVisitCount,
+          productsCount,
+        };
+  
+        console.log(result);
+        return res.status(200).json(result);
       }
-
-      // Si l'utilisateur est admin, on renvoie les stats liées à ses produits
+  
+      // Cas admin : stats limitées aux produits assignés
       if (req.user.role === 'admin') {
         const adminId = req.user._id;
-
-        // Récupérer les produits assignés à cet admin
+  
+        // Produits de cet admin
         const adminProducts = await Product.find({ assignedAdminId: adminId }).select('_id');
-        const productIds = adminProducts.map(product => product._id);
-
-        // Récupérer les commandes contenant les produits de cet admin
+        const productIds = adminProducts.map(p => p._id);
+  
+        if (productIds.length === 0) {
+          return res.status(200).json({
+            countOrders: 0,
+            countOrdersPending: 0,
+            countOrdersConfirmed: 0,
+            countOrdersShipped: 0,
+            countOrdersDelivered: 0,
+            countOrdersCancelled: 0,
+            salesRevenue: 0,
+            usersCount: 0,
+            userVisitCount: 0,
+            productsCount: 0,
+          });
+        }
+  
+        // Commandes contenant ces produits
         const adminOrders = await Order.find({
-          'items.product': { $in: productIds }
+          "items.product": { $in: productIds }
         }).select('_id status');
-
-        const adminOrderIds = adminOrders.map(order => order._id);
-
+  
+        const adminOrderIds = adminOrders.map(o => o._id);
+  
         const [
           ordersCount,
           ordersPending,
@@ -98,18 +103,16 @@ const statsController = {
           Order.countDocuments({ _id: { $in: adminOrderIds }, status: "cancelled" }),
           Product.countDocuments({ assignedAdminId: adminId }),
         ]);
-
-        // Calculer les revenus pour les commandes de cet admin
-        const salesRevenue = await Order.find({ 
-          _id: { $in: adminOrderIds },
-          paymentStatus: "paid" 
-        });
-
-        const totalSalesRevenue = salesRevenue.reduce((total, order) => {
-          return total + (order.totalAmount || 0);
-        }, 0);
-
-        console.log({
+  
+        // Revenu via aggregation
+        const revenueResult = await Order.aggregate([
+          { $match: { _id: { $in: adminOrderIds }, paymentStatus: "paid" } },
+          { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+        ]);
+  
+        const totalSalesRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
+  
+        const result = {
           countOrders: ordersCount,
           countOrdersPending: ordersPending,
           countOrdersConfirmed: ordersConfirmed,
@@ -117,25 +120,16 @@ const statsController = {
           countOrdersDelivered: ordersDelivered,
           countOrdersCancelled: ordersCancelled,
           salesRevenue: totalSalesRevenue,
-          usersCount: 0, // Les admins n'ont pas accès aux stats utilisateurs
-          userVisitCount: 0, // Les admins n'ont pas accès aux stats de visites
-          productsCount: productsCount,
-        })
-        return res.status(200).json({
-          countOrders: ordersCount,
-          countOrdersPending: ordersPending,
-          countOrdersConfirmed: ordersConfirmed,
-          countOrdersShipped: ordersShipped,
-          countOrdersDelivered: ordersDelivered,
-          countOrdersCancelled: ordersCancelled,
-          salesRevenue: totalSalesRevenue,
-          usersCount: 0, // Les admins n'ont pas accès aux stats utilisateurs
-          userVisitCount: 0, // Les admins n'ont pas accès aux stats de visites
-          productsCount: productsCount,
-        });
+          usersCount: 0,       // pas accessible pour admin
+          userVisitCount: 0,   // pas accessible pour admin
+          productsCount,
+        };
+  
+        console.log(result);
+        return res.status(200).json(result);
       }
-
-      // Si le rôle n'est ni super_admin ni admin
+  
+      // Si rôle non autorisé
       return res.status(403).json({ message: "Accès non autorisé" });
   
     } catch (error) {
@@ -143,6 +137,7 @@ const statsController = {
       return res.status(500).json({ message: error.message });
     }
   },
+  
 
   async getStatsByBuyer(req, res) {
     try {
@@ -290,139 +285,126 @@ const statsController = {
   async getSalesStats(req, res) {
     try {
       const { period = 'year', year, month, date } = req.query;
-      
-      // Validation des paramètres
+  
       if (!['day', 'month', 'year'].includes(period)) {
         return res.status(400).json({ message: "Période invalide. Utilisez: day, month, ou year" });
       }
-
+  
       const targetYear = year ? parseInt(year) : new Date().getFullYear();
       const targetMonth = month ? parseInt(month) - 1 : new Date().getMonth();
       const targetDate = date ? new Date(date) : new Date();
-
-      // Validation des dates
+  
       if (isNaN(targetYear) || targetYear < 2000 || targetYear > 2100) {
         return res.status(400).json({ message: "Année invalide" });
       }
-
       if (period === 'month' && (isNaN(targetMonth) || targetMonth < 0 || targetMonth > 11)) {
         return res.status(400).json({ message: "Mois invalide" });
       }
-
       if (period === 'day' && isNaN(targetDate.getTime())) {
         return res.status(400).json({ message: "Date invalide" });
       }
-
+  
       const role = req.user?.role;
       let productIds = [];
-      console.log(role)
-      // Si l'utilisateur est admin, récupérer ses produits
+  
       if (role === 'admin') {
         const adminId = req.user?._id;
         if (!adminId) {
           return res.status(400).json({ message: "ID administrateur manquant" });
         }
         const adminProducts = await Product.find({ assignedAdminId: adminId }).select('_id');
-        productIds = adminProducts.map(product => product._id);
-      } else if (role === 'super_admin') {
-        const products = await Product.find().select('_id');
-        productIds = products.map(product => product._id);
+        productIds = adminProducts.map(p => p._id);
       } else if (role !== 'super_admin') {
         return res.status(403).json({ message: "Accès non autorisé" });
       }
-
+  
       let labels = [];
       let salesData = [];
       let ordersData = [];
-
-      console.log(productIds.length)
-
+  
       if (period === 'day') {
-        // Statistiques par heure pour un jour donné
         const startOfDay = new Date(targetDate);
         startOfDay.setHours(0, 0, 0, 0);
         const endOfDay = new Date(targetDate);
         endOfDay.setHours(23, 59, 59, 999);
-
+  
         for (let hour = 0; hour < 24; hour++) {
           const startHour = new Date(startOfDay);
-          startHour.setHours(hour);
+          startHour.setHours(hour, 0, 0, 0);
           const endHour = new Date(startOfDay);
-          endHour.setHours(hour + 1);
-
+          endHour.setHours(hour + 1, 0, 0, 0);
+  
           labels.push(`${hour}h`);
-
+  
           const query = {
             createdAt: { $gte: startHour, $lt: endHour },
             paymentStatus: 'paid'
           };
-
-          // if (role === 'admin') {
+  
+          if (role === 'admin') {
             query['items.product'] = { $in: productIds };
-          // }
-
+          }
+  
           const orders = await Order.find(query).select('totalAmount');
-          const hourRevenue = orders.reduce((total, order) => total + (order.totalAmount || 0), 0);
-          
+          const hourRevenue = orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+  
           salesData.push(Math.round(hourRevenue));
           ordersData.push(orders.length);
         }
       } else if (period === 'month') {
-        // Statistiques par jour pour un mois donné
         const startOfMonth = new Date(targetYear, targetMonth, 1);
         const endOfMonth = new Date(targetYear, targetMonth + 1, 0);
         const daysInMonth = endOfMonth.getDate();
-
+  
         for (let day = 1; day <= daysInMonth; day++) {
           const startOfDay = new Date(targetYear, targetMonth, day, 0, 0, 0);
           const endOfDay = new Date(targetYear, targetMonth, day, 23, 59, 59);
-
+  
           labels.push(`${day}`);
-
+  
           const query = {
             createdAt: { $gte: startOfDay, $lte: endOfDay },
             paymentStatus: 'paid'
           };
-
-          // if (role === 'admin') {
+  
+          if (role === 'admin') {
             query['items.product'] = { $in: productIds };
-          // }
-
+          }
+  
           const orders = await Order.find(query).select('totalAmount');
-          const dayRevenue = orders.reduce((total, order) => total + (order.totalAmount || 0), 0);
-          
+          const dayRevenue = orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+  
           salesData.push(Math.round(dayRevenue));
           ordersData.push(orders.length);
         }
       } else {
-        // Statistiques par mois pour une année (par défaut)
-        for (let month = 0; month < 12; month++) {
-          const startOfMonth = new Date(targetYear, month, 1);
-          const endOfMonth = new Date(targetYear, month + 1, 0, 23, 59, 59);
-          
+        for (let m = 0; m < 12; m++) {
+          const startOfMonth = new Date(targetYear, m, 1, 0, 0, 0, 0);
+          const endOfMonth = new Date(targetYear, m + 1, 0, 23, 59, 59, 999);
+  
           const monthName = startOfMonth.toLocaleDateString('fr-FR', { month: 'short' });
           labels.push(monthName);
-          
+  
           const query = {
             createdAt: { $gte: startOfMonth, $lte: endOfMonth },
             paymentStatus: 'paid'
           };
-
-          // if (role === 'admin') {
+  
+          if (role === 'admin') {
             query['items.product'] = { $in: productIds };
-          // }
-
+          }
+  
           const orders = await Order.find(query).select('totalAmount');
-          const monthRevenue = orders.reduce((total, order) => total + (order.totalAmount || 0), 0);
-          
+          const monthRevenue = orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+  
           salesData.push(Math.round(monthRevenue));
           ordersData.push(orders.length);
         }
       }
-      
-      const totalRevenue = salesData.reduce((sum, revenue) => sum + revenue, 0);
-      const totalOrders = ordersData.reduce((sum, orders) => sum + orders, 0);
-      
+  
+      const totalRevenue = salesData.reduce((sum, r) => sum + r, 0);
+      const totalOrders = ordersData.reduce((sum, o) => sum + o, 0);
+  
       res.status(200).json({
         labels,
         salesData,
@@ -436,281 +418,255 @@ const statsController = {
       });
     } catch (error) {
       console.error('Erreur dans getSalesStats:', error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: "Erreur lors de la récupération des statistiques de vente",
         error: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }
   },
+  
 
   async getSalesByCountry(req, res) {
     try {
       const { year, month, limit = 10 } = req.query;
       const targetYear = year ? parseInt(year) : new Date().getFullYear();
       const targetMonth = month ? parseInt(month) - 1 : null;
-
-      // Validation des paramètres
+  
+      // Validation
       if (isNaN(targetYear) || targetYear < 2000 || targetYear > 2100) {
         return res.status(400).json({ message: "Année invalide" });
       }
-
       if (targetMonth !== null && (isNaN(targetMonth) || targetMonth < 0 || targetMonth > 11)) {
         return res.status(400).json({ message: "Mois invalide" });
       }
-
+  
       const role = req.user?.role;
       let productIds = [];
-
-      // Si l'utilisateur est admin, récupérer ses produits
-      if (role === 'admin') {
+  
+      if (role === "admin") {
         const adminId = req.user?._id;
         if (!adminId) {
           return res.status(400).json({ message: "ID administrateur manquant" });
         }
-        const adminProducts = await Product.find({ assignedAdminId: adminId }).select('_id');
-        productIds = adminProducts.map(product => product._id);
-      } else if (role === 'super_admin') {
-        const products = await Product.find().select('_id');
-        productIds = products.map(product => product._id);
-      } else {
+        const adminProducts = await Product.find({ assignedAdminId: adminId }).select("_id");
+        productIds = adminProducts.map(p => p._id);
+      } else if (role !== "super_admin") {
         return res.status(403).json({ message: "Accès non autorisé" });
       }
-
+  
       // Construire la plage de dates
-      let dateQuery = {};
+      let dateQuery;
       if (targetMonth !== null) {
-        // Statistiques pour un mois spécifique
         const startOfMonth = new Date(targetYear, targetMonth, 1);
         const endOfMonth = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59);
         dateQuery = { $gte: startOfMonth, $lte: endOfMonth };
       } else {
-        // Statistiques pour toute l'année
         const startOfYear = new Date(targetYear, 0, 1);
         const endOfYear = new Date(targetYear, 11, 31, 23, 59, 59);
         dateQuery = { $gte: startOfYear, $lte: endOfYear };
       }
-
-      // Pipeline d'agrégation MongoDB
+  
+      // Base du $match
+      const baseMatch = {
+        createdAt: dateQuery,
+        paymentStatus: "paid",
+        country: { $exists: true, $ne: null, $ne: "" }
+      };
+  
+      // Ajouter la restriction seulement si admin
+      if (role === "admin" && productIds.length > 0) {
+        baseMatch["items.product"] = { $in: productIds };
+      }
+  
+      // Agrégation par pays
       const pipeline = [
-        {
-          $match: {
-            createdAt: dateQuery,
-            paymentStatus: 'paid',
-            country: { $exists: true, $ne: null, $ne: '' },
-            ...(role === 'admin' && productIds.length > 0 ? { 'items.product': { $in: productIds } } : role === 'super_admin' ? { 'items.product': { $in: productIds } } : {})
-          }
-        },
+        { $match: baseMatch },
         {
           $group: {
-            _id: '$country',
-            totalRevenue: { $sum: '$totalAmount' },
+            _id: "$country",
+            totalRevenue: { $sum: "$totalAmount" },
             totalOrders: { $sum: 1 },
-            averageOrderValue: { $avg: '$totalAmount' }
+            averageOrderValue: { $avg: "$totalAmount" }
           }
         },
-        {
-          $sort: { totalRevenue: -1 }
-        },
-        {
-          $limit: parseInt(limit)
-        },
+        { $sort: { totalRevenue: -1 } },
+        { $limit: parseInt(limit) },
         {
           $project: {
-            country: '$_id',
-            totalRevenue: { $round: ['$totalRevenue', 0] },
+            country: "$_id",
+            totalRevenue: { $round: ["$totalRevenue", 0] },
             totalOrders: 1,
-            averageOrderValue: { $round: ['$averageOrderValue', 0] },
+            averageOrderValue: { $round: ["$averageOrderValue", 0] },
             _id: 0
           }
         }
       ];
-
+  
       const salesByCountry = await Order.aggregate(pipeline);
-
-      // Calculer les totaux globaux
-      const querys = {
-        createdAt: dateQuery,
-        paymentStatus: 'paid',
-        ...(role === 'admin' ? productIds.length > 0 ? { 'items.product': { $in: productIds } } : {} : role === 'super_admin' ? productIds.length > 0 ? { 'items.product': { $in: productIds } } : {} : {})
-      }
+  
+      // Statistiques globales (totaux)
       const totalStats = await Order.aggregate([
-        {
-          $match: querys
-        },
+        { $match: baseMatch },
         {
           $group: {
             _id: null,
-            totalRevenue: { $sum: '$totalAmount' },
+            totalRevenue: { $sum: "$totalAmount" },
             totalOrders: { $sum: 1 }
           }
         }
       ]);
-
+  
       const globalStats = totalStats[0] || { totalRevenue: 0, totalOrders: 0 };
-
-      // Calculer les pourcentages
-      const salesWithPercentages = salesByCountry.map(country => ({
-        ...country,
-        revenuePercentage: globalStats.totalRevenue > 0 
-          ? Math.round((country.totalRevenue / globalStats.totalRevenue) * 100 * 100) / 100 
-          : 0,
-        ordersPercentage: globalStats.totalOrders > 0 
-          ? Math.round((country.totalOrders / globalStats.totalOrders) * 100 * 100) / 100 
-          : 0
+  
+      // Ajouter les pourcentages
+      const salesWithPercentages = salesByCountry.map(c => ({
+        ...c,
+        revenuePercentage:
+          globalStats.totalRevenue > 0
+            ? Math.round((c.totalRevenue / globalStats.totalRevenue) * 100 * 100) / 100
+            : 0,
+        ordersPercentage:
+          globalStats.totalOrders > 0
+            ? Math.round((c.totalOrders / globalStats.totalOrders) * 100 * 100) / 100
+            : 0
       }));
-
+  
       res.status(200).json({
         countries: salesWithPercentages,
         totalRevenue: Math.round(globalStats.totalRevenue),
         totalOrders: globalStats.totalOrders,
-        period: targetMonth !== null ? 'month' : 'year',
+        period: targetMonth !== null ? "month" : "year",
         year: targetYear,
         month: targetMonth !== null ? targetMonth + 1 : null,
         topCountriesCount: salesByCountry.length
       });
-
     } catch (error) {
-      console.error('Erreur dans getSalesByCountry:', error);
-      res.status(500).json({ 
+      console.error("Erreur dans getSalesByCountry:", error);
+      res.status(500).json({
         message: "Erreur lors de la récupération des statistiques par pays",
-        error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        error: process.env.NODE_ENV === "development" ? error.message : undefined
       });
     }
-  },
+  }
+,  
 
-  async getMostSoldProducts(req, res) {
-    try {
-      const { limit = 10 } = req.query;
-      const role = req.user?.role;
+async getMostSoldProducts(req, res) {
+  try {
+    const { limit = 1000 } = req.query;
+    const role = req.user?.role;
 
-      let productIds = [];
-      let matchCondition = { paymentStatus: 'paid' };
+    let productIds = [];
+    if (role === 'admin') {
+      const adminId = req.user?._id;
+      if (!adminId) return res.status(400).json({ message: "ID administrateur manquant" });
+      const adminProducts = await Product.find({ assignedAdminId: adminId }).select('_id');
+      productIds = adminProducts.map(p => p._id);
+    } else if (role === 'super_admin') {
+      const products = await Product.find().select('_id');
+      productIds = products.map(p => p._id);
+    } else {
+      return res.status(403).json({ message: "Accès non autorisé" });
+    }
 
-      // Si l'utilisateur est admin, récupérer ses produits
-      if (role === 'admin') {
-        const adminId = req.user?._id;
-        if (!adminId) {
-          return res.status(400).json({ message: "ID administrateur manquant" });
+    const pipeline = [
+      { $match: { paymentStatus: 'paid', 'items.product': { $in: productIds } } },
+      { $unwind: "$items" },
+      { $match: { 'items.product': { $in: productIds } } },
+      // Compter une seule fois le produit par commande
+      {
+        $group: {
+          _id: { orderId: "$_id", productId: "$items.product" },
+          quantity: { $sum: "$items.quantity" },
+          revenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } }
         }
-        const adminProducts = await Product.find({ assignedAdminId: adminId }).select('_id');
-        productIds = adminProducts.map(product => product._id);
-        matchCondition['items.product'] = { $in: productIds };
-      } else if (role === 'super_admin') {
-        // Super admin voit tous les produits
-        const products = await Product.find().select('_id');
-        productIds = products.map(product => product._id);
-        matchCondition['items.product'] = { $in: productIds };
-      } else {
-        return res.status(403).json({ message: "Accès non autorisé" });
+      },
+      // Grouper par produit pour obtenir totaux et nombre de commandes distinctes
+      {
+        $group: {
+          _id: "$_id.productId",
+          totalQuantitySold: { $sum: "$quantity" },
+          totalRevenue: { $sum: "$revenue" },
+          totalOrders: { $sum: 1 } // nombre de commandes distinctes contenant ce produit
+        }
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "productDetails"
+        }
+      },
+      { $unwind: "$productDetails" },
+      {
+        $project: {
+          productId: "$_id",
+          productName: "$productDetails.name",
+          productImage: "$productDetails.photos",
+          category: "$productDetails.category",
+          totalQuantitySold: 1,
+          totalRevenue: { $round: ["$totalRevenue", 0] },
+          totalOrders: 1,
+          _id: 0
+        }
+      },
+      { $sort: { totalQuantitySold: -1 } },
+      { $limit: parseInt(limit) }
+    ];
+
+    const mostSoldProducts = await Order.aggregate(pipeline);
+
+    // Totaux globaux
+    const totalStats = await Order.aggregate([
+      { $match: { paymentStatus: 'paid', 'items.product': { $in: productIds } } },
+      { $unwind: "$items" },
+      { $match: { 'items.product': { $in: productIds } } },
+      {
+        $group: {
+          _id: { orderId: "$_id", productId: "$items.product" },
+          quantity: { $sum: "$items.quantity" },
+          revenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalQuantity: { $sum: "$quantity" },
+          totalRevenue: { $sum: "$revenue" }
+        }
       }
+    ]);
 
-      // Pipeline d'agrégation pour calculer les produits les plus vendus
-      const pipeline = [
-        {
-          $match: matchCondition
-        },
-        {
-          $unwind: '$items'
-        },
-        {
-          $match: {
-            'items.product': { $in: productIds }
-          }
-        },
-        {
-          $group: {
-            _id: '$items.product',
-            totalQuantitySold: { $sum: '$items.quantity' },
-            totalRevenue: { $sum: { $multiply: ['$items.quantity', '$items.price'] } },
-            totalOrders: { $sum: 1 },
-            averagePrice: { $avg: '$items.price' }
-          }
-        },
-        {
-          $lookup: {
-            from: 'products',
-            localField: '_id',
-            foreignField: '_id',
-            as: 'productDetails'
-          }
-        },
-        {
-          $unwind: '$productDetails'
-        },
-        {
-          $project: {
-            productId: '$_id',
-            productName: '$productDetails.name',
-            productImage: '$productDetails.photos',
-            category: '$productDetails.category',
-            totalQuantitySold: 1,
-            totalRevenue: { $round: ['$totalRevenue', 0] },
-            totalOrders: 1,
-            averagePrice: { $round: ['$averagePrice', 0] },
-            _id: 0
-          }
-        },
-        {
-          $sort: { totalQuantitySold: -1 }
-        },
-        {
-          $limit: parseInt(limit)
-        }
-      ];
+    const globalStats = totalStats[0] || { totalQuantity: 0, totalRevenue: 0 };
 
-      const mostSoldProducts = await Order.aggregate(pipeline);
+    const productsWithPercentages = mostSoldProducts.map(p => ({
+      ...p,
+      quantityPercentage: globalStats.totalQuantity
+        ? Math.round((p.totalQuantitySold / globalStats.totalQuantity) * 100 * 100) / 100
+        : 0,
+      revenuePercentage: globalStats.totalRevenue
+        ? Math.round((p.totalRevenue / globalStats.totalRevenue) * 100 * 100) / 100
+        : 0
+    }));
 
-      // Calculer les statistiques globales pour les pourcentages
-      const totalStatsQuery = [
-        {
-          $match: matchCondition
-        },
-        {
-          $unwind: '$items'
-        },
-        {
-          $match: {
-            'items.product': { $in: productIds }
-          }
-        },
-        {
-          $group: {
-            _id: null,
-            totalQuantity: { $sum: '$items.quantity' },
-            totalRevenue: { $sum: { $multiply: ['$items.quantity', '$items.price'] } }
-          }
-        }
-      ];
+    res.status(200).json({
+      mostSoldProducts: productsWithPercentages,
+      totalQuantitySold: globalStats.totalQuantity,
+      totalRevenue: Math.round(globalStats.totalRevenue),
+      topProductsCount: mostSoldProducts.length
+    });
 
-      const totalStats = await Order.aggregate(totalStatsQuery);
-      const globalStats = totalStats[0] || { totalQuantity: 0, totalRevenue: 0 };
+  } catch (error) {
+    console.error('Erreur dans getMostSoldProducts:', error);
+    res.status(500).json({
+      message: "Erreur lors de la récupération des produits les plus vendus",
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+}
 
-      // Ajouter les pourcentages
-      const productsWithPercentages = mostSoldProducts.map(product => ({
-        ...product,
-        quantityPercentage: globalStats.totalQuantity > 0 
-          ? Math.round((product.totalQuantitySold / globalStats.totalQuantity) * 100 * 100) / 100 
-          : 0,
-        revenuePercentage: globalStats.totalRevenue > 0 
-          ? Math.round((product.totalRevenue / globalStats.totalRevenue) * 100 * 100) / 100 
-          : 0
-      }));
 
-      res.status(200).json({
-        mostSoldProducts: productsWithPercentages,
-        totalQuantitySold: globalStats.totalQuantity,
-        totalRevenue: Math.round(globalStats.totalRevenue),
-        topProductsCount: mostSoldProducts.length
-      });
 
-    } catch (error) {
-      console.error('Erreur dans getMostSoldProducts:', error);
-      res.status(500).json({ 
-        message: "Erreur lors de la récupération des produits les plus vendus",
-        error: process.env.NODE_ENV === 'development' ? error.message : undefined
-      });
-    }
-  },
 
   // ... rest of your code
 };

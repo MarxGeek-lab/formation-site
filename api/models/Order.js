@@ -84,7 +84,6 @@ const orderSchema = new mongoose.Schema(
     },
     subTotal: {
       type: Number,
-      default: 12000,
     },
     paidAmount: {
       type: Number,

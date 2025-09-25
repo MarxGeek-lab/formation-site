@@ -42,7 +42,6 @@ const OrderList = () => {
   useEffect(() => {
     getOrders();
     fetchStats();
-    console.log(stats)
   },[user]);
   
   const data = [

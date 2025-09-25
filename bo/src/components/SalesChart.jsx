@@ -270,7 +270,7 @@ const SalesChart = () => {
                 {salesData.totalOrders}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Total commandes
+                Commandes réussies
               </Typography>
             </Box>
           </Grid>
