@@ -587,7 +587,7 @@ const sendOrderEmailByAdmin = async (order, admin) => {
 
   // Envoyer le mail
   const emailService = new EmailService();
-  emailService.setSubject(`${isSubscription ? 'Abonnement ':'Commande '} ORD-${order?._id?.toString().toUpperCase()} confirmée par l'admin sur Rafly`);
+  emailService.setSubject(`${isSubscription ? 'Abonnement ':'Commande '} ORD-${order?._id?.toString().slice(0, 6).toUpperCase()} confirmée par l'admin sur Rafly`);
   emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
   emailService.addTo(order?.customer?.email || order?.email);
   emailService.setHtml(html);
