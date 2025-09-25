@@ -2,7 +2,7 @@ const cron = require('node-cron');
 const { checkPendingOrdersPaymentStatus } = require('../controllers/orderController');
 
 // Cron job pour vérifier le statut des paiements toutes les 10 minutes
-const paymentStatusCron = cron.schedule('*/1 * * * *', async () => {
+const paymentStatusCron = cron.schedule('*/5 * * * *', async () => {
   console.log('🚀 Exécution du cron de vérification des paiements:', new Date().toISOString());
   
   try {
