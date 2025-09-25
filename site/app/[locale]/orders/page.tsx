@@ -337,7 +337,7 @@ console.log(selectedOrder)
                         variant="h6"
                         sx={{ fontWeight: 600, fontSize: { xs: '1rem', sm: '1.1rem' } }}
                       >
-                        Commande ORD-{order?._id?.toUpperCase()}
+                        {order?.typeOrder === 'abonnement' ? 'Abonnement' : 'Commande'} ORD-{order?._id?.toUpperCase()}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         {formatDate(order?.createdAt)}
@@ -381,7 +381,7 @@ console.log(selectedOrder)
                       />
                       <Box sx={{ flexGrow: 1 }}>
                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                          {item?.product?.name}
+                          {order?.typeOrder === 'abonnement' ? item?.subscription?.title : item?.product?.name}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           {item?.quantity} × {formatAmount(item?.price)} FCFA
@@ -445,7 +445,7 @@ console.log(selectedOrder)
                         </Button>
                       )}
 
-                      <Button
+                      {/* <Button
                         variant="outlined"
                         onClick={() => handleViewOrder(order)}
                         sx={{ 
@@ -455,7 +455,7 @@ console.log(selectedOrder)
                         }}
                       >
                         Détails
-                      </Button>
+                      </Button> */}
                     </Box>
                   </Box>
                 </AccordionDetails>
