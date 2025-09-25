@@ -32,14 +32,8 @@ const statsController = {
           Product.countDocuments(),
         ]);
 
-        const salesRevenue = await Order.find({ paymentStatus: "paid" })
-          .populate('payments.transaction');
-
-        const totalSalesRevenue = salesRevenue.reduce((total, order) => {
-          return total + order.payments.reduce((paymentTotal, payment) => {
-            return payment.transaction.status === "success" && payment.transaction.type === "payment" ? paymentTotal + payment.transaction.amount : paymentTotal;
-          }, 0);
-        }, 0);
+        const salesRevenue = await Order.find({paymentStatus: 'paid'});
+        const totalSalesRevenue = salesRevenue.reduce((total, order) => total + order.totalAmount, 0);
     
         return res.status(200).json({
           countOrders: ordersCount,
