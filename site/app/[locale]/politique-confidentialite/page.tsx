@@ -26,7 +26,7 @@ export default function PolitiqueConfidentialitePage({ params }: { params: { loc
             color: 'var(--foreground)',
             mb: 2,
             mx: 'auto'
-          }} className={'rafly-title'}>
+          }} className={'titlePageSection'}>
             {t('title')}
           </Typography>
           <Typography variant="body1" sx={{ 

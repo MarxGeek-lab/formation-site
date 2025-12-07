@@ -29,7 +29,7 @@ export default function SupportPage({ params }: { params: { locale: string } }) 
       <Container maxWidth="lg">
         <div className={styles.heroSection}>
           <div className={styles.heroContent}>
-            <h1 className="rafly-title">{t('hero.title')}</h1>
+            <h1 className="titlePageSection">{t('hero.title')}</h1>
             <p className={styles.heroDescription}>
               {t('hero.description')}
             </p>

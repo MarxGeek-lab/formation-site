@@ -14,6 +14,7 @@ import { formatPrice } from "@/utils/formatPrice";
 import { getLocalizedPrice } from "@/utils/LocalizedPrice";
 import ProductImage from './ProductImage';
 import { Translate } from './Translate';
+import ProductDetailsModal from './ProductDetailsModal';
 
 interface ProductCardProps {
   product: any;
@@ -30,13 +31,13 @@ export default function ProductCard({
   const { addNotification } = useNotification();
   const { trackProductView, trackAddToCart } = useTracking();
   const [openDemo, setOpenDemo] = useState(false);
+  const [openDetails, setOpenDetails] = useState(false);
   const [price, setPrice] = useState("");
 
   const handleClick = () => {
-    if (product.name) {
-      const slug = generateSlug(product.name);
-      router.push(`/${locale}/produit/${product._id}`);
-    }
+    // Ouvrir le modal de détails au lieu de rediriger
+    setOpenDetails(true);
+    trackProductView(product._id);
   };
 
   const handleAddToCart = async (e: React.MouseEvent) => {
@@ -124,8 +125,8 @@ export default function ProductCard({
 
 
   return (
-    <div className={styles.productCard}>
-      {/* <Link href={`/${locale}/produit/${product._id}`}> */}
+    <>
+      <div className={styles.productCard} onClick={handleClick}>
         <div className={styles.imageContainer}>
           {product?.photos?.length > 0 ? (
             <ProductImage product={product} />
@@ -152,23 +153,22 @@ export default function ProductCard({
                   fontWeight: "600",
                   textTransform: "none",
                   fontSize: "15px",
-                  backgroundColor: "rgba(255, 255, 255, 1)", // noir transparent
+                  backgroundColor: "rgba(255, 255, 255, 1)",
                   color: "#333",
                   boxShadow: "0px 4px 10px rgba(0,0,0,0.8)",
-                  backdropFilter: "blur(4px)", // effet verre dépoli subtil
+                  backdropFilter: "blur(4px)",
                   transition: "all 0.3s ease",
                   "&:hover": {
                     boxShadow: "0px 6px 14px rgba(0,0,0,0.4)",
                     transform: "translateY(-2px)"
                   },
                 }}
-                onClick={() => setOpenDemo(true)}
+                onClick={(e) => { e.stopPropagation(); setOpenDemo(true); }}
               >
                 <Translate text="Voir démo" lang={locale} />
               </Button>
           )}
         </div>
-      {/* </Link> */}
 
       <div className={styles.content}>
         <h3 className={styles.title}>
@@ -195,59 +195,47 @@ export default function ProductCard({
               <span className={styles.price}>{price || 'F CFA '+product?.price}</span>
             </Box>
           )}
-          <div className={styles.features}>
-            <div className={styles.feature}>
-              <svg className={styles.checkIcon} viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              <span>
-                <Translate text="Licence incluse" lang={locale} />
-              </span>
-            </div>
-          </div>
-        </div>
-        
-        <div className={styles.buttonGroup}>
-          <button className={styles.accessButton} onClick={handleClick}>
-            {t('accessProduct')}
-          </button>
-          <button 
-            className={styles.addToCartButtonBottom} 
-            onClick={handleAddToCart}
-            disabled={cart.isLoading}
-          >
-            {cart.isLoading ? (
-              <div className={styles.spinner}>⏳</div>
-            ) : (
-              <AddShoppingCart />
-            )}
+          <button className={styles.accessButton} onClick={(e) => { e.stopPropagation(); handleClick(); }}>
+            Acheter
           </button>
         </div>
       </div>
+      </div>
+
+      {/* Modal de détails du produit */}
+      <ProductDetailsModal
+        open={openDetails}
+        onClose={() => setOpenDetails(false)}
+        product={product}
+        locale={locale}
+        price={price}
+      />
+
+      {/* Modal vidéo démo */}
       <Dialog
         open={openDemo}
         onClose={() => setOpenDemo(false)}
-        maxWidth="md" // limite la largeur
+        maxWidth="md"
         fullWidth
         PaperProps={{
           sx: {
             background: "var(--background)",
             borderRadius: "12px",
-            overflow: "hidden", // supprime le scroll interne
+            overflow: "hidden",
           },
         }}
       >
         <DialogTitle>{t("videoDemo")}</DialogTitle>
         <DialogContent
           sx={{
-            p: 0, // pas de padding autour
-            overflow: "hidden", // empêche le scroll
+            p: 0,
+            overflow: "hidden",
           }}
         >
           <Box
             sx={{
               width: "100%",
-              maxHeight: "70vh", // limite la hauteur à l’écran
+              maxHeight: "70vh",
               display: "flex",
               justifyContent: "center",
             }}
@@ -257,8 +245,8 @@ export default function ProductCard({
               style={{
                 width: "100%",
                 height: "100%",
-                maxHeight: "70vh", // garde la vidéo responsive
-                objectFit: "contain", // pas de déformation
+                maxHeight: "70vh",
+                objectFit: "contain",
                 borderRadius: "8px",
               }}
             >
@@ -271,7 +259,6 @@ export default function ProductCard({
           <Button color="error" size="small" variant="contained" onClick={() => setOpenDemo(false)}>{t("close")}</Button>
         </DialogActions>
       </Dialog>
-
-    </div>
+    </>
   );
 }

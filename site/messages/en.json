@@ -144,32 +144,24 @@
     }
   },
   "FAQ": {
-    "subtitle": "FAQs",
-    "title": "Frequently Asked Questions",
-    "description": "You'll find answers to most of your questions about Rafly and its products",
+    "subtitle": "Frequently Asked Questions",
+    "title": "Everything you need to know",
+    "description": "Quick answers to the most common questions about our web and mobile training courses",
     "questions": {
-      "whatIsRafly": "What is Rafly?",
-      "howToBuy": "How to buy a product on Rafly?",
-      "productTypes": "What types of products can I find on Rafly?",
-      "immediateAccess": "Are files accessible immediately?",
-      "sellProducts": "Can I sell my own products on Rafly?",
-      "paymentMethods": "What payment methods are accepted?",
-      "refunds": "Can I get a refund after purchase?",
-      "fileProblems": "What to do if I have a problem with a downloaded file?",
-      "promotions": "Are there promotions or discounts on Rafly?",
-      "contactSupport": "How to contact Rafly support?"
+      "whatAreFormations": "What are Rafly training courses?",
+      "howToAccess": "How do I access training after purchase?",
+      "formationTypes": "What types of training do you offer?",
+      "certificateIncluded": "Do the courses include certificates?",
+      "supportAvailable": "What type of support is available?",
+      "refundPolicy": "What is the refund policy?"
     },
     "answers": {
-      "whatIsRaflyAnswer": "📝 Rafly is a marketplace specialized in selling digital products. You'll find templates, graphic files, developer resources and much more.",
-      "howToBuyAnswer": "📝 Simply browse the catalog, add a product to your cart and complete your purchase via available payment methods.",
-      "productTypesAnswer": "📝 Rafly offers various digital files: website templates, graphic elements, ebooks, presets, plugins, etc.",
-      "immediateAccessAnswer": "📝 Yes, as soon as your payment is validated, you can download your files directly from your account.",
-      "sellProductsAnswer": "📝 Yes! Rafly allows creators to sell their digital products. Contact us to learn more.",
-      "paymentMethodsAnswer": "📝 We accept payments by credit card, mobile money and other solutions adapted to Africa.",
-      "refundsAnswer": "📝 Since digital products are downloadable immediately, refunds are subject to certain conditions. Check our refund policy for more details.",
-      "fileProblemsAnswer": "📝 Contact our support, we'll do our best to help you or find a solution with the seller.",
-      "promotionsAnswer": "📝 Yes, we regularly organize special offers. Stay connected so you don't miss anything!",
-      "contactSupportAnswer": "📝 You can write to us via the site's contact page or directly by email."
+      "whatAreFormationsAnswer": "Our courses are comprehensive programs in web and mobile development, created by recognized experts. They include HD videos, hands-on projects, source code, and lifetime access to content.",
+      "howToAccessAnswer": "Once your payment is validated, you'll receive an email with your credentials. Log in to your personal space to immediately access all your courses, download resources, and track your progress.",
+      "formationTypesAnswer": "We offer training in React, Next.js, React Native, Node.js, TypeScript, and more. Each course covers fundamentals to advanced concepts, with concrete projects to complete.",
+      "certificateIncludedAnswer": "Yes! All our plans include certificates of completion. The Pro plan offers industry-recognized professional certificates, perfect for enhancing your resume and LinkedIn profile.",
+      "supportAvailableAnswer": "The Starter plan includes email support (24-48h response). The Pro plan offers priority 24/7 support with personalized mentoring. The Enterprise plan includes a dedicated account manager.",
+      "refundPolicyAnswer": "We offer a 14-day money-back guarantee. If our courses don't meet your expectations, contact us for a full refund, no questions asked."
     }
   },
   "Footer": {

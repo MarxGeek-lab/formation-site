@@ -14,7 +14,7 @@ const ProductImage = ({ product }: { product: any }) => {
   if (!imgSrc) return null;
 
   return (
-    <div style={{ position: "relative", width: '100%', height: 200 }}>
+    <div style={{ position: "relative", width: '100%' }}>
       {loading && (
         <div
           style={{
@@ -35,8 +35,6 @@ const ProductImage = ({ product }: { product: any }) => {
       <img
         src={imgSrc}
         alt={product?.name}
-        width={300}
-        height={200}
         className={styles.productImage}
         onLoad={() => setLoading(false)}
         onError={() => setLoading(false)}

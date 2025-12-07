@@ -1,0 +1,53 @@
+.footer {
+  background: var(--card-background);
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(250, 0, 63, 0.1);
+  color: #FA003F;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+    color: white;
+    transform: translateY(-3px);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.footerLink {
+  color: var(--foreground);
+  font-size: 0.938rem;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+    color: #FA003F;
+  }
+}
+
+.contactLink {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--foreground);
+  font-size: 0.938rem;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+    color: #FA003F;
+  }
+}

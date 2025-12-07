@@ -338,8 +338,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
     }
   }
 
-  console.log("cartItems == ", cartItems)
-
   useEffect(() => {
     getStatusPaiement()
     const url = window.location.href;
@@ -355,10 +353,9 @@ export default function PaiementPage({ params }: { params: { locale: string } })
 
   return (
     <Box sx={{ 
-      backgroundColor: 'var(--background)', 
       minHeight: '100vh',
       py: { xs: 0, md: 6 },
-      px: { xs: 0, md: 6 },
+      px: { xs: 0, md: 3 },
       pb: { xs: 6, md: 6 },
     }}>
       <Container maxWidth="lg">
@@ -368,7 +365,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
           fontSize: { xs: '1.8rem', md: '2.5rem' },
           fontWeight: 700,
           color: 'var(--foreground)'
-        }} className={'rafly-title'}>
+        }} className={'titlePageSection'}>
           {t('finalizeOrder')}
         </Typography>
 
@@ -393,13 +390,27 @@ export default function PaiementPage({ params }: { params: { locale: string } })
             }}>
               <Translate text="Consulter votre panier" lang={locale} /> 
           </Typography>
-          <Button variant="contained" onClick={() => router.push(`/${locale}/panier`)}>
+          <Button variant="contained" onClick={() => router.push(`/${locale}/panier`)}
+              sx={{
+                background: '#FA003F',
+                color: 'white',
+                py: 0.8,
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                borderRadius: '10px',
+                textTransform: 'none',
+                borderWidth: 2,
+                '&:hover': {
+                  borderColor: '#C70032',
+                  background: 'rgba(250, 0, 63, 0.05)',
+                  borderWidth: 2,
+                },
+              }}>
             <Translate text="Panier" lang={locale} /> 
           </Button>
         </Box>
-        <Card className={styles.promoSection} sx={{ mb: 4 }}>
+        {/* <Card className={styles.promoSection} sx={{ mb: 4 }}>
           <CardContent sx={{ p: 0 }}>
-            {/* Message d'information */}
             <div className={styles.promoMessage} onClick={() => setShowPromoInput(!showPromoInput)}>
               <div className={styles.promoIcon}>🎫</div>
               <Typography variant="body1" sx={{ 
@@ -416,7 +427,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
               </Typography>
             </div>
             
-            {/* Zone de saisie du code promo */}
             <Box className={styles.promoInputSection}
             sx={{
               display: showPromoInput ? 'block' : 'none',
@@ -439,7 +449,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
               </div>
             </Box>
 
-            {/* Message du code promo */}
             {promoMessage && (
               <Box sx={{ mt: 2, mb: 2 }}>
                 <Typography 
@@ -476,7 +485,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
               </Box>
             )}
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Grid container spacing={3}>
           {/* Formulaire de facturation */}
@@ -493,9 +502,9 @@ export default function PaiementPage({ params }: { params: { locale: string } })
 
                 <form onSubmit={handleSubmit}>
                   <Grid container spacing={3}>
-                    <Grid size={{ xs: 12, sm: 6 }}>
+                    <Grid size={{ xs: 12 }}>
                       <div className={styles.formField}>
-                        <label htmlFor="firstName">{t('firstName')} {t('required')}</label>
+                        <label htmlFor="firstName">Nom & Prénoms {t('required')}</label>
                         <input
                           id="firstName"
                           type="text"
@@ -508,19 +517,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6 }}>
                       <div className={styles.formField}>
-                        <label htmlFor="lastName">{t('lastName')} {t('required')}</label>
-                        <input
-                          id="lastName"
-                          type="text"
-                          value={formData.lastName}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('lastName', e.target.value)}
-                          className={errors.lastName ? styles.error : ''}
-                        />
-                        {errors.lastName && <span className={styles.errorText}>{errors.lastName}</span>}
-                      </div>
-                    </Grid>
-                    <Grid size={{ xs: 12 }}>
-                      <div className={styles.formField}>
                         <label htmlFor="email">{t('email')} {t('required')}</label>
                         <input
                           id="email"
@@ -532,7 +528,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                         {errors.email && <span className={styles.errorText}>{errors.email}</span>}
                       </div>
                     </Grid>
-                    <Grid size={{ xs: 12 }}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                       <div className={styles.formField}>
                         <label htmlFor="phone">{t('phone')}</label>
                         <input
@@ -545,7 +541,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                         {errors.phone && <span className={styles.errorText}>{errors.phone}</span>}
                       </div>
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
+                    <Grid size={{ xs: 12 }}>
                       <div className={styles.formField}>
                         <label htmlFor="country">{t('country')} {t('required')}</label>
                         <input
@@ -554,45 +550,6 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                           value={formData.country}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('country', e.target.value)}
                         />
-                      </div>
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
-                      <div className={styles.formField}>
-                        <label htmlFor="city">{t('city')} </label>
-                        <input
-                          id="city"
-                          type="text"
-                          value={formData.city}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('city', e.target.value)}
-                          className={errors.city ? styles.error : ''}
-                        />
-                        {errors.city && <span className={styles.errorText}>{errors.city}</span>}
-                      </div>
-                    </Grid>
-                    <Grid size={{ xs: 12 }}>
-                      <div className={styles.formField}>
-                        <label htmlFor="address">{t('address')} </label>
-                        <input
-                          id="address"
-                          type="text"
-                          value={formData.address}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('address', e.target.value)}
-                          className={errors.address ? styles.error : ''}
-                        />
-                        {errors.address && <span className={styles.errorText}>{errors.address}</span>}
-                      </div>
-                    </Grid>
-                    <Grid size={{ xs: 12 }}>
-                      <div className={styles.formField}>
-                        <label htmlFor="address">{t('additionalInfo')} <span>{t('optional')}</span> </label>
-                        <textarea
-                          id="address"
-                          value={formData.address}
-                          rows={5}
-                          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('address', e.target.value)}
-                          className={errors.address ? styles.error : ''}
-                        />
-                        {errors.address && <span className={styles.errorText}>{errors.address}</span>}
                       </div>
                     </Grid>
                   </Grid>
@@ -631,14 +588,14 @@ export default function PaiementPage({ params }: { params: { locale: string } })
           {/* Résumé de commande */}
           <Grid size={{ xs: 12, sm: 12, md: 4 }}>
             <Card className={styles.orderSummary}>
-              <CardContent sx={{ p: 0 }}>
-                <Typography variant="h5" sx={{ 
+              <CardContent>
+                {/* <Typography variant="h5" sx={{ 
                   mb: 3,
                   fontWeight: 600,
                   color: 'var(--foreground)'
                 }}>
                   {t('yourOrder')}
-                </Typography>
+                </Typography> */}
 
                 <Box className={styles.cartItems}>
                   {cartItems.map((item) => (
@@ -781,7 +738,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
 
                 {/* Section Paiement */}
                 <div className={styles.paymentSection}>
-                  <div className={styles.paymentHeader}>
+                  {/* <div className={styles.paymentHeader}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'var(--foreground)' }}>{t('paymentMethods')}</Typography>
                     <Image src={icon_monero} alt="Icone Monero" width={150} height={150} />
                   </div>
@@ -792,7 +749,7 @@ export default function PaiementPage({ params }: { params: { locale: string } })
                   
                   <div className={styles.privacyNote}>
                     <p>{t('privacyNote')} <a href={`/${locale}/politique-confidentialite`}>{t('privacyPolicy')}</a>.</p>
-                  </div>
+                  </div> */}
                   
                   <Button
                     fullWidth

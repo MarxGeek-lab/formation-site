@@ -1,0 +1,145 @@
+.pricingSection {
+  padding: 6rem 0;
+
+  @media (max-width: 768px) {
+    padding: 4rem 0;
+  }
+}
+
+.pricingHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pricingDescription {
+  font-size: 1.125rem !important;
+  color: #9ca3af !important;
+  margin-top: 1rem !important;
+}
+
+.pricingCard {
+  background: var(--card-background);
+  border: 2px solid rgba(250, 0, 63, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-8px);
+    border-color: rgba(250, 0, 63, 0.3);
+    box-shadow: 0 20px 40px rgba(250, 0, 63, 0.2);
+  }
+
+  &.popular {
+    border-color: #FA003F;
+    box-shadow: 0 8px 32px rgba(250, 0, 63, 0.25);
+  }
+}
+
+.popularBadge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.813rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(250, 0, 63, 0.3);
+}
+
+.planName {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: var(--foreground) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.planDescription {
+  font-size: 0.938rem !important;
+  color: #9ca3af !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.planPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  font-size: 3rem !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, #FA003F 0%, #FF1A58 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.period {
+  font-size: 1rem !important;
+  color: #9ca3af !important;
+}
+
+.xofPrice {
+  font-size: 1.125rem !important;
+  color: #FA003F !important;
+  font-weight: 600 !important;
+  margin-bottom: 2rem !important;
+}
+
+.planButton {
+  width: 100%;
+  background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(250, 0, 63, 0.3);
+  margin-bottom: 2rem;
+
+  &:hover {
+    background: linear-gradient(135deg, #C70032 0%, #FA003F 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(250, 0, 63, 0.4);
+  }
+}
+
+.featuresList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  p {
+    font-size: 0.938rem !important;
+    color: var(--foreground) !important;
+    margin: 0 !important;
+  }
+}
+
+.checkIcon {
+  color: #FA003F;
+  flex-shrink: 0;
+  width: 20px !important;
+  height: 20px !important;
+}

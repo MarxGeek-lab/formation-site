@@ -82,7 +82,7 @@ export default function AffiliationPage({ params }: { params: { locale: string }
 
       {/* How it works Section */}
       <Container maxWidth="lg">
-        <h2 className="rafly-title">{t('howItWorks.title')}</h2>
+        <h2 className="titlePageSection">{t('howItWorks.title')}</h2>
         
         <Grid container spacing={4} sx={{px: {xs: 0, sm: 0, md: 20}}}>
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -132,7 +132,7 @@ export default function AffiliationPage({ params }: { params: { locale: string }
 
       {/* What we provide Section */}
       <Container maxWidth="lg" className="">
-        <h2 className="rafly-title">
+        <h2 className="titlePageSection">
           {t('whatWeProvide.title')} <span>RAFLY</span> {t('whatWeProvide.titleSuffix')}
         </h2>
         
@@ -196,7 +196,7 @@ export default function AffiliationPage({ params }: { params: { locale: string }
 
       {/* Videos Section */}
       <Container maxWidth="lg">
-        <h2 className="rafly-title">{t('videos.title')}</h2>
+        <h2 className="titlePageSection">{t('videos.title')}</h2>
         
         <Grid container spacing={4} sx={{ mt: 6, px: {xs: 2, sm: 6}}}>
           <Grid size={{ xs: 12, sm: 6, md: 6 }}>

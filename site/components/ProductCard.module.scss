@@ -1,38 +1,126 @@
-// Product Card Component Styles
+// Product Card Component Styles - Creative Asymmetric Design
 .productCard {
-  background: var(--card-background);
-  border: 1px solid var(--primary);
-  border-radius: 12px;
-  padding: 1rem;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  // background: linear-gradient(135deg, rgba(250, 0, 63, 0.05) 0%, rgba(199, 0, 50, 0.02) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(250, 0, 63, 0.2);
+  position: relative;
+  border-radius: 24px;
+  padding: 0 !important;
+  overflow: visible;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  // box-shadow:
+  //   0 8px 32px rgba(250, 0, 63, 0.1),
+  //   inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 24px;
+    // background: linear-gradient(135deg, #FA003F, #FF1A58, #C70032, #FA003F);
+    background-size: 400% 400%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    animation: gradientRotate 8s ease infinite;
+    filter: blur(8px);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(250, 0, 63, 0.15) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(95, 58, 252, 0.15);
-    border-color: var(--primary);
-    
-    .hoverOverlay {
+    transform: translateY(-16px) rotateX(2deg) rotateY(2deg);
+    // box-shadow:
+    //   0 32px 64px rgba(250, 0, 63, 0.25),
+    //   0 0 0 1px rgba(250, 0, 63, 0.3),
+    //   inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(250, 0, 63, 0.4);
+
+    &::before {
       opacity: 1;
     }
+
+    &::after {
+      opacity: 1;
+    }
+
+    .imageContainer {
+      // transform: scale(1.08) translateY(-4px);
+
+      &::before {
+        opacity: 0.6;
+      }
+    }
+
+    .category {
+      transform: translateX(8px);
+    }
+
+    .priceSection {
+      transform: translateX(4px);
+    }
+  }
+}
+
+@keyframes gradientRotate {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
   }
 }
 
 .imageContainer {
   position: relative;
-  width: 100%;
-  height: 200px;
-  background: var(--card-background);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: "100%";
+  background: linear-gradient(135deg, rgba(250, 0, 63, 0.12) 0%, rgba(199, 0, 50, 0.06) 100%);
+  border-radius: 24px 24px 0 0;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
   overflow: hidden;
-  margin-bottom: 1rem;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(250, 0, 63, 0.3) 0%, rgba(199, 0, 50, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    mix-blend-mode: overlay;
+  }
   
   .imagePlaceholder {
     display: flex;
@@ -48,8 +136,9 @@
   
   .productImage {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: 180px;
+    object-fit: cover;    
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
   }
   
   .hoverOverlay {
@@ -114,27 +203,81 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  min-height: 215px;
+  min-height: 150px;
+  padding: 1rem 1rem 0.2rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(250, 0, 63, 0.02) 100%);
 }
 
 .title {
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: 1rem !important;
+  font-weight: 500;
   color: var(--foreground);
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  // letter-spacing: -0.02em;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #FA003F 0%, transparent 100%);
+    border-radius: 2px;
+  }
 }
 
 .category {
-  font-size: 1rem;
-  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  padding: 0.3rem 0.8rem;
+  background: #fa003e1c;
+  border-radius: 10px;
+  font-size: 0.85rem !important;
+  color: white;
   margin-bottom: 1rem;
-  font-weight: 500;
+  font-weight: 800;
+  text-transform:capitalize;
+  letter-spacing: 1.2px;
+  // box-shadow:
+  //   0 4px 16px rgba(250, 0, 63, 0.3),
+  //   inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #C70032 0%, #FA003F 100%);
+    transform: translateX(8px) scale(1.05);
+    box-shadow:
+      0 8px 24px rgba(250, 0, 63, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+    &::before {
+      left: 100%;
+    }
+  }
 }
 
 .priceSection {
@@ -142,8 +285,12 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap !important;
-  margin-bottom: 1rem;
-  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+
 }
 
 .priceContainer {
@@ -151,10 +298,26 @@
 }
 
 .price {
-  font-size: 1.2rem !important;
-  font-weight: 700 !important;
-  color: var(--foreground) !important;
+  font-size: 1.1rem !important;
+  font-weight: bold !important;
+  background: linear-gradient(135deg, #FA003F 0%, #FF1A58 50%, #C70032 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   white-space: nowrap !important;
+  filter: drop-shadow(0 2px 8px rgba(250, 0, 63, 0.25));
+  letter-spacing: -0.03em;
+  position: relative;
+  animation: priceGlow 3s ease-in-out infinite;
+}
+
+@keyframes priceGlow {
+  0%, 100% {
+    filter: drop-shadow(0 2px 8px rgba(250, 0, 63, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 4px 16px rgba(250, 0, 63, 0.4));
+  }
 }
 
 .features {
@@ -180,105 +343,238 @@
 
 .buttonGroup {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  position: absolute;
-  bottom: 0;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 1rem;
   width: 100%;
 }
 
 .accessButton {
-  background: var(--primary);
-  border: 1px solid rgba(95, 58, 252, 0.2);
-  border-radius: 0.75rem;
-  padding: 0.875rem 1.25rem;
-  color: var(--foreground);
-  font-weight: 600;
-  font-size: 1rem;
+  background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+  border: none;
+  border-radius: 14px;
+  padding: 0.6rem 0.9rem !important;
+  color: white;
+  font-weight: 800;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  flex: 1;
-  
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 6px 20px rgba(250, 0, 63, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+  transform: translateY(-6px) scale(1.02);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    // padding: 2px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
   &:hover {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(95, 58, 252, 0.3);
+    background: linear-gradient(135deg, #C70032 0%, #FA003F 100%);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow:
+      0 12px 32px rgba(250, 0, 63, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+    &::before {
+      left: 100%;
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(1);
   }
 }
 
 .addToCartButtonBottom {
-  background: transparent;
-  border: 1px solid var(--primary);
-  border-radius: 0.75rem;
-  padding: 0.875rem;
-  color: var(--primary);
+  background: rgba(250, 0, 63, 0.08);
+  border: 2px solid #FA003F;
+  border-radius: 14px;
+  padding: 1.125rem;
+  color: #FA003F;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  &:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(95, 58, 252, 0.3);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
   }
-  
+
   svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.4s ease;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+    color: white;
+    transform: translateY(-3px) scale(1.08) rotate(5deg);
+    box-shadow: 0 12px 32px rgba(250, 0, 63, 0.5);
+    border-color: transparent;
+
+    &::before {
+      opacity: 1;
+    }
+
+    svg {
+      transform: scale(1.15);
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(1.02) rotate(2deg);
   }
 }
 
 // Responsive Design
 @media (max-width: 768px) {
   .productCard {
-    padding: 0.875rem;
+    &:hover {
+      transform: translateY(-8px) rotateX(0) rotateY(0);
+    }
   }
-  
+
+  .imageContainer {
+    height: 220px;
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+  }
+
+  .content {
+    padding: 1.5rem 1.25rem 1.25rem;
+    min-height: 200px;
+  }
+
   .title {
     font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+
+    &::after {
+      width: 30px;
+      height: 2px;
+    }
   }
-  
+
   .category {
-    font-size: 0.9rem;
+    font-size: 0.688rem;
+    padding: 0.5rem 1rem;
+    letter-spacing: 1px;
   }
-  
+
   .price {
-    font-size: 1.25rem;
+    font-size: 1.375rem !important;
   }
-  
+
   .priceSection {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 1rem;
     gap: 0.75rem;
   }
-  
+
   .accessButton {
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.938rem;
+    border-radius: 12px;
+  }
+
+  .addToCartButtonBottom {
+    padding: 0.875rem;
+    border-radius: 12px;
   }
 }
 
 @media (max-width: 480px) {
+  .imageContainer {
+    height: 200px;
+    width: calc(100% + 24px);
+    margin: -12px -12px 0 -12px;
+  }
+
+  .content {
+    min-height: 180px;
+    padding: 1.25rem 1rem 1rem;
+  }
+
   .title {
     font-size: 1rem;
-    line-height: 1.4;
+    line-height: 1.3;
   }
-  
+
+  .category {
+    font-size: 0.625rem;
+    padding: 0.4rem 0.875rem;
+  }
+
   .price {
-    font-size: 1.125rem;
+    font-size: 1.25rem !important;
   }
-  
+
+  .priceSection {
+    padding: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
   .feature {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
-  
+
   .checkIcon {
     width: 0.875rem;
     height: 0.875rem;
+  }
+
+  .buttonGroup {
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+  }
+
+  .accessButton {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .addToCartButtonBottom {
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 }

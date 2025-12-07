@@ -106,7 +106,7 @@ export default function ReinitialiserMotDePassePage({ params }: { params: { loca
         <Container maxWidth="sm">
           <Box className={styles.authContainer}>
             <Box sx={{ textAlign: 'center', mb: 4 }}>
-              <Typography variant="h3" className="rafly-title" sx={{ mb: 2 }}>
+              <Typography variant="h3" className="titlePageSection" sx={{ mb: 2 }}>
                 {t('invalidLink')}
               </Typography>
               <Typography variant="body1" sx={{ 
@@ -179,7 +179,7 @@ export default function ReinitialiserMotDePassePage({ params }: { params: { loca
                 <CheckCircle sx={{ fontSize: 40, color: 'var(--success)' }} />
               </Box>
               
-              <Typography variant="h3" className="rafly-title" sx={{ mb: 2 }}>
+              <Typography variant="h3" className="titlePageSection" sx={{ mb: 2 }}>
                 {t('passwordChanged')}
               </Typography>
               
@@ -225,7 +225,7 @@ export default function ReinitialiserMotDePassePage({ params }: { params: { loca
         <Box className={styles.authContainer}>
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography variant="h3" className="rafly-title" sx={{ mb: 2 }}>
+            <Typography variant="h3" className="titlePageSection" sx={{ mb: 2 }}>
               {t('newPassword')}
             </Typography>
             <Typography variant="body1" sx={{ 

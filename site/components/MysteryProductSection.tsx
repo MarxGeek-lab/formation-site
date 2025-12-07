@@ -76,7 +76,7 @@ export default function MysteryProductSection({ locale }: { locale: string }) {
               mx: 'auto',
               my: 2,
             }}
-            className='rafly-title'
+            className='titlePageSection'
           >
             {t('title')}
           </Typography>

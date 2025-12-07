@@ -3,8 +3,10 @@ import { Roboto, Roboto_Slab } from "next/font/google";
 import "../globals.css";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import EbookSidebar from "../../components/EbookSidebar";
 import CartSidebar from "../../components/CartSidebar";
 import NotificationToast from "../../components/NotificationToast";
+import FloatingContactButtons from "../../components/FloatingContactButtons";
 import ThemeProvider from "../../components/ThemeProvider";
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript'
 import { GlobalProvider } from "@/contexts/GlobalContext";
@@ -13,6 +15,8 @@ import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ReactNode } from "react";
 import LocaleProvider from "./LocaleProvider";
 import Script from "next/script";
+import { Box } from "@mui/material";
+import SocialFloat from "@/components/SocialFloat";
 
 export const viewport = {
   width: 'device-width',
@@ -29,14 +33,6 @@ export default async function LocaleLayout({
 }) {
   const resolvedParams = await params;
   const {locale} = resolvedParams;
-
-  async function getConfig() {
-    console.log(process.env.API_URL)
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}settings`);
-    const data = await res.json(); // ✅ parse le JSON
-    return data.fb_pixel_id;                   // retourne uniquement le data
-  }
-  const fbPixelId = await getConfig();
 
    return (
     <html lang={locale} data-theme="dark">
@@ -55,7 +51,7 @@ export default async function LocaleLayout({
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', ${fbPixelId});
+              fbq('init', ${"fbPixelId"});
               fbq('track', 'PageView');
             `,
           }}
@@ -65,7 +61,7 @@ export default async function LocaleLayout({
             height="1"
             width="1"
             style={{ display: "none" }}
-            src={`https://www.facebook.com/tr?id=${fbPixelId}&ev=PageView&noscript=1`}
+            src={`https://www.facebook.com/tr?id=${"fbPixelId"}&ev=PageView&noscript=1`}
           />
         </noscript>
       </head>
@@ -78,13 +74,38 @@ export default async function LocaleLayout({
             <GlobalProvider>
               <NotificationProvider>
                 <CartProvider>
-                  <Header locale={locale} />
-                  <main style={{
-                    minHeight: '100vh',
-                  }}>{children}</main>
-                  <Footer locale={locale} />
+                  {/* Sidebar E-Books - Fixed on all pages */}
+                  <Box sx={{
+                    display: "flex",
+                  }}>
+                    <EbookSidebar locale={locale} />
+                    <Box sx={{position: "relative"}}>
+                       {/* Header */}
+                      <Header locale={locale} />
+                  
+                      <Box
+                        component="main"
+                        sx={{
+                          minHeight: '100vh',
+                          ml: { xs: 0, lg: '280px' },
+                          transition: 'margin 0.3s ease',
+                          pt: { xs: '80px', lg: 0 }
+                        }}
+                      >
+                        {children}
+                      </Box>
+
+                      {/* Footer */}
+                      <Box sx={{ ml: { xs: 0, lg: '280px' } }}>
+                        <Footer locale={locale} />
+                      </Box>
+                    </Box>
+                  </Box>
+              
                   <CartSidebar params={{ locale }} />
                   <NotificationToast />
+                  <FloatingContactButtons />
+                  <SocialFloat />
                 </CartProvider>
               </NotificationProvider>
             </GlobalProvider>
@@ -94,4 +115,3 @@ export default async function LocaleLayout({
     </html>
   );
 }
-

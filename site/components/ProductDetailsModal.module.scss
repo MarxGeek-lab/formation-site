@@ -1,0 +1,318 @@
+// Product Details Modal Styles
+.modalContent {
+  padding: 0 !important;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(250, 0, 63, 0.05);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+    border-radius: 4px;
+
+    &:hover {
+      background: linear-gradient(135deg, #C70032 0%, #FA003F 100%);
+    }
+  }
+}
+
+
+.leftSection {
+  background: linear-gradient(135deg, rgba(250, 0, 63, 0.05) 0%, rgba(199, 0, 50, 0.02) 100%);
+  padding: 2.5rem;
+  gap: 1.5rem;
+  position: sticky;
+  border-right: 1px solid rgba(250, 0, 63, 0.1);
+
+  @media (max-width: 960px) {
+    border-right: none;
+    border-bottom: 1px solid rgba(250, 0, 63, 0.1);
+    padding: 2rem 1.5rem;
+  }
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(250, 0, 63, 0.1) 0%, rgba(199, 0, 50, 0.05) 100%);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(250, 0, 63, 0.08) 0%, rgba(199, 0, 50, 0.04) 100%);
+}
+
+.categoryBadge {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.rightSection {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  @media (max-width: 960px) {
+    padding: 2rem 1.5rem;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.productTitle {
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  color: var(--foreground) !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem !important;
+  }
+}
+
+.ratingSection {
+  display: flex;
+  align-items: center;
+}
+
+.priceBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(250, 0, 63, 0.08) 0%, rgba(199, 0, 50, 0.03) 100%);
+  border-radius: 16px;
+  border: 2px solid rgba(250, 0, 63, 0.15);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #FA003F 0%, #C70032 100%);
+    border-radius: 16px 0 0 16px;
+  }
+}
+
+.currentPrice {
+  font-size: 2.5rem !important;
+  font-weight: 900 !important;
+  background: linear-gradient(135deg, #FA003F 0%, #FF1A58 50%, #C70032 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1 !important;
+
+  @media (max-width: 768px) {
+    font-size: 2rem !important;
+  }
+}
+
+.oldPrice {
+  font-size: 1.25rem !important;
+  color: #9ca3af !important;
+  text-decoration: line-through;
+}
+
+.descriptionSection {
+  padding: 1.5rem;
+  background: rgba(250, 0, 63, 0.02);
+  border-radius: 12px;
+  border-left: 3px solid #FA003F;
+  margin-top: 2rem;
+}
+
+.featuresSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  color: var(--foreground) !important;
+  margin: 0 !important;
+  position: relative;
+  padding-bottom: 0.75rem;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #FA003F 0%, transparent 100%);
+    border-radius: 2px;
+  }
+}
+
+.featuresList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(250, 0, 63, 0.03);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(250, 0, 63, 0.08);
+    transform: translateX(4px);
+  }
+
+  p {
+    font-size: 0.938rem;
+    color: var(--foreground);
+    margin: 0;
+  }
+}
+
+.checkIcon {
+  color: #10b981;
+  font-size: 20px !important;
+  flex-shrink: 0;
+}
+
+.benefitsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.benefitCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(250, 0, 63, 0.05) 0%, rgba(199, 0, 50, 0.02) 100%);
+  border: 1px solid rgba(250, 0, 63, 0.15);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(250, 0, 63, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(250, 0, 63, 0.15);
+  }
+}
+
+.benefitIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(250, 0, 63, 0.3);
+
+  svg {
+    color: white;
+    font-size: 24px;
+  }
+}
+
+.benefitTitle {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: var(--foreground) !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.benefitDescription {
+  font-size: 0.875rem !important;
+  color: #9ca3af !important;
+  margin: 0 !important;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  // padding-top: 1rem;
+  border-top: 1px solid rgba(250, 0, 63, 0.1);
+}
+
+.closeButton {
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    transform: rotate(90deg) scale(1.1);
+  }
+}
+
+// Responsive
+@media (max-width: 600px) {
+  .modalGrid {
+    min-height: auto;
+  }
+
+  .leftSection,
+  .rightSection {
+    padding: 1.5rem;
+  }
+
+  .productTitle {
+    font-size: 1.375rem !important;
+  }
+
+  .currentPrice {
+    font-size: 1.75rem !important;
+  }
+
+  .benefitsGrid,
+  .featuresList {
+    grid-template-columns: 1fr;
+  }
+}

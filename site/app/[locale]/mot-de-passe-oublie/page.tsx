@@ -94,7 +94,7 @@ export default function MotDePasseOubliePage({ params }: { params: { locale: str
                 <Email sx={{ fontSize: 40, color: 'var(--primary)' }} />
               </Box>
               
-              <Typography variant="h3" className="rafly-title" sx={{ mb: 2, mx: 'auto' }}>
+              <Typography variant="h3" className="titlePageSection" sx={{ mb: 2, mx: 'auto' }}>
                 {t('emailSent')}
               </Typography>
               
@@ -160,7 +160,7 @@ export default function MotDePasseOubliePage({ params }: { params: { locale: str
         <Box className={styles.authContainer}>
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography className="rafly-title" sx={{ mb: 2, mx: 'auto' }}>
+            <Typography className="titlePageSection" sx={{ mb: 2, mx: 'auto' }}>
               {t('forgotPassword')}
             </Typography>
             <Typography variant="body1" sx={{ 

@@ -170,21 +170,48 @@ export default function CartSidebar({ params }: { params: { locale: string } }) 
               
               <Box className={styles.actionButtons}>
                 <Button
-                  variant="outlined"
-                  color="error"
                   onClick={clearCart}
                   className={styles.clearButton}
                   startIcon={<Delete />}
+                  sx={{
+                    border: '1px solid #FA003F',
+                    color: 'white',
+                    py: 1.5,
+                    fontSize: '1rem',
+                    fontWeight: 700,
+                    borderRadius: '14px',
+                    textTransform: 'none',
+                    borderWidth: 2,
+                    '&:hover': {
+                      borderColor: '#C70032',
+                      background: 'rgba(250, 0, 63, 0.05)',
+                      borderWidth: 2,
+                    },
+                  }}
                 >
                   Vider le panier
                 </Button>
                 
                 <Button
-                  variant="contained"
-                  color="primary"
                   className={styles.checkoutButton}
                   size="large"
                   onClick={handleCheckout}
+                  sx={{
+                    background: '#FA003F',
+                    borderColor: '#FA003F',
+                      color: 'white',
+                      py: 1.5,
+                      fontSize: '1rem',
+                      fontWeight: 700,
+                      borderRadius: '14px',
+                      textTransform: 'none',
+                      borderWidth: 2,
+                      '&:hover': {
+                        borderColor: '#C70032',
+                        background: 'rgba(250, 0, 63, 0.05)',
+                        borderWidth: 2,
+                      },
+                  }}
                 >
                   Passer commande
                 </Button>

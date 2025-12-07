@@ -121,7 +121,7 @@ export default function CataloguePage({ params }: { params: { locale: string } }
         <Box className={styles.heroContent} sx={{mb: 6}}>
           <Typography className={'rafly-sub'}>{t('subtitle')}</Typography>
           <Typography variant="h1" 
-            className="rafly-title"
+            className="titlePageSection"
             sx={{
               mx: 'auto',
               my: 3

@@ -82,7 +82,7 @@ export default function AboutPage() {
                 px: {xs: 0, sm: 6}
             }}>
                 <Grid size={{ xs: 12, sm: 12, md: 6 }} justifyContent="center" alignItems={'center'}>
-                    <Typography className={'rafly-title'} sx={{
+                    <Typography className={'titlePageSection'} sx={{
                         textAlign: {xs: 'center', sm: 'center', md: 'left'}
                     }}>
                         {t('hero.title')}
@@ -105,7 +105,7 @@ export default function AboutPage() {
         </Container>
 
         <Container maxWidth="lg">
-          <h2 className={'rafly-title'}>
+          <h2 className={'titlePageSection'}>
             {t('whatIsRafly.title')}
           </h2>
           <p className={`${styles.heroDescription} ${theme === 'light' ? styles.light : styles.dark}`}>
@@ -164,7 +164,7 @@ export default function AboutPage() {
             <span>{t('problems.summary')}</span>
           </div>
 
-          <Typography className='rafly-title' 
+          <Typography className='titlePageSection' 
             sx={{
               my: 3,
               px: {xs: 0, sm: 8}
@@ -248,7 +248,7 @@ export default function AboutPage() {
               </div>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <h2 className={'rafly-title'} style={{ 
+              <h2 className={'titlePageSection'} style={{ 
                 color: 'white', 
                 marginBottom: '3rem',
                 textAlign: 'left'
@@ -333,7 +333,7 @@ export default function AboutPage() {
       {/* CTA Section */}
         <Container maxWidth="lg">
           <div className={styles.ctaContent}>
-            <h2 className={'rafly-title'}>
+            <h2 className={'titlePageSection'}>
               {t('cta.title')}
             </h2>
             <p className={styles.sectionDescription}>

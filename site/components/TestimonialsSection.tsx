@@ -111,7 +111,7 @@ export default function TestimonialsSection() {
               fontSize: { xs: '2rem', md: '3rem' },
               color: 'var(--text)'
             }}
-            className='rafly-title'
+            className='titlePageSection'
           >
             {t('title')}
           </Typography>

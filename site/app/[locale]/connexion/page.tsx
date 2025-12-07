@@ -116,7 +116,7 @@ export default function ConnexionPage({
         <Box className={styles.authContainer}>
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography className="rafly-title rafly-title2" 
+            <Typography className="titlePageSection titlePageSection2" 
             sx={{ mb: 0, mx: 'auto' }}>
               {t('login')}
             </Typography>

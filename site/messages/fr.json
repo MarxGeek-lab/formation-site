@@ -144,32 +144,24 @@
     }
   },
   "FAQ": {
-    "subtitle": "FAQs",
-    "title": "Questions fréquentes",
-    "description": "Vous trouverez les réponses à la majorité de vos questions sur Rafly et ses produits",
+    "subtitle": "Questions Fréquentes",
+    "title": "Tout ce que vous devez savoir",
+    "description": "Réponses rapides aux questions les plus courantes sur nos formations web et mobile",
     "questions": {
-      "whatIsRafly": "Qu'est-ce que Rafly ?",
-      "howToBuy": "Comment acheter un produit sur Rafly ?",
-      "productTypes": "Quels types de produits puis-je trouver sur Rafly ?",
-      "immediateAccess": "Les fichiers sont-ils accessibles immédiatement ?",
-      "sellProducts": "Puis-je vendre mes propres produits sur Rafly ?",
-      "paymentMethods": "Quels moyens de paiement sont acceptés ?",
-      "refunds": "Puis-je obtenir un remboursement après achat ?",
-      "fileProblems": "Que faire si j'ai un problème avec un fichier téléchargé ?",
-      "promotions": "Y a-t-il des promotions ou des réductions sur Rafly ?",
-      "contactSupport": "Comment contacter le support Rafly ?"
+      "whatAreFormations": "Qu'est-ce que les formations Rafly ?",
+      "howToAccess": "Comment accéder aux formations après achat ?",
+      "formationTypes": "Quels types de formations proposez-vous ?",
+      "certificateIncluded": "Les formations incluent-elles des certificats ?",
+      "supportAvailable": "Quel type de support est disponible ?",
+      "refundPolicy": "Quelle est la politique de remboursement ?"
     },
     "answers": {
-      "whatIsRaflyAnswer": "📝 Rafly est une marketplace spécialisée dans la vente de produits numériques. Tu y trouveras des templates, des fichiers graphiques, des ressources pour développeurs et bien plus encore.",
-      "howToBuyAnswer": "📝 Il te suffit de parcourir le catalogue, d'ajouter un produit à ton panier et de finaliser ton achat via les moyens de paiement disponibles.",
-      "productTypesAnswer": "📝 Rafly propose des fichiers numériques variés : templates de sites, éléments graphiques, ebooks, presets, plugins, etc.",
-      "immediateAccessAnswer": "📝 Oui, dès que ton paiement est validé, tu peux télécharger tes fichiers directement depuis ton compte.",
-      "sellProductsAnswer": "📝 Oui ! Rafly permet aux créateurs de vendre leurs produits numériques. Contacte-nous pour en savoir plus.",
-      "paymentMethodsAnswer": "📝 Nous acceptons les paiements par carte bancaire, mobile money et autres solutions adaptées à l'Afrique.",
-      "refundsAnswer": "📝 Les produits numériques étant téléchargeables immédiatement, les remboursements sont soumis à certaines conditions. Consulte notre politique de remboursement pour plus de détails.",
-      "fileProblemsAnswer": "📝 Contacte notre support, nous ferons de notre mieux pour t'aider ou trouver une solution avec le vendeur.",
-      "promotionsAnswer": "📝 Oui, nous organisons régulièrement des offres spéciales. Reste connecté pour ne rien manquer !",
-      "contactSupportAnswer": "📝 Vous pouvez nous écrire via la page de contact du site ou directement par email."
+      "whatAreFormationsAnswer": "Nos formations sont des programmes complets en développement web et mobile, créés par des experts reconnus. Elles incluent des vidéos HD, des projets pratiques, du code source et un accès à vie au contenu.",
+      "howToAccessAnswer": "Dès validation de votre paiement, vous recevez un email avec vos identifiants. Connectez-vous à votre espace personnel pour accéder immédiatement à toutes vos formations, télécharger les ressources et suivre votre progression.",
+      "formationTypesAnswer": "Nous proposons des formations en React, Next.js, React Native, Node.js, TypeScript, et bien plus. Chaque formation couvre les fondamentaux jusqu'aux concepts avancés, avec des projets concrets à réaliser.",
+      "certificateIncludedAnswer": "Oui ! Tous nos plans incluent des certificats de completion. Le plan Pro offre des certificats professionnels reconnus par l'industrie, parfaits pour valoriser votre CV et LinkedIn.",
+      "supportAvailableAnswer": "Le plan Starter inclut un support par email (réponse sous 24-48h). Le plan Pro offre un support prioritaire 24/7 avec mentorat personnalisé. Le plan Enterprise inclut un gestionnaire de compte dédié.",
+      "refundPolicyAnswer": "Nous offrons une garantie satisfait ou remboursé de 14 jours. Si nos formations ne répondent pas à vos attentes, contactez-nous pour un remboursement complet, sans questions."
     }
   },
   "Footer": {

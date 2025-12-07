@@ -81,7 +81,7 @@ export default function TeamSection() {
           
           <Typography 
             variant="h2" 
-            className='rafly-title'
+            className='titlePageSection'
             sx={{mx: 'auto', my: 3}}
           >
             {t('title')}

@@ -1,6 +1,6 @@
 // Page Paiement Styles
 .billingCard {
-  background: var(--card-background) !important;
+  background: none !important;
   border: 1px solid var(--border) !important;
   border-radius: 12px !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
@@ -11,8 +11,6 @@
   border: 1px solid var(--border) !important;
   border-radius: 12px !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-  position: sticky;
-  top: 2rem;
 }
 
 .formField {
@@ -51,9 +49,9 @@
   
   input {
     padding: 12px 16px;
-    border: 1px solid var(--primary-light);
+    // border: 1px solid var(--primary-light);
     border-radius: 8px;
-    background-color: var(--primary-subtle) !important;
+    background-color: #27121611 !important;
     color: white;
     font-size: 1rem;
     transition: border-color 0.3s ease;

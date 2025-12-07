@@ -9,13 +9,13 @@ export async function GET(req: Request) {
   const cachedCountryParam = url.searchParams.get("cachedCountry") || null;
 
   try {
-    // return NextResponse.json({
-    //   price: amount + " XOF",
-    //   currency: "XOF",
-    //   amount: amount,
-    //   country: "Unknown",
-    //   success: true,
-    // });
+    return NextResponse.json({
+      price: amount + " XOF",
+      currency: "XOF",
+      amount: amount,
+      country: "Unknown",
+      success: true,
+    });
     // 1️⃣ Détection IP et localisation
     console.log("🔍 Étape 1: Détection pays via ipapi");
     const forwardedFor = req.headers.get("x-forwarded-for");

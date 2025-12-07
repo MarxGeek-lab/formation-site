@@ -1,55 +1,59 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: "Nunito Sans";
-  src: url("../assets/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC\,opsz\,wdth\,wght.ttf");
+  font-family: "Exo2";
+  src: url("../assets/fonts/Exo2/Exo2-Regular.ttf");
 }
 :root {
-  /* Rafly Colors - Extracted from post-6.css */
-  --primary: #5F3AFC;
-  --primary-subtle: #0e0a25;
-  --primary-border: #2c1c71;
-  --primary-text: #d3cff2;
-  --secondary: #1A152E;
-  --text: #1A152E;
-  --accent: #5F3AFC;
-  --primary-light: #5E3AFC33;
-  --background-light: #ECEFFFB2;
-  --dark-bg: #090619;
-  --darker-bg: #0A0719;
-  /* --primary-subtle: #5E3AFC0D; */
+  /* New Dark Theme with #FA003F */
+  --primary: #FA003F;
+  --primary-dark: #C70032;
+  --primary-light: #FF1A58;
+  --primary-subtle: #1a0a0f;
+  --primary-border: #4d0016;
+  --primary-text: #f2cfda;
+  --secondary: #0A0719;
+  --text: #FFFFFF;
+  --accent: #FA003F;
+  --primary-light-bg: #FA003F1A;
+  --background-light: #FFF0F4;
+  --dark-bg: #0A0719;
+  --darker-bg: #050310;
   --white: #FFFFFF;
-  --page-transition: #FFBC7D;
-  
+  --page-transition: #FA003F;
+
+  /* Card backgrounds */
+  --card-background: #0f0820;
+  --card-background-hover: #1a0f2e;
+
   /* Elementor Global Colors */
-  --e-global-color-primary: #5F3AFC;
-  --e-global-color-secondary: #1A152E;
-  --e-global-color-text: #1A152E;
-  --e-global-color-accent: #5F3AFC;
-  --e-global-color-c3c16f7: #5E3AFC33;
-  --e-global-color-83ce759: #ECEFFFB2;
-  --e-global-color-1397ae0: #090619;
-  --e-global-color-7e150af: #0A0719;
-  --e-global-color-2819805: #5E3AFC0D;
-  
-  /* Legacy variables for compatibility*/
-  --background: #090619;
+  --e-global-color-primary: #FA003F;
+  --e-global-color-secondary: #0A0719;
+  --e-global-color-text: #FFFFFF;
+  --e-global-color-accent: #FA003F;
+
+  /* Legacy variables for compatibility */
+  --background: #0A0719;
   --foreground: #ffffff;
 }
 
 /* Theme variations */
 [data-theme="light"] {
   --background: #ffffff;
-  --foreground: #1a152e;
-  --theme-toggle-bg: rgba(0,0,0,0.05);
-  --theme-toggle-bg-hover: rgba(0,0,0,0.1);
+  --foreground: #1a0a0f;
+  --card-background: #ffffff;
+  --card-background-hover: #FFF0F4;
+  --theme-toggle-bg: rgba(250, 0, 63, 0.05);
+  --theme-toggle-bg-hover: rgba(250, 0, 63, 0.1);
 }
 
 [data-theme="dark"] {
-  --background: #090619;
+  --background: #0A0719;
   --foreground: #ffffff;
-  --theme-toggle-bg: rgba(255,255,255,0.1);
-  --theme-toggle-bg-hover: rgba(255,255,255,0.2);
+  --card-background: #0f0820;
+  --card-background-hover: #1a0f2e;
+  --theme-toggle-bg: rgba(250, 0, 63, 0.1);
+  --theme-toggle-bg-hover: rgba(250, 0, 63, 0.2);
 }
 
 /* Tailwind CSS custom properties */
@@ -70,18 +74,27 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Nunito Sans", sans-serif;
+  font-family: "Exo2", sans-serif;
   overflow-x: hidden;
   position: relative;
   min-height: 100vh;
 
-  /* Génération d'étoiles en dégradés radiaux */
-  background-image: 
-    radial-gradient(rgba(255, 255, 255, 0.493) 1px, transparent 1px),
-    radial-gradient(rgba(255, 255, 255, 0.493) 1px, transparent 1px),
-    radial-gradient(rgba(255, 255, 255, 0.493) 2px, transparent 2px);
-  background-size: 200px 200px, 300px 300px, 500px 500px; 
-  background-position: 0 0, 50px 100px, 100px 200px;
+  /* Thème dark profond avec étoiles et teinte rouge */
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+    radial-gradient(rgba(250, 0, 63, 0.15) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.2) 2px, transparent 2px),
+    radial-gradient(circle at 20% 50%, rgba(250, 0, 63, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(199, 0, 50, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, #050310 0%, #0A0719 30%, #1a0a2e 70%, #0A0719 100%);
+  background-size: 250px 250px, 350px 350px, 600px 600px, 100% 100%, 100% 100%, 100% 100%;
+  background-position: 0 0, 60px 120px, 120px 240px, 0 0, 0 0, 0 0;
+  background-attachment: fixed;
+}
+
+[data-theme="light"] body {
+  background-image: none;
+  background: linear-gradient(180deg, #ffffff 0%, #fff5f7 100%);
 }
 
 
@@ -89,7 +102,6 @@ body {
 /* Rafly specific styles - Following post-6.css structure */
 h1, h2, h3, h4, h5, h6 {
   color: var(--text);
-  font-family: "Poppins", sans-serif;
   font-weight: 600;
 }
 
@@ -163,19 +175,28 @@ p {
 .rafly-sub {
   background-color: transparent;
   padding: 8px 20px !important;
-  background-image: linear-gradient(90deg, #5E3AFC33 0%, #5E3AFC00 100%);
+  background-image: linear-gradient(90deg, rgba(250, 0, 63, 0.15) 0%, rgba(250, 0, 63, 0) 100%);
   border-style: solid;
-  border-width: 1px 1px 1px 1px;
-  border-color: var(--e-global-color-secondary);
+  border-width: 2px 2px 2px 2px;
+  border-color: rgba(250, 0, 63, 0.3);
   border-radius: 30px;
   width: fit-content;
   margin: auto !important;
   margin-bottom:0rem !important;
-  color: var(--primary) !important;
+  color: #FA003F !important;
   display: flex;
   align-items: center;
   gap: 5px;
   font-size: 15px;
+  box-shadow: 0 4px 12px rgba(250, 0, 63, 0.1);
+  transition: all 0.3s ease;
+}
+
+.rafly-sub:hover {
+  background-image: linear-gradient(90deg, rgba(250, 0, 63, 0.2) 0%, rgba(250, 0, 63, 0.05) 100%);
+  border-color: rgba(250, 0, 63, 0.5);
+  box-shadow: 0 6px 16px rgba(250, 0, 63, 0.2);
+  transform: translateY(-2px);
 }
 
 .rafly-sub svg {
@@ -183,8 +204,8 @@ p {
   height: 20px;
 }
 
-.rafly-title {
-  font-size: 52px !important;
+.titlePageSection {
+  font-size: 38px !important;
   font-weight: bold !important;
   text-align: left;
   color: white !important;
@@ -196,7 +217,7 @@ p {
   text-align: center;
 }
 
-.rafly-title2 {
+.titlePageSection2 {
   font-size: 36px !important;
   margin-bottom: 1rem !important;
 }
@@ -215,7 +236,7 @@ p {
 
 
 @media (max-width: 600px) {
-  .rafly-title {
+  .titlePageSection {
     font-size: 28px !important;
     line-height: 42px !important;
   }

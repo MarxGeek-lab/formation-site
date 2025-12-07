@@ -1,80 +1,142 @@
 .header {
-    margin: 30px auto !important;
-    padding: 0 26px !important;    
-    border: 1px solid var(--primary-border) !important;
-    border-radius: 12px;
-    background: var(--primary-subtle) !important;
+  background: rgba(10, 7, 25, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(250, 0, 63, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
 
-    @media (max-width: 600px) {
-        margin: 15px auto !important;
-        padding: 0 12px !important;
+.headerContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  gap: 2rem;
+}
+
+.logoWrapper {
+  flex-shrink: 0;
+
+  a {
+    display: block;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
     }
+  }
+}
+
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: 2.5rem;
+  flex: 1;
+  justify-content: center;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
 }
 
 .navLink {
-    color: var(--foreground);
-    font-size: 1.05rem;
-    transition: color 0.2s ease;
-    
-    &:hover {
-        color: var(--primary);
+  color: var(--foreground);
+  font-size: 0.938rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #FA003F 0%, #C70032 100%);
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: #FA003F;
+
+    &::after {
+      width: 100%;
     }
+  }
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cartButton {
+  color: var(--foreground) !important;
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    color: #FA003F !important;
+    transform: scale(1.1);
+  }
 }
 
 .ctaButton {
-    background-color: var(--primary);
-    color: white;
-    padding: 0.6rem 1rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    
-    &:hover {
-        background-color: color-mix(in srgb, var(--primary) 90%, black);
-    }
-    
-    svg {
-        width: 1rem;
-        height: 1rem;
-        margin-right: 0.5rem;
-    }
-    
-    &.fullWidth {
-        width: 100%;
-    }
+  display: none;
+  background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+  color: white;
+  padding: 0.625rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.938rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(250, 0, 63, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, #C70032 0%, #FA003F 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(250, 0, 63, 0.4);
+  }
+
+  @media (min-width: 1024px) {
+    display: block;
+  }
 }
 
-.ctaButton2 {
-    background-color: var(--primary-light);
-    color: white;
-    padding: 0.6rem 1rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    
-    &:hover {
-        background-color: color-mix(in srgb, var(--primary) 90%, black);
-    }
-    
-    svg {
-        width: 1rem;
-        height: 1rem;
-        margin-right: 0.5rem;
-    }
-    
-    &.fullWidth {
-        width: 100%;
-    }
+.ctaButtonMobile {
+  width: 100%;
+  background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+  color: white;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.938rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(250, 0, 63, 0.3);
+  margin-top: 1rem;
+
+  &:hover {
+    background: linear-gradient(135deg, #C70032 0%, #FA003F 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(250, 0, 63, 0.4);
+  }
 }
 
 .logo {
@@ -115,60 +177,35 @@
 }
 
 .mobileMenuButton {
-    padding: 0.5rem;
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: var(--foreground);
-    
-    svg {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-}
+  display: block;
+  color: var(--foreground) !important;
 
-.cartButton {
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
-    border: none;
-    cursor: pointer;
-    background-color: transparent;
-    color: var(--foreground);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    &:hover {
-        background-color: var(--primary-subtle);
-        color: var(--primary);
-    }
-    
-    svg {
-        width: 1.25rem;
-        height: 1.25rem;
-    }
+  @media (min-width: 1024px) {
+    display: none !important;
+  }
 }
 
 .mobileNav {
-    margin-top: 1rem;
-    padding-bottom: 1rem;
-    border-top: 1px solid #f3f4f6;
-    padding-top: 1rem;
-    
-    .mobileNavLinks {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .mobileNavLink {
-        color: var(--foreground);
-        transition: color 0.2s ease;
-        font-size: 14px;
-        
-        &:hover {
-            color: var(--primary);
-        }
-    }
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(250, 0, 63, 0.1);
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+.mobileNavLink {
+  color: var(--foreground);
+  font-size: 0.938rem;
+  font-weight: 500;
+  padding: 0.75rem 0;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #FA003F;
+    padding-left: 0.5rem;
+  }
 }
