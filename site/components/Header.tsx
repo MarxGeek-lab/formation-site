@@ -4,14 +4,15 @@ import Image from "next/image";
 import { useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { Box, Container, Badge } from "@mui/material";
-import { ShoppingCart } from "@mui/icons-material";
+import { ShoppingBag, ShoppingCart } from "@mui/icons-material";
 import { useTranslations } from 'next-intl';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useCart } from '@/contexts/CartContext';
+import LoginModal from './LoginModal';
 
 import styles from './Header/Header.module.scss';
 
-import logo from '@/assets/images/logo-1.webp'; 
+import logo from '@/assets/images/logo-1.webp';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/contexts/GlobalContext";
 import { Translate } from "./Translate";
@@ -19,12 +20,22 @@ import { Translate } from "./Translate";
 export default function Header({ locale }: { locale: string }) {
   const { user } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { theme, toggleTheme, mounted } = useTheme();
   const router = useRouter();
   const t = useTranslations('Header');
   const { cart, toggleCart } = useCart();
 
   console.log(locale);
+
+  // Gérer l'ouverture du modal ou la navigation
+  const handleAccountClick = () => {
+    if (user) {
+      router.push(`/${locale}/dashboard`);
+    } else {
+      setIsLoginModalOpen(true);
+    }
+  };
 
   return (
     <header className={styles.header}>
@@ -35,7 +46,7 @@ export default function Header({ locale }: { locale: string }) {
             <a href={`/${locale}`}>
               <Image
                 src={logo}
-                alt="Rafly Logo"
+                alt="MarxGeek Academy Logo"
                 width={120}
                 height={42}
                 className={styles.logo}
@@ -46,10 +57,16 @@ export default function Header({ locale }: { locale: string }) {
           {/* Desktop Navigation */}
           <nav className={styles.desktopNav}>
             <a href={`/${locale}#tarification`} className={styles.navLink}>
-              {t('pricing')}
+              {/* {t('pricing')} */}
+              Accueil
             </a>
-            <a href={`/${locale}/affiliation`} className={styles.navLink}>
-              {t('affiliation')}
+            <a href={`/${locale}#formations`} className={styles.navLink}>
+              {/* {t('pricing')} */}
+              Nos Formations
+            </a>
+            <a href={`/${locale}#abonnements`} className={styles.navLink}>
+              {/* {t('pricing')} */}
+              Nos Abonnements
             </a>
             <a href={`/${locale}/a-propos`} className={styles.navLink}>
               {t('about')}
@@ -58,7 +75,7 @@ export default function Header({ locale }: { locale: string }) {
 
           {/* Right Section */}
           <Box className={styles.rightSection}>
-            <LanguageSwitcher />
+            {/* <LanguageSwitcher /> */}
 
             <button
               onClick={toggleCart}
@@ -70,14 +87,7 @@ export default function Header({ locale }: { locale: string }) {
               </Badge>
             </button>
 
-            <button className={styles.ctaButton}
-              onClick={() => {
-                if (user) {
-                  router.push(`/${locale}/dashboard`);
-                } else {
-                  router.push(`/${locale}/connexion`);
-                }
-              }}>
+            <button className={styles.ctaButton} onClick={handleAccountClick}>
               <Translate text="Mon Compte" lang={locale} />
             </button>
 
@@ -115,19 +125,19 @@ export default function Header({ locale }: { locale: string }) {
               {t('cart')}
             </a>
 
-            <button className={styles.ctaButtonMobile}
-              onClick={() => {
-                if (user) {
-                  router.push(`/${locale}/dashboard`);
-                } else {
-                  router.push(`/${locale}/connexion`);
-                }
-              }}>
+            <button className={styles.ctaButtonMobile} onClick={handleAccountClick}>
               <Translate text="Mon Compte" lang={locale} />
             </button>
           </nav>
         )}
       </Box>
+
+      {/* Login Modal */}
+      <LoginModal
+        open={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        locale={locale}
+      />
     </header>
   );
 }

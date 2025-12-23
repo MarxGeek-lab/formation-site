@@ -1,14 +1,13 @@
 import { useState } from "react";
 import styles from './ProductCard.module.scss';
 import CircularProgress from "@mui/material/CircularProgress";
+import { API_URL2 } from "@/settings/constant";
 
 const ProductImage = ({ product }: { product: any }) => {
   const [loading, setLoading] = useState(true);
 
   const imgSrc = product?.photos[0]
-    ? product.photos[0].startsWith("http://localhost:5000/")
-      ? product.photos[0].replace("http://localhost:5000/", "https://api.rafly.me/")
-      : product.photos[0]
+    ? API_URL2+ product.photos[0]
     : null;
 
   if (!imgSrc) return null;

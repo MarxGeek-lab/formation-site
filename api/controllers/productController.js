@@ -108,8 +108,8 @@ const productController = {
 
         for (const email of emails) {
           const emailService = new EmailService();
-          emailService.setSubject("Nouveau produit ajouté sur Rafly");
-          emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+          emailService.setSubject("Nouveau produit ajouté sur MarxGeek Academy");
+          emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
           emailService.addTo(email.email);
           emailService.setHtml(generateTemplateHtml("templates/newProduct.html", {
             message: message,
@@ -136,10 +136,10 @@ const productController = {
   updateProduct: async (req, res) => {
     try {
       // Récupération des fichiers
-      const photos = req.files['images']?.map((file) => process.env.API_URL+file.filename) || [];
-      const pdf = req.files['pdf']?.map((file) => process.env.API_URL+file.filename) || [];
-      const videos = req.files['videos']?.[0] ? process.env.API_URL+req.files['videos'][0].filename : null;
-console.log(req.body)
+      const photos = req.files['images']?.map((file) => "/uploads/covers/"+file.filename) || [];
+      const pdf = req.files['pdf']?.map((file) => "/uploads/"+file.filename) || [];
+      const videos = req.files['videos']?.[0] ? "/uploads/"+req.files['videos'][0].filename : null;
+      // console.log("/uploads/"+file.filename)
       const {
         name, description, category, productType,
         isSubscriptionBased, subscriptionId, assignedAdminId,

@@ -33,12 +33,12 @@ module.exports = {
       abandonedCart: {
         subject: 'Vous avez oublié quelque chose dans votre panier ! 🛒',
         from: process.env.EMAIL_FROM || 'noreply@rafly.com',
-        fromName: 'Rafly'
+        fromName: 'MarxGeek Academy'
       },
       followUp: {
         subject: 'Dernière chance ! Votre panier vous attend 💔',
         from: process.env.EMAIL_FROM || 'noreply@rafly.com',
-        fromName: 'Rafly'
+        fromName: 'MarxGeek Academy'
       }
     }
   },

@@ -9,52 +9,59 @@ import { useRouter } from 'next/navigation';
 
 const plans = [
   {
-    name: 'Starter',
-    price: '29€',
-    xofPrice: '~19 000 XOF',
-    period: '/mois',
-    description: 'Idéal pour débuter',
+    name: 'Basic',
+    xofPrice: '10 000 XOF',
+    period: 'paiement unique',
+    description:
+      'Pour apprendre les bases du développement web à ton rythme.',
     features: [
-      'Accès à 10 formations',
+      'Accès complet aux formations HTML, CSS et JavaScript',
+      'Parcours pédagogique structuré et progressif',
+      'Exercices pratiques après chaque module',
+      'Suivi de progression automatisé',
       'Support par email',
-      'Certificat de completion',
-      'Accès à vie aux formations',
+      'Accès à vie aux contenus',
     ],
     popular: false,
   },
   {
-    name: 'Pro',
-    price: '79€',
-    xofPrice: '~52 000 XOF',
+    name: 'Populaire',
+    price: '79 €',
+    xofPrice: '25 000 XOF',
     period: '/mois',
-    description: 'Pour les professionnels',
+    description:
+      'Idéal pour progresser rapidement avec un suivi actif et interactif',
     features: [
-      'Accès illimité aux formations',
-      'Support prioritaire 24/7',
-      'Certificats professionnels',
-      'Projets pratiques inclus',
-      'Mentorat personnalisé',
-      'Accès aux masterclasses',
+      'Accès complet aux formations HTML, CSS et JavaScript',
+      'Accès au module de formation React.js',
+      'Projets pratiques encadrés (HTML / CSS / JavaScript / React)',
+      'Suivi actif et interactif avec retours personnalisés',
+      'Corrections détaillées des exercices et projets',
+      'Sessions d’échanges (chat ou visio selon planning)',
+      'Support WhatsApp prioritaire',
     ],
     popular: true,
   },
   {
-    name: 'Enterprise',
-    price: '199€',
-    xofPrice: '~130 000 XOF',
+    name: 'Avancé',
+    price: '199 €',
+    xofPrice: '70 000 XOF',
     period: '/mois',
-    description: 'Pour les équipes',
+    description:
+      'Un accompagnement intensif pour atteindre un niveau professionnel',
     features: [
-      'Tout du plan Pro',
-      'Formations sur mesure',
-      'Tableau de bord équipe',
-      'Rapports détaillés',
-      'Intégration SSO',
-      'Gestionnaire de compte dédié',
+      'Toutes les fonctionnalités du plan Populaire',
+      'Suivi personnalisé individuel (one-to-one)',
+      'Coaching technique régulier',
+      'Projets réels simulant des cas professionnels',
+      'Revue de code approfondie et bonnes pratiques',
+      'Plan de progression personnalisé selon le niveau',
+      'Préparation à l’insertion professionnelle (portfolio, conseils, orientation)',
     ],
     popular: false,
   },
 ];
+
 
 export default function PricingSection({ locale }: { locale: string }) {
   const t = useTranslations('Pricing');
@@ -67,14 +74,10 @@ export default function PricingSection({ locale }: { locale: string }) {
     >
       <Container maxWidth="lg">
         <Box className={styles.pricingHeader}>
-          <Typography className="rafly-sub">
-            {t('subtitle')}
-          </Typography>
-          <Typography variant="h2" className="titlePageSection">
-            {t('title')}
-          </Typography>
-          <Typography className={styles.pricingDescription}>
-            {t('description')}
+          <Typography variant="h2" 
+          // className="titlePageSection"
+          sx={{textAlign: "center", fontWeight: "700", fontSize: "40px"}}>
+            Nos abonnements
           </Typography>
         </Box>
 
@@ -97,15 +100,15 @@ export default function PricingSection({ locale }: { locale: string }) {
                 </Typography>
                 <Box className={styles.planPrice}>
                   <Typography className={styles.price}>
-                    {plan.price}
+                    {plan.xofPrice}
                   </Typography>
                   <Typography className={styles.period}>
                     {plan.period}
                   </Typography>
                 </Box>
-                <Typography className={styles.xofPrice}>
+                {/* <Typography className={styles.xofPrice}>
                   {plan.xofPrice}
-                </Typography>
+                </Typography> */}
                 <button className={styles.planButton}>
                   Choisir ce plan
                 </button>

@@ -49,8 +49,8 @@ const userController = {
 
       // Configuration de l'email à envoyer
       const emailService = new EmailService();
-      emailService.setSubject("Activation de votre compte sur Rafly");
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+      emailService.setSubject("Activation de votre compte sur MarxGeek Academy");
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
       emailService.addTo(email);
       emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
       await emailService.send(); // Envoi de l'email
@@ -236,23 +236,106 @@ const userController = {
     }
   },
 
+  // Nouveau endpoint pour connexion simplifiée avec envoi de mot de passe par email
+  sendLoginPassword: async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ message: 'Email requis' });
+      }
+
+      // Vérifier si l'utilisateur existe
+      let user = await User.findOne({ email });
+      let isNewUser = false;
+
+      // Si l'utilisateur n'existe pas, créer un nouveau compte
+      if (!user) {
+        // Générer un mot de passe aléatoire
+        const randomPassword = Math.random().toString(36).slice(-8);
+        const hashedPassword = await encryptPassword(randomPassword);
+
+        // Créer le nouvel utilisateur
+        user = new User({
+          email,
+          name: email.split('@')[0], // Utiliser la partie avant @ comme nom
+          password: hashedPassword,
+          isActive: true,
+          typeAccount: 'client'
+        });
+
+        await user.save();
+        isNewUser = true;
+
+        // Envoyer email avec mot de passe pour nouveau compte
+        const emailData = {
+          fullname: user.name,
+          password: randomPassword,
+          email: email
+        };
+
+        const emailService = new EmailService();
+        emailService.setSubject("Bienvenue sur MarxGeek Academy - Votre mot de passe");
+        emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
+        emailService.addTo(email);
+        emailService.setHtml(generateTemplateHtml("templates/newAccountPassword.html", emailData));
+        await emailService.send();
+
+        return res.status(200).json({
+          message: 'Compte créé avec succès. Mot de passe envoyé par email.',
+          isNewUser: true
+        });
+      } else {
+        // Utilisateur existant - générer et envoyer un nouveau mot de passe
+        const randomPassword = Math.random().toString(36).slice(-8);
+        const hashedPassword = await encryptPassword(randomPassword);
+
+        // Mettre à jour le mot de passe
+        user.password = hashedPassword;
+        await user.save();
+
+        // Envoyer email avec mot de passe
+        const emailData = {
+          fullname: user.name,
+          password: randomPassword,
+          email: email
+        };
+
+        const emailService = new EmailService();
+        emailService.setSubject("Connexion MarxGeek Academy - Votre mot de passe");
+        emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
+        emailService.addTo(email);
+        emailService.setHtml(generateTemplateHtml("templates/loginPassword.html", emailData));
+        await emailService.send();
+
+        return res.status(200).json({
+          message: 'Mot de passe envoyé par email.',
+          isNewUser: false
+        });
+      }
+    } catch (error) {
+      console.error('Error in sendLoginPassword:', error);
+      return res.status(500).json({ message: 'Erreur serveur', error });
+    }
+  },
+
   resendCodeOtp: async (req, res) => {
     const { email, action } = req.body;
     console.log(req.body)
     try {
       const userVerify = await User.findOne({ email: email });
-  
+
       if (!userVerify) {
         return res.status(404).json();
       }
-  
+
       const otp = generateVerificationCode();
       const fullName = userVerify.name
       const data = { fullname: fullName, otp };
   
       const emailService = new EmailService();
-      emailService.setSubject(`${action ? "Confirmation de votre mail":"Activation de votre compte"} sur Rafly`);
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+      emailService.setSubject(`${action ? "Confirmation de votre mail":"Activation de votre compte"} sur MarxGeek Academy`);
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
       emailService.addTo(email);
       emailService.setHtml(
         generateTemplateHtml(action ? "templates/resetPwdMobile.html":"templates/activeAccount.html", data),
@@ -293,8 +376,8 @@ const userController = {
 
       // Configuration de l'email à envoyer
       const emailService = new EmailService();
-      emailService.setSubject("Activation de votre compte sur Rafly");
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+      emailService.setSubject("Activation de votre compte sur MarxGeek Academy");
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
       emailService.addTo(email);
       emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
       await emailService.send(); // Envoi de l'email
@@ -390,8 +473,8 @@ const userController = {
       };
 
       const emailService = new EmailService();
-      emailService.setSubject("Confirmation de votre email sur Rafly");
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+      emailService.setSubject("Confirmation de votre email sur MarxGeek Academy");
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
       emailService.addTo(email);
       emailService.setHtml(generateTemplateHtml("templates/verifyEmail.html", emailData));
       await emailService.send();

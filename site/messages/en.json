@@ -137,9 +137,9 @@
     "title": "What our users say",
     "description": "Hundreds of satisfied customers in different fields: design, freelance, productivity, content...",
     "texts": {
-      "testimonial1": "Rafly is a real gem! I found exactly the resources I needed for my project. Smooth interface and quality products!",
+      "testimonial1": "MarxGeek Academy is a real gem! I found exactly the resources I needed for my project. Smooth interface and quality products!",
       "testimonial2": "Top-notch service! Products are well sorted, and support is super responsive. I really recommend 100%.",
-      "testimonial3": "Thanks to Rafly, I was able to get super useful templates and tools in just a few clicks. A real time saver!",
+      "testimonial3": "Thanks to MarxGeek Academy, I was able to get super useful templates and tools in just a few clicks. A real time saver!",
       "testimonial4": "A clear platform, fast downloads and a great selection of digital products."
     }
   },
@@ -148,7 +148,7 @@
     "title": "Everything you need to know",
     "description": "Quick answers to the most common questions about our web and mobile training courses",
     "questions": {
-      "whatAreFormations": "What are Rafly training courses?",
+      "whatAreFormations": "What are MarxGeek Academy training courses?",
       "howToAccess": "How do I access training after purchase?",
       "formationTypes": "What types of training do you offer?",
       "certificateIncluded": "Do the courses include certificates?",
@@ -178,7 +178,7 @@
     "newsletterDescription": "Subscribe to not miss our mystery products",
     "emailPlaceholder": "Email",
     "subscribe": "Subscribe",
-    "copyright": "© 2025 Rafly. All rights reserved."
+    "copyright": "© 2025 MarxGeek Academy. All rights reserved."
   },
   "Catalogue": {
     "subtitle": "Our Products",
@@ -202,12 +202,58 @@
   },
   "About": {
     "hero": {
-      "title": "Rafly, the platform that transforms beginners into successful sellers.",
-      "description": "We don't just sell digital products. We provide weapons to win: validated products, concrete strategies, and a community that takes action. Launch your business today, without getting lost along the way."
+      "title": "Transform your future with our quality training",
+      "description": "We are an online learning platform dedicated to web and mobile development. Our mission: make technology accessible to everyone through practical and results-oriented training.",
+      "badge": "Trusted training platform"
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "Democratize access to technological knowledge and support every learner towards professional success",
+      "card1": "Training created by field experts with real experience in web and mobile development",
+      "card2": "100% practical learning with concrete projects to consolidate your skills",
+      "card3": "Personalized support to help you achieve your professional goals"
+    },
+    "values": {
+      "title": "Our Values",
+      "description": "The principles that guide our educational approach daily",
+      "excellence": {
+        "title": "Excellence",
+        "description": "We create high-quality content, constantly updated with the latest technologies and best practices"
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "Tech learning must be accessible to everyone, regardless of your level or background"
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "We adopt the most effective learning methods to guarantee your rapid progress"
+      }
+    },
+    "stats": {
+      "title": "MarxGeek Academy in numbers",
+      "formations": "Available training courses",
+      "students": "Satisfied students",
+      "satisfaction": "Satisfaction rate",
+      "support": "Available support"
+    },
+    "whyChoose": {
+      "title": "Why choose MarxGeek Academy?",
+      "description": "Our unique approach combines theory and practice for rapid and effective skill development",
+      "reason1": "Content regularly updated according to the latest market trends",
+      "reason2": "Real projects to build a solid professional portfolio",
+      "reason3": "Lifetime access to all your training with free updates",
+      "reason4": "Active community of learners and mentors",
+      "reason5": "Recognized certificates to enhance your resume"
+    },
+    "cta": {
+      "title": "Ready to transform your career?",
+      "description": "Join hundreds of students who have already transformed their passion for technology into professional skills",
+      "browseCatalogue": "Discover our training",
+      "contactSupport": "Contact support"
     },
     "whatIsRafly": {
-      "title": "What is Rafly? And why will you love it?",
-      "description": "Rafly was born from a real and personal need, directly experienced by a field e-commerce entrepreneur. Before Rafly, selling a digital product was a real obstacle course."
+      "title": "What is MarxGeek Academy? And why will you love it?",
+      "description": "MarxGeek Academy was born from a real and personal need, directly experienced by a field e-commerce entrepreneur. Before MarxGeek Academy, selling a digital product was a real obstacle course."
     },
     "problems": {
       "problem1": "...you had to spend hours scrolling on Facebook",
@@ -218,9 +264,9 @@
     "solution": {
       "intro": "It's by experiencing all these obstacles that a simple idea was born:",
       "idea": "What if a single platform could take care of everything",
-      "description": "Rafly is therefore this solution: an all-in-one tool designed to save you time, accelerate your sales and focus only on what really matters: selling.",
+      "description": "MarxGeek Academy is therefore this solution: an all-in-one tool designed to save you time, accelerate your sales and focus only on what really matters: selling.",
       "mission": "Our mission: make digital business simple, fast and profitable for everyone.",
-      "intro2": "Whether you're a beginner or already launched, Rafly gives you direct access to:",
+      "intro2": "Whether you're a beginner or already launched, MarxGeek Academy gives you direct access to:",
       "features": {
         "feature1": "tested, sorted and validated digital products",
         "feature2": "professional visuals ready to use",
@@ -231,7 +277,7 @@
     "testimonials": {
       "title": "Some client results",
       "testimonial1": {
-        "description": "In just 6 months, a seller using our digital products generated over €16,500 in revenue. How? By exploiting our ready-to-sell products and taking advantage of all Rafly's features to attract, convert and retain customers.",
+        "description": "In just 6 months, a seller using our digital products generated over €16,500 in revenue. How? By exploiting our ready-to-sell products and taking advantage of all MarxGeek Academy's features to attract, convert and retain customers.",
         "mission": "Our mission: make digital business simple, fast and profitable for everyone.",
         "clientName": "Positif Godson, CEO",
         "result": "€16,500",
@@ -240,7 +286,7 @@
     },
     "cta": {
       "title": "Ready to take action?",
-      "description": "You no longer need to search for hours, nor struggle with unprofessional visuals. Rafly brings you directly the best tested digital products and ready-to-sell tools. Join now the hundreds of sellers who are already getting results.",
+      "description": "You no longer need to search for hours, nor struggle with unprofessional visuals. MarxGeek Academy brings you directly the best tested digital products and ready-to-sell tools. Join now the hundreds of sellers who are already getting results.",
       "primaryButton": "Discover successful products",
       "secondaryButton": "Get my subscription"
     }
@@ -275,7 +321,7 @@
       "features": {
         "feature1": {
           "title": "Automatic and unlimited commissions",
-          "description": "Your income increases effortlessly, as your members create their own groups. Rafly becomes a lucrative source of income, not an expense."
+          "description": "Your income increases effortlessly, as your members create their own groups. MarxGeek Academy becomes a lucrative source of income, not an expense."
         },
         "feature2": {
           "title": "Use our proven marketing resources",
@@ -292,7 +338,7 @@
       }
     },
     "videos": {
-      "title": "Share Rafly like the best affiliates"
+      "title": "Share MarxGeek Academy like the best affiliates"
     }
   },
   "Support": {
@@ -332,54 +378,54 @@
     "sections": {
       "section1": {
         "title": "1. PERSONAL DATA PROTECTION",
-        "paragraph1": "Rafly.me attaches particular importance to the confidentiality of its users' information. When a user accesses the platform and purchases a digital product, certain personal data may be collected, notably the email address and username.",
-        "paragraph2": "This information is strictly used to provide access to purchased products and to ensure follow-up when needed. Rafly.me undertakes never to sell, rent or share this information with third parties, except in case of legal obligation.",
+        "paragraph1": "MarxGeek Academy attaches particular importance to the confidentiality of its users' information. When a user accesses the platform and purchases a digital product, certain personal data may be collected, notably the email address and username.",
+        "paragraph2": "This information is strictly used to provide access to purchased products and to ensure follow-up when needed. MarxGeek Academy undertakes never to sell, rent or share this information with third parties, except in case of legal obligation.",
         "paragraph3": "Users have the right to access, rectify and delete their personal data. Any request in this regard can be addressed via the platform's customer support.",
-        "paragraph4": "The collected data is stored securely and is only accessible to authorized persons within Rafly.me."
+        "paragraph4": "The collected data is stored securely and is only accessible to authorized persons within MarxGeek Academy."
       },
       "section2": {
         "title": "2. USE AND RESALE OF DIGITAL PRODUCTS",
-        "paragraph1": "All products offered on Rafly.me are white-label digital products. When a user purchases a product, they get immediate access and can exploit it as they wish.",
+        "paragraph1": "All products offered on MarxGeek Academy are white-label digital products. When a user purchases a product, they get immediate access and can exploit it as they wish.",
         "paragraph2": "The user is free to resell the digital products purchased on the platform, without restriction. However, it is their responsibility to ensure they comply with applicable laws regarding the resale of digital content.",
-        "paragraph3": "Rafly.me does not guarantee automatic success in product resale. Profitability will depend on the efforts and strategies implemented by the user."
+        "paragraph3": "MarxGeek Academy does not guarantee automatic success in product resale. Profitability will depend on the efforts and strategies implemented by the user."
       },
       "section3": {
         "title": "3. PRODUCT ACCESS CONDITIONS AND SUPPORT",
-        "paragraph1": "Purchasing a digital product on Rafly.me gives unlimited access to the relevant content. Once the transaction is validated, the user can download or consult the product without time limitation.",
+        "paragraph1": "Purchasing a digital product on MarxGeek Academy gives unlimited access to the relevant content. Once the transaction is validated, the user can download or consult the product without time limitation.",
         "paragraph2": "Some users choose to subscribe to a subscription plan offered on the platform. These subscriptions give access to specific products and strategies that can help them in their resale.",
-        "paragraph3": "Rafly.me offers support only to users who have subscribed to a subscription plan. This support may include advice, strategies and additional resources to help the user better exploit the purchased digital products.",
+        "paragraph3": "MarxGeek Academy offers support only to users who have subscribed to a subscription plan. This support may include advice, strategies and additional resources to help the user better exploit the purchased digital products.",
         "paragraph4": "Users who purchase individual products do not have access to this support and must manage the resale and exploitation of products autonomously."
       },
       "section4": {
         "title": "4. REFUND POLICY",
         "paragraph1": "Since digital products are accessible immediately after purchase, no refund will be granted, except in exceptional cases.",
-        "paragraph2": "Some products available on Rafly.me display the name and details before purchase.",
+        "paragraph2": "Some products available on MarxGeek Academy display the name and details before purchase.",
         "paragraph3": "For mystery products, the product image is partially hidden, but a general description is provided. These products are supposed to be winners, and the user accepts these conditions with full knowledge of the facts.",
-        "paragraph4": "It is the user's responsibility to carefully read all information provided before proceeding with payment. Once the purchase is made, no refund will be granted, unless the situation is deemed exceptional and valid by Rafly.me.",
-        "paragraph5": "Any refund request will be examined on a case-by-case basis, and Rafly.me reserves the right to accept or refuse the request."
+        "paragraph4": "It is the user's responsibility to carefully read all information provided before proceeding with payment. Once the purchase is made, no refund will be granted, unless the situation is deemed exceptional and valid by MarxGeek Academy.",
+        "paragraph5": "Any refund request will be examined on a case-by-case basis, and MarxGeek Academy reserves the right to accept or refuse the request."
       },
       "section5": {
         "title": "5. USER RESPONSIBILITY",
-        "paragraph1": "The user is solely responsible for the use they make of products purchased on Rafly.me.",
-        "paragraph2": "If the user applies the strategies proposed by Rafly.me as part of a subscription, they may obtain results. However, Rafly.me cannot guarantee precise income or automatic success, as these results depend on the individual efforts of each user.",
-        "paragraph3": "Rafly.me cannot be held responsible for losses, failures or unachieved results related to the exploitation of products purchased on the platform."
+        "paragraph1": "The user is solely responsible for the use they make of products purchased on MarxGeek Academy.",
+        "paragraph2": "If the user applies the strategies proposed by MarxGeek Academy as part of a subscription, they may obtain results. However, MarxGeek Academy cannot guarantee precise income or automatic success, as these results depend on the individual efforts of each user.",
+        "paragraph3": "MarxGeek Academy cannot be held responsible for losses, failures or unachieved results related to the exploitation of products purchased on the platform."
       },
       "section6": {
         "title": "6. SUSPENSION AND TERMINATION",
-        "paragraph1": "Rafly.me reserves the right to suspend or delete a user account in case of abuse, fraud or non-compliance with these conditions.",
+        "paragraph1": "MarxGeek Academy reserves the right to suspend or delete a user account in case of abuse, fraud or non-compliance with these conditions.",
         "paragraph2": "A user may decide to terminate their subscription at any time. However, no refund will be granted after subscription, except in exceptional cases mentioned in section 4."
       },
       "section7": {
         "title": "7. GENERAL CONDITIONS MODIFICATIONS",
-        "paragraph1": "Rafly.me may be required to modify these conditions to guarantee better user protection and ensure proper platform operation.",
+        "paragraph1": "MarxGeek Academy may be required to modify these conditions to guarantee better user protection and ensure proper platform operation.",
         "paragraph2": "Any update to the conditions will be communicated to users via the site or by email. Users are invited to regularly consult these conditions to stay informed of possible modifications.",
-        "paragraph3": "By continuing to use Rafly.me after a conditions update, the user automatically accepts the new provisions."
+        "paragraph3": "By continuing to use MarxGeek Academy after a conditions update, the user automatically accepts the new provisions."
       },
       "section8": {
         "title": "8. CONDITIONS ACCEPTANCE",
-        "paragraph1": "By purchasing a digital product or subscribing to a subscription on Rafly.me, the user accepts all the conditions stated in this contract.",
+        "paragraph1": "By purchasing a digital product or subscribing to a subscription on MarxGeek Academy, the user accepts all the conditions stated in this contract.",
         "paragraph2": "Using the platform implies full and complete adherence to these conditions, without possibility of contestation after purchase.",
-        "paragraph3": "Rafly.me undertakes to provide a service that meets user expectations while guaranteeing total transparency on purchase, resale and support modalities."
+        "paragraph3": "MarxGeek Academy undertakes to provide a service that meets user expectations while guaranteeing total transparency on purchase, resale and support modalities."
       }
     },
     "contact": {
@@ -458,9 +504,9 @@
   },
   "Auth": {
     "login": "Login",
-    "loginSubtitle": "Sign in to your Rafly account",
+    "loginSubtitle": "Sign in to your MarxGeek Academy account",
     "register": "Register",
-    "registerSubtitle": "Create your Rafly account",
+    "registerSubtitle": "Create your MarxGeek Academy account",
     "forgotPassword": "Forgot Password",
     "resetPassword": "Reset Password",
     "email": "Email address",

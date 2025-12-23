@@ -43,7 +43,7 @@ export default function Header({ locale }: { locale: string }) {
             <a href={`/${locale}`}>
               <Image
                 src={logo}
-                alt="Rafly Logo"
+                alt="MarxGeek Academy Logo"
                 width={120}
                 height={42}
                 className={styles.logo}
@@ -355,7 +355,7 @@ export default function Footer({ locale }: { locale: string }) {
         >
           {/* À propos */}
           <Box>
-            <Image src={logo} alt="Rafly" width={120} height={42} />
+            <Image src={logo} alt="MarxGeek Academy" width={120} height={42} />
             <Typography
               sx={{
                 mt: 2,
@@ -451,7 +451,7 @@ export default function Footer({ locale }: { locale: string }) {
               color: theme === 'dark' ? '#9ca3af' : '#6b7280',
             }}
           >
-            © {new Date().getFullYear()} Rafly. Tous droits réservés.
+            © {new Date().getFullYear()} MarxGeek Academy. Tous droits réservés.
           </Typography>
         </Box>
       </Container>

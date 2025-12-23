@@ -292,27 +292,119 @@
   }
 }
 
-// Responsive
-@media (max-width: 600px) {
-  .modalGrid {
-    min-height: auto;
+// Responsive Mobile
+@media (max-width: 768px) {
+  .modalContent {
+    padding: 0 !important;
+    max-height: 90vh;
   }
 
-  .leftSection,
+  .leftSection {
+    padding: 1.5rem !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(250, 0, 63, 0.1) !important;
+  }
+
   .rightSection {
-    padding: 1.5rem;
+    padding: 1.5rem !important;
+  }
+
+  .imageWrapper {
+    aspect-ratio: 16 / 10 !important;
+    max-height: 250px;
   }
 
   .productTitle {
-    font-size: 1.375rem !important;
+    font-size: 1.25rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .ratingSection {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 8px;
+  }
+
+  .priceBox {
+    padding: 1rem !important;
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 8px !important;
   }
 
   .currentPrice {
     font-size: 1.75rem !important;
   }
 
-  .benefitsGrid,
+  .oldPrice {
+    font-size: 1rem !important;
+  }
+
+  .descriptionSection {
+    padding: 1rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .benefitsGrid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .benefitCard {
+    padding: 1rem !important;
+  }
+
+  .benefitIcon {
+    width: 36px !important;
+    height: 36px !important;
+
+    svg {
+      font-size: 20px !important;
+    }
+  }
+
+  .benefitTitle {
+    font-size: 0.9rem !important;
+  }
+
+  .benefitDescription {
+    font-size: 0.8rem !important;
+  }
+
   .featuresList {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+    gap: 0.75rem !important;
+
+    button {
+      width: 100% !important;
+      padding: 12px 20px !important;
+      font-size: 0.875rem !important;
+    }
+  }
+
+  .closeButton {
+    top: 12px !important;
+    right: 12px !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    padding: 8px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .productTitle {
+    font-size: 1.125rem !important;
+  }
+
+  .currentPrice {
+    font-size: 1.5rem !important;
+  }
+
+  .leftSection,
+  .rightSection {
+    padding: 1rem !important;
   }
 }

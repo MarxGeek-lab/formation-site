@@ -37,7 +37,7 @@ export default function Footer({ locale }: { locale: string }) {
               color: theme === 'dark' ? '#9ca3af' : '#6b7280',
             }}
           >
-            © {new Date().getFullYear()} Rafly. Tous droits réservés.
+            © {new Date().getFullYear()} MarxGeek Academy. Tous droits réservés.
           </Typography>
 
           <a

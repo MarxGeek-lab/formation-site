@@ -20,8 +20,8 @@ exports.createQuestion = async (req, res) => {
     const userN = await User.findOne({ _id: user });
 
     const emailService = new EmailService();
-    emailService.setSubject(`Assistance sur Rafly`);
-    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+    emailService.setSubject(`Assistance sur MarxGeek Academy`);
+    emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
     emailService.addTo('mgangbala610@gmail.com');
     const message = `Vous avez reçu un nouveau message d'assistance de l'utilisateur ${userN?.name}.
     Veuillez vous rendre dans votre espace personnelle pour y répondre.`
@@ -67,11 +67,11 @@ exports.addMessageToChatSupport = async (req, res) => {
       let msg='';
       let title='';
       if (type === 'message') {
-        title='Demande d\'assistance sur Rafly'
+        title='Demande d\'assistance sur MarxGeek Academy'
         msg = `Vous avez reçu un nouveau message d'assistance de l'utilisateur ${userData?.name}.
         Veuillez vous rendre dans votre espace personnelle pour y répondre.`
       } else {
-        title='Réponse suite à votre demande d\'assistance sur Rafly';
+        title='Réponse suite à votre demande d\'assistance sur MarxGeek Academy';
         msg = `Le support a répondu à votre demande. Veuillez consulter votre boîte d'assistance.`;
       }
 
@@ -82,7 +82,7 @@ exports.addMessageToChatSupport = async (req, res) => {
 
       const emailService = new EmailService();
       emailService.setSubject(title);
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
       if (type === 'message') {
         emailService.addTo(emailsAdmin);
       } else {
@@ -98,7 +98,7 @@ exports.addMessageToChatSupport = async (req, res) => {
 
       // Notifications
       const notification = new Notifications({
-        title: type === 'message' ? 'Demande d\'assistance sur Rafly' : 'Réponse suite à votre demande d\'assistance sur Rafly',
+        title: type === 'message' ? 'Demande d\'assistance sur MarxGeek Academy' : 'Réponse suite à votre demande d\'assistance sur MarxGeek Academy',
         content: msg,
         user: type === 'message' ? null : user,
         type: type === 'message' ? 'user': 'admin',

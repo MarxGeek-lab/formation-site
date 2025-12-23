@@ -112,7 +112,6 @@ const Navigation = props => {
         mb: 2,
         backgroundColor: primaryColorConfig[0].main,
       }}>
-        <img src={API_URL_ROOT+'icon.webp'} alt="" width={30} height={30} />
         <Typography variant='subtitle1' color='white' whiteSpace={'nowrap'}>Tableau de bord</Typography>
       </Box>
       {/* Nav Header including Logo & nav toggle icons  */}

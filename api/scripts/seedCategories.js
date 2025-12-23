@@ -1,105 +1,88 @@
 const mongoose = require('mongoose');
 const Category = require('../models/Categories');
-require('dotenv').config();
 
-// Catégories prédéfinies avec traductions
-const predefinedCategories = [
-  {
-    name: "ebooks",
-    nameEn: "E-books",
-    nameFr: "Livres numériques"
-  },
-  {
-    name: "subscriptions", 
-    nameEn: "Subscriptions",
-    nameFr: "Abonnements"
-  },
-  {
-    name: "business",
-    nameEn: "Business",
-    nameFr: "Business"
-  },
-  {
-    name: "graphicDesign",
-    nameEn: "Graphic Design", 
-    nameFr: "Design graphique"
-  },
-  {
-    name: "entertainment",
-    nameEn: "Entertainment",
-    nameFr: "Divertissement"
-  },
-  {
-    name: "training",
-    nameEn: "Training",
-    nameFr: "Formation"
-  },
-  {
-    name: "ai",
-    nameEn: "Artificial Intelligence",
-    nameFr: "Intelligence artificielle"
-  },
-  {
-    name: "videoEditing",
-    nameEn: "Video Editing",
-    nameFr: "Montage vidéo"
-  },
-  {
-    name: "mysteries",
-    nameEn: "Mysteries",
-    nameFr: "Mystères"
-  },
-  {
-    name: "premiumTools",
-    nameEn: "Premium Tools",
-    nameFr: "Outils premium"
-  },
-  {
-    name: "spirituality",
-    nameEn: "Spirituality",
-    nameFr: "Spiritualité"
-  },
-  {
-    name: "templates",
-    nameEn: "Templates",
-    nameFr: "Modèles"
-  }
+// Connexion à MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/marxgeek_academy', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('📌 Connected to MongoDB'))
+.catch(err => console.error('❌ MongoDB connection error:', err));
+
+// Liste des catégories
+const categories = [
+  // 1. Fondamentaux
+  { nameFr: "HTML", nameEn: "HTML" },
+  { nameFr: "CSS", nameEn: "CSS" },
+  { nameFr: "JavaScript (Débutant)", nameEn: "JavaScript Basics" },
+  { nameFr: "Git & GitHub", nameEn: "Git & GitHub" },
+  { nameFr: "Terminal & Commandes", nameEn: "Terminal & Commands" },
+
+  // 2. Frontend
+  { nameFr: "JavaScript Avancé", nameEn: "Advanced JavaScript" },
+  { nameFr: "TypeScript", nameEn: "TypeScript" },
+  { nameFr: "React.js", nameEn: "React.js" },
+  { nameFr: "Next.js", nameEn: "Next.js" },
+  { nameFr: "Vue.js", nameEn: "Vue.js" },
+  { nameFr: "Nuxt.js", nameEn: "Nuxt.js" },
+  { nameFr: "Angular", nameEn: "Angular" },
+  { nameFr: "Tailwind CSS", nameEn: "Tailwind CSS" },
+  { nameFr: "Animations Web (GSAP, Framer Motion)", nameEn: "Web Animations" },
+
+  // 3. Backend
+  { nameFr: "Node.js", nameEn: "Node.js" },
+  { nameFr: "Express.js", nameEn: "Express.js" },
+  { nameFr: "AdonisJS", nameEn: "AdonisJS" },
+  { nameFr: "NestJS", nameEn: "NestJS" },
+  { nameFr: "PHP & Laravel", nameEn: "Laravel" },
+  { nameFr: "APIs REST & GraphQL", nameEn: "API Development" },
+  { nameFr: "Sécurité Backend", nameEn: "Backend Security" },
+
+  // 4. Bases de données
+  { nameFr: "MongoDB", nameEn: "MongoDB" },
+  { nameFr: "MySQL & SQL", nameEn: "SQL / MySQL" },
+  { nameFr: "PostgreSQL", nameEn: "PostgreSQL" },
+  { nameFr: "Redis", nameEn: "Redis" },
+  { nameFr: "ORMs (Prisma, Sequelize, Mongoose)", nameEn: "ORM Tools" },
+
+  // 5. Mobile
+  { nameFr: "React Native", nameEn: "React Native" },
+  { nameFr: "Expo", nameEn: "Expo" },
+  { nameFr: "Flutter", nameEn: "Flutter" },
+
+  // 6. DevOps
+  { nameFr: "Linux & Ubuntu", nameEn: "Linux & Ubuntu" },
+  { nameFr: "Docker", nameEn: "Docker" },
+  { nameFr: "Nginx & Serveurs", nameEn: "Nginx & Servers" },
+  { nameFr: "CI/CD (GitHub Actions)", nameEn: "CI/CD" },
+  { nameFr: "Sécurité Serveur", nameEn: "Server Security" },
+
+  // 7. Business & Carrière
+  { nameFr: "Portfolio Développeur", nameEn: "Developer Portfolio" },
+  { nameFr: "Freelancing & Clients", nameEn: "Freelancing" },
+  { nameFr: "Soft Skills pour Développeurs", nameEn: "Soft Skills" },
+
+  // 8. Projets pratiques
+  { nameFr: "Projets Pratiques Web", nameEn: "Web Projects" },
+  { nameFr: "Apps Mobiles Complètes", nameEn: "Mobile Apps" },
+  { nameFr: "Clones de Sites", nameEn: "Website Clones" },
 ];
 
-const seedCategories = async () => {
+// Fonction de seed
+async function seedCategories() {
   try {
-    // Connexion à la base de données
-    await mongoose.connect(process.env.MONGODB_URL || "mongodb://azrexchange:azrexchange2024@198.7.125.60:27017/marketDB", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    console.log('Connexion à MongoDB réussie');
-
-    // Supprimer toutes les catégories existantes (optionnel)
+    console.log("🗑 Suppression des anciennes catégories...");
     await Category.deleteMany({});
-    console.log('Catégories existantes supprimées');
 
-    // Insérer les nouvelles catégories
-    const insertedCategories = await Category.insertMany(predefinedCategories);
-    
-    console.log(`${insertedCategories.length} catégories ajoutées avec succès:`);
-    insertedCategories.forEach(category => {
-      console.log(`- ${category.name} (EN: ${category.nameEn}, FR: ${category.nameFr})`);
-    });
+    console.log("📥 Insertion des nouvelles catégories...");
+    await Category.insertMany(categories);
 
-  } catch (error) {
-    console.error('Erreur lors de l\'insertion des catégories:', error);
+    console.log("✅ Catégories ajoutées avec succès !");
+  } catch (err) {
+    console.error("❌ Erreur lors du seed :", err);
   } finally {
-    // Fermer la connexion
-    await mongoose.connection.close();
-    console.log('Connexion fermée');
+    mongoose.connection.close();
   }
-};
-
-// Exécuter le script
-if (require.main === module) {
-  seedCategories();
 }
 
-module.exports = { seedCategories, predefinedCategories };
+seedCategories();

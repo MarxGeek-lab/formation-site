@@ -51,6 +51,13 @@ const ProductSchema = new mongoose.Schema({
   // Documents et médias
   saleDocument: [String], // PDF de vente
   demoVideo: { type: String }, // Vidéo de démonstration
+
+  // Ebook spécifique
+  ebookFile: [{ type: String }], // Fichier(s) ebook original (peut être multiple pour parties 1 & 2)
+  ebookPreview: { type: String }, // PDF preview crypté avec mot de passe
+  ebookPassword: { type: String }, // Mot de passe pour ouvrir le preview
+  downloadLink: { type: String }, // Lien vers la page HTML de téléchargement sécurisée
+  downloadCode: { type: String }, // Code pour télécharger le fichier complet
   
   // Caractéristiques personnalisées
   characteristics: [{

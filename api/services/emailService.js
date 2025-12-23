@@ -102,14 +102,14 @@ async function sendAbandonedCartEmail(cart) {
 		console.log('[BOUTON: Finaliser ma commande]');
 		console.log('');
 		console.log('Cordialement,');
-		console.log('L\'équipe Rafly');
+		console.log('L\'équipe MarxGeek Academy');
 		console.log('==========================================');
 
 		// Si vous avez un vrai service email, décommentez et adaptez le code ci-dessous:
 		/*
 		const emailService = new EmailService();
 		
-		emailService.setFrom(process.env.EMAIL_FROM || 'noreply@rafly.com', 'Rafly');
+		emailService.setFrom(process.env.EMAIL_FROM || 'noreply@rafly.com', 'MarxGeek Academy');
 		emailService.addTo(cart.email);
 		emailService.setSubject('Vous avez oublié quelque chose dans votre panier ! 🛒');
 		
@@ -146,7 +146,7 @@ function generateAbandonedCartEmailHTML(cart) {
 		<head>
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>Panier abandonné - Rafly</title>
+			<title>Panier abandonné - MarxGeek Academy</title>
 		</head>
 		<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
 			<div style="background: #f8f9fa; padding: 30px; border-radius: 10px;">
@@ -201,11 +201,11 @@ function generateAbandonedCartEmailHTML(cart) {
 				
 				<p style="font-size: 14px; color: #666; text-align: center;">
 					Cordialement,<br>
-					L'équipe Rafly
+					L'équipe MarxGeek Academy
 				</p>
 				
 				<p style="font-size: 12px; color: #999; text-align: center; margin-top: 30px;">
-					Vous recevez cet email car vous avez des articles dans votre panier sur Rafly.<br>
+					Vous recevez cet email car vous avez des articles dans votre panier sur MarxGeek Academy.<br>
 					<a href="${process.env.FRONTEND_URL || 'https://rafly.com'}/unsubscribe?email=${cart.email}" style="color: #999;">Se désabonner</a>
 				</p>
 			</div>

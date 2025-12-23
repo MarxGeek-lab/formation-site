@@ -34,10 +34,8 @@ const HorizontalWithBorder = props => {
 
   return (
     <Card sx={{
-      background: '#5F3AFC20', 
       boxShadow: 'none',
       border: '1px solid rgb(207, 207, 207)',
-      borderBottom: '2px solid #5F3AFC'
     }}>
       <CardContent className=' h-[110px] flex items-center justify-between gap-2'>
         <div className='flex flex-col items-start gap-1'>

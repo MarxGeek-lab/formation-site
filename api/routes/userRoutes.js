@@ -9,6 +9,7 @@ const upload = require('../middleware/multer');
 router.post("/test", (req, res) => res.send("coo"))
 router.post('/signup', userController.signUp);
 router.post('/signin', userController.signIn);
+router.post('/send-login-password', userController.sendLoginPassword);
 router.post('/active-account', userController.activeAccount);
 router.post('/resend-activation-code', userController.resendActivationCode);
 router.post('/resend-code-otp', userController.resendCodeOtp);

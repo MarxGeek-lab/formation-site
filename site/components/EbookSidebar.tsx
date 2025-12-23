@@ -92,6 +92,21 @@ export default function EbookSidebar({ locale, onCategoryChange, onSearchChange,
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
     onCategoryChange?.(categoryId);
+
+    // Émettre un événement personnalisé pour la page d'accueil
+    const event = new CustomEvent('categoryChange', { detail: { category: categoryId } });
+    window.dispatchEvent(event);
+
+    // Scroll vers la section formations
+    setTimeout(() => {
+      const formationsSection = document.getElementById('formations');
+      if (formationsSection) {
+        formationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+
+    // Fermer le drawer mobile
+    setMobileOpen(false);
   };
 
   const handleFilterChange = () => {
@@ -173,10 +188,9 @@ export default function EbookSidebar({ locale, onCategoryChange, onSearchChange,
       </Box>
 
       {/* Filters */}
-      <Box className={styles.filtersSection}>
+      {/* <Box className={styles.filtersSection}>
         <h3 className={styles.sectionTitle}>Filtres</h3>
         
-        {/* Price Range */}
         <FormControl fullWidth size="small" className={styles.filterControl}>
           <InputLabel>Prix</InputLabel>
           <Select
@@ -195,7 +209,6 @@ export default function EbookSidebar({ locale, onCategoryChange, onSearchChange,
           </Select>
         </FormControl>
 
-        {/* Level */}
         <FormControl fullWidth size="small" className={styles.filterControl}>
           <InputLabel>Niveau</InputLabel>
           <Select
@@ -214,7 +227,6 @@ export default function EbookSidebar({ locale, onCategoryChange, onSearchChange,
           </Select>
         </FormControl>
 
-        {/* Active Filters */}
         {(priceRange !== "all" || level !== "all" || selectedCategory !== "all") && (
           <Box className={styles.activeFilters}>
             <p className={styles.activeFiltersLabel}>Filtres actifs:</p>
@@ -252,13 +264,13 @@ export default function EbookSidebar({ locale, onCategoryChange, onSearchChange,
             </Box>
           </Box>
         )}
-      </Box>
+      </Box> */}
 
       {/* CTA Button */}
       <Box className={styles.ctaSection}>
         <button 
           className={styles.ctaButton}
-          onClick={() => router.push(`/${locale}/catalogue`)}
+          onClick={() => router.push(`/${locale}/#formations`)}
         >
           <MenuBook sx={{ mr: 1 }} />
           Voir tous les e-books
@@ -297,7 +309,7 @@ export default function EbookSidebar({ locale, onCategoryChange, onSearchChange,
           position: 'fixed',
           left: 0,
           top: 0,
-          width: 280,
+          width: 250,
           height: '100vh',
           overflowY: 'auto',
           zIndex: 1100,

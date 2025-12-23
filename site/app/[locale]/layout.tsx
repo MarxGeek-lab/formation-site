@@ -17,6 +17,7 @@ import LocaleProvider from "./LocaleProvider";
 import Script from "next/script";
 import { Box } from "@mui/material";
 import SocialFloat from "@/components/SocialFloat";
+import SessionChecker from "@/components/SessionChecker";
 
 export const viewport = {
   width: 'device-width',
@@ -74,6 +75,9 @@ export default async function LocaleLayout({
             <GlobalProvider>
               <NotificationProvider>
                 <CartProvider>
+                  {/* Session Checker */}
+                  <SessionChecker />
+
                   {/* Sidebar E-Books - Fixed on all pages */}
                   <Box sx={{
                     display: "flex",

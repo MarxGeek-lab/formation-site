@@ -4,6 +4,8 @@ const orderController = require('../controllers/orderController');
 const authAdmin = require('../middleware/authenticateAdminToken');
 
 router.post('/', orderController.createOrder);
+router.post('/create', orderController.createSimpleOrder);
+router.post('/download-locked', orderController.downloadLockedPreviews);
 router.post('/admin/create', authAdmin, orderController.createOrderByAdmin);
 router.get('/user/:customerId', orderController.getUserOrders);
 router.get('/user/:customerId/subscription', orderController.getUserOrdersSubscription);

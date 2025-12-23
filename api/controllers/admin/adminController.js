@@ -354,8 +354,8 @@ const adminController = {
 
 
       const emailService = new EmailService();
-      emailService.setSubject(`${emailSubject} sur Rafly`);
-      emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+      emailService.setSubject(`${emailSubject} sur MarxGeek Academy`);
+      emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
       emailService.addTo(user?.email);
       emailService.setHtml(generateTemplateHtml("templates/notificationMessage.html", {
         salutation: getGreeting(),

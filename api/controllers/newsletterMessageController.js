@@ -65,7 +65,7 @@ const newsletterMessageController = {
             if (subscribers.length > 0) {
                 for (const subscriber of subscribers) {
                     const emailService = new EmailService();
-                    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+                    emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
                     emailService.addTo(subscriber.email);
                     emailService.setSubject(message.subject);
                     emailService.setHtml(generateTemplateHtml('templates/newsletter.html', {
@@ -74,7 +74,7 @@ const newsletterMessageController = {
                         name: subscriber.name,
                         salutation: getGreeting(),
                         content: message.htmlContent,
-                        websiteTitle: 'Rafly',
+                        websiteTitle: 'MarxGeek Academy',
                         contactEmail: 'contact@rafly.com'
                     }));
 

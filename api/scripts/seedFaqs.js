@@ -5,11 +5,11 @@ require('dotenv').config();
 const faqs = [
   // Création de compte et Profil
   {
-    question: "Comment créer un compte sur Rafly ?",
-    answer: "Pour créer un compte sur Rafly, cliquez sur 'S'inscrire' en haut à droite de la page d'accueil. Remplissez le formulaire avec vos informations personnelles (nom, prénom, email, mot de passe). Validez votre email via le lien envoyé à votre adresse pour activer votre compte."
+    question: "Comment créer un compte sur MarxGeek Academy ?",
+    answer: "Pour créer un compte sur MarxGeek Academy, cliquez sur 'S'inscrire' en haut à droite de la page d'accueil. Remplissez le formulaire avec vos informations personnelles (nom, prénom, email, mot de passe). Validez votre email via le lien envoyé à votre adresse pour activer votre compte."
   },
   {
-    question: "Comment devenir propriétaire sur Rafly ?",
+    question: "Comment devenir propriétaire sur MarxGeek Academy ?",
     answer: "Pour devenir propriétaire, connectez-vous à votre compte et accédez à votre profil. Cliquez sur 'Devenir propriétaire' et fournissez les documents requis : pièce d'identité, justificatif de domicile, et informations bancaires. Votre demande sera examinée sous 48h ouvrées."
   },
   {
@@ -19,12 +19,12 @@ const faqs = [
 
   // Publication et Gestion des Biens
   {
-    question: "Comment publier un bien sur Rafly ?",
+    question: "Comment publier un bien sur MarxGeek Academy ?",
     answer: "Une fois votre statut de propriétaire validé, cliquez sur 'Publier un bien' dans votre tableau de bord. Remplissez les informations détaillées (localisation, description, équipements, photos, prix), définissez vos conditions de réservation, et validez la publication."
   },
   {
     question: "Quels types de biens puis-je mettre en location ?",
-    answer: "Rafly accepte divers types de biens : appartements, maisons, chambres privées, espaces de coworking, salles de réunion, et espaces événementiels. Chaque bien doit respecter nos conditions d'utilisation et normes de sécurité."
+    answer: "MarxGeek Academy accepte divers types de biens : appartements, maisons, chambres privées, espaces de coworking, salles de réunion, et espaces événementiels. Chaque bien doit respecter nos conditions d'utilisation et normes de sécurité."
   },
   {
     question: "Comment modifier les informations de mon bien ?",
@@ -42,13 +42,13 @@ const faqs = [
   },
   {
     question: "Quels sont les modes de paiement acceptés ?",
-    answer: "Rafly accepte les cartes bancaires (Visa, Mastercard), PayPal, et les virements bancaires pour certaines réservations longue durée. Tous les paiements sont sécurisés et cryptés."
+    answer: "MarxGeek Academy accepte les cartes bancaires (Visa, Mastercard), PayPal, et les virements bancaires pour certaines réservations longue durée. Tous les paiements sont sécurisés et cryptés."
   },
 
   // Sécurité et Support
   {
-    question: "Comment fonctionne la garantie Rafly ?",
-    answer: "La garantie Rafly couvre les dommages matériels jusqu'à 10 000€, les annulations de dernière minute, et assure une médiation en cas de litige. Une assurance complémentaire peut être souscrite pour une protection supplémentaire."
+    question: "Comment fonctionne la garantie MarxGeek Academy ?",
+    answer: "La garantie MarxGeek Academy couvre les dommages matériels jusqu'à 10 000€, les annulations de dernière minute, et assure une médiation en cas de litige. Une assurance complémentaire peut être souscrite pour une protection supplémentaire."
   },
   {
     question: "Comment contacter le support client ?",

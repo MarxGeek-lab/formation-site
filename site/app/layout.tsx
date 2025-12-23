@@ -4,11 +4,11 @@ import "./globals.css";
 
 
 export const metadata: Metadata = {
-  title: "Rafly - Plateforme de revente de produits numériques",
+  title: "MarxGeek Academy - Plateforme de revente de produits numériques",
   description:
     "La plateforme n°1 de revente de produits numériques. Accédez à une sélection de produits digitaux rentables, validés par le marché.",
   keywords: [
-    "Rafly",
+    "MarxGeek Academy",
     "revente produits numériques",
     "produits digitaux",
     "marketplace digitale",
@@ -30,21 +30,21 @@ export const metadata: Metadata = {
     "formation numérique",
     "outils digitaux"
   ],
-  authors: [{ name: "Rafly", url: "https://api.rafly.me" }],
-  creator: "Rafly",
+  authors: [{ name: "MarxGeek Academy", url: "https://api.rafly.me" }],
+  creator: "MarxGeek Academy",
 
   openGraph: {
-    title: "Rafly - Plateforme de revente de produits numériques",
+    title: "MarxGeek Academy - Plateforme de revente de produits numériques",
     description:
       "La plateforme n°1 de revente de produits numériques. Accédez à une sélection de produits digitaux rentables, validés par le marché.",
     url: "https://app.rafly.me",
-    siteName: "Rafly",
+    siteName: "MarxGeek Academy",
     images: [
       {
         url: "https://app.rafly.me/logo.webp",
         width: 1200,
         height: 630,
-        alt: "Rafly - Marketplace de produits numériques",
+        alt: "MarxGeek Academy - Marketplace de produits numériques",
       },
     ],
     locale: "fr_FR",
@@ -53,11 +53,11 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Rafly - Plateforme de revente de produits numériques",
+    title: "MarxGeek Academy - Plateforme de revente de produits numériques",
     description:
       "La plateforme n°1 de revente de produits numériques. Accédez à une sélection de produits digitaux rentables, validés par le marché.",
-    site: "@Rafly",
-    creator: "@Rafly",
+    site: "@MarxGeek Academy",
+    creator: "@MarxGeek Academy",
     images: ["https://api.rafly.me/logo-1.webp"],
   },
 };

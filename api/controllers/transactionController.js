@@ -565,8 +565,8 @@ const transactionController = {
         <table style="margin: 0 auto;" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
           <tr>
             <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background: #5E3AFC;">
-              <img src="https://api.rafly.me/logo/icon.webp" alt="Logo" style="width:40px; height:auto;" />
-              <h3 style="color: #fff; font-size: 24px;">Rafly</h3>
+              <img src="https://api.marxgeek.com/logo/icon.webp" alt="Logo" style="width:40px; height:auto;" />
+              <h3 style="color: #fff; font-size: 24px;">MarxGeek Academy</h3>
             </td>
           </tr>
   
@@ -609,7 +609,7 @@ const transactionController = {
   
           <tr>
             <td align="center" style="padding:20px; font-size:12px; color:#888;">
-              © 2025 Rafly. Tous droits réservés.
+              © 2025 MarxGeek Academy. Tous droits réservés.
             </td>
           </tr>
         </table>
@@ -620,8 +620,8 @@ const transactionController = {
     console.log("debu mail 3 == ")
     // Envoyer le mail
     const emailService = new EmailService();
-    emailService.setSubject(`${isSubscription ? 'Abonnement ':'Commande '} ORD-${order?._id?.toString().slice(0, 6).toUpperCase()} confirmée sur Rafly`);
-    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+    emailService.setSubject(`${isSubscription ? 'Abonnement ':'Commande '} ORD-${order?._id?.toString().slice(0, 6).toUpperCase()} confirmée sur MarxGeek Academy`);
+    emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
     emailService.addTo(order?.customer?.email || order?.email);
     emailService.setHtml(html);
   

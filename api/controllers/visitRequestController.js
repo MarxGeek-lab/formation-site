@@ -42,8 +42,8 @@ exports.createVisitRequest = async (req, res) => {
 
     // Notification par mail au client
     const emailService = new EmailService();
-    emailService.setSubject(`Demande de visite sur Rafly`);
-    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+    emailService.setSubject(`Demande de visite sur MarxGeek Academy`);
+    emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
     emailService.addTo(email);
     emailService.setHtml(generateTemplateHtml("templates/requestVisit.html", templateData));
     emailService.send();
@@ -58,8 +58,8 @@ exports.createVisitRequest = async (req, res) => {
         date_demande: new Date(visitRequest?.createdAt).toLocaleString()
     };
      const emailService2 = new EmailService();
-     emailService2.setSubject(`Demande de visite sur Rafly`);
-     emailService2.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+     emailService2.setSubject(`Demande de visite sur MarxGeek Academy`);
+     emailService2.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
      emailService2.addTo(ownerEmail);
      emailService2.setHtml(generateTemplateHtml("templates/requestVisitNotifyOwner.html", templateData2));
      emailService2.send();

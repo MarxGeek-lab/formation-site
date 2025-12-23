@@ -1,38 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  Drawer, 
-  Box, 
-  Typography, 
-  IconButton, 
-  Button, 
-  List, 
-  ListItem, 
-  ListItemAvatar, 
+import {
+  Drawer,
+  Box,
+  Typography,
+  IconButton,
+  Button,
+  List,
+  ListItem,
+  ListItemAvatar,
   ListItemText,
   Avatar,
   Divider,
   Badge
 } from '@mui/material';
-import { 
-  Close, 
-  Add, 
-  Remove, 
-  Delete, 
-  ShoppingCart 
+import {
+  Close,
+  Add,
+  Remove,
+  Delete,
+  ShoppingCart
 } from '@mui/icons-material';
 import { useCart } from '@/contexts/CartContext';
+import PaymentModal from './PaymentModal';
 import styles from './CartSidebar.module.scss';
+import { API_URL2 } from '@/settings/constant';
 
 export default function CartSidebar({ params }: { params: { locale: string } }) {
   const { cart, removeFromCart, updateQuantity, clearCart, toggleCart } = useCart();
   const router = useRouter();
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
   const handleCheckout = () => {
-    toggleCart(); // Close the cart
-    router.push(`/${params.locale}/paiement`);
+    setPaymentModalOpen(true);
   };
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
@@ -92,7 +94,7 @@ export default function CartSidebar({ params }: { params: { locale: string } }) 
                 <ListItem key={item.id} className={styles.cartItem}>
                   <ListItemAvatar>
                     <Avatar
-                      src={item.image?.replace('http://localhost:5000/', 'https://api.rafly.me/')}
+                      src={API_URL2+ item.image}
                       alt={item.name}
                       variant="rounded"
                       className={styles.productImage}
@@ -109,9 +111,6 @@ export default function CartSidebar({ params }: { params: { locale: string } }) 
                     }
                     secondary={
                       <Box className={styles.productDetails}>
-                        <Typography variant="body2" color="textSecondary">
-                          {item.category}
-                        </Typography>
                         <Typography variant="subtitle2" className={styles.productPrice}>
                           {formatPrice(item.price)}
                         </Typography>
@@ -220,6 +219,13 @@ export default function CartSidebar({ params }: { params: { locale: string } }) 
           </>
         )}
       </Box>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        open={paymentModalOpen}
+        onClose={() => setPaymentModalOpen(false)}
+        locale={params.locale}
+      />
     </Drawer>
   );
 }

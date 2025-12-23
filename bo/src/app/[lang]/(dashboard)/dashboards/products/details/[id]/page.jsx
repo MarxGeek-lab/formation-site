@@ -17,6 +17,7 @@ import "dayjs/locale/fr";
 import { Box } from '@mui/material';
 import PropertyDetailHeader from '../PropertyDetailHeader';
 import PropertyDetailsCard from '../PropertyDetailsCard';
+import { API_URL_ROOT } from '@/settings';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(duration);
@@ -75,7 +76,7 @@ const OrderDetailsPage = () => {
           <Slider {...settings}>
             {product.photos.map((img, index) => (
               <Box key={index} sx={{width: '100%'}}>
-                    <img src={img} alt={`Slide ${index}`} style={{ 
+                    <img src={API_URL_ROOT+ img} alt={`Slide ${index}`} style={{ 
                   width: '100%', height: '300px', objectFit: 'contain', borderRadius: 2 }}  />
               </Box>
             ))}

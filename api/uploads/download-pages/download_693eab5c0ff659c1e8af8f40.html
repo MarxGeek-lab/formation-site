@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Téléchargement - Formation CSS Enrichie - Design Moderne</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo h1 {
+            color: #FA003F;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+        .product-info {
+            background: linear-gradient(135deg, rgba(250, 0, 63, 0.08) 0%, rgba(199, 0, 50, 0.03) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #FA003F;
+        }
+        .product-info h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .product-info p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .download-section {
+            margin-bottom: 30px;
+        }
+        .download-section h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            color: #555;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #FA003F;
+            box-shadow: 0 0 0 3px rgba(250, 0, 63, 0.1);
+        }
+        .btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #FA003F 0%, #C70032 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(250, 0, 63, 0.35);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(250, 0, 63, 0.5);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .info-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+        .info-box p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+        .info-box strong {
+            color: #333;
+        }
+        .error {
+            background: #fee;
+            color: #c00;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+        .success {
+            background: #efe;
+            color: #080;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>MarxGeek Academy</h1>
+            <p>Plateforme de formation professionnelle</p>
+        </div>
+
+        <div class="product-info">
+            <h2>Formation CSS Enrichie - Design Moderne</h2>
+            <p>Merci pour votre achat ! Pour télécharger votre formation, veuillez entrer le code de téléchargement que vous avez reçu par email.</p>
+        </div>
+
+        <div class="error" id="error"></div>
+        <div class="success" id="success"></div>
+
+        <div class="download-section">
+            <h3>Téléchargement sécurisé</h3>
+            <div class="input-group">
+                <label for="downloadCode">Code de téléchargement</label>
+                <input
+                    type="text"
+                    id="downloadCode"
+                    placeholder="Entrez le code reçu par email"
+                    autocomplete="off"
+                    style="text-transform: uppercase;"
+                >
+            </div>
+            <button class="btn" onclick="verifyAndDownload()">Télécharger la formation</button>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Besoin d'aide ?</strong></p>
+            <p>📧 Email: mgangbala610@gmail.com</p>
+            <p>💬 WhatsApp: +229 01 69 81 64 13</p>
+            <p><strong>Note:</strong> Le code de téléchargement vous a été envoyé par email lors de votre achat.</p>
+        </div>
+    </div>
+
+    <script>
+        const CORRECT_CODE = '66567932EF6E';
+        const DOWNLOAD_LINK = 'https://api.marxgeek.com/uploads/ebooks/ebook_1765714780032_vqtnrq_Formation-CSS-ENRICHIE.pdf';
+
+        function verifyAndDownload() {
+            const input = document.getElementById('downloadCode');
+            const enteredCode = input.value.toUpperCase().trim();
+            const errorDiv = document.getElementById('error');
+            const successDiv = document.getElementById('success');
+
+            // Reset messages
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
+            if (!enteredCode) {
+                errorDiv.textContent = 'Veuillez entrer le code de téléchargement.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (enteredCode === CORRECT_CODE) {
+                successDiv.textContent = 'Code correct ! Téléchargement en cours...';
+                successDiv.style.display = 'block';
+
+                // Télécharger le fichier
+                setTimeout(() => {
+                    window.location.href = DOWNLOAD_LINK;
+                }, 1000);
+            } else {
+                errorDiv.textContent = 'Code incorrect. Veuillez vérifier le code reçu par email ou contactez le support.';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Permettre la validation avec Enter
+        document.getElementById('downloadCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyAndDownload();
+            }
+        });
+    </script>
+</body>
+</html>

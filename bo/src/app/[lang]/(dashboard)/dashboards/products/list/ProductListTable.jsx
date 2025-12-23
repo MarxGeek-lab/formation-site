@@ -45,7 +45,6 @@ import { getLocalizedUrl } from '@/utils/i18n'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 import { formatAmount } from '@/utils/formatAmount'
-import { API_URL_ROOT, URL_SITE } from '@/settings'
 import { usePropertyStore } from '@/contexts/PropertyStore'
 import { showToast } from '@/components/ToastNotification/ToastNotification'
 import { hideLoader, showLoader } from '@/components/Loader/loaderService'
@@ -55,6 +54,7 @@ import dayjs from 'dayjs'
 import { colors } from '@/data/constant'
 import { COLORS } from '@/configs/theme'
 import SearchIcon from '@mui/icons-material/Search';
+import { API_URL_ROOT } from '@/settings'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   const searchValue = value.toLowerCase();
@@ -114,6 +114,8 @@ const ProductListTable = ({ productData }) => {
   useEffect(() => {
     setData(productData);
   }, [productData]);
+console.log(productData)
+  // console.log("productData = ", productData[0].photos[0])
 
   const columns = useMemo(
     () => [
@@ -121,7 +123,7 @@ const ProductListTable = ({ productData }) => {
         header: 'Produit',
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
-            <img src={row.original.photos[0]} width={60} className='rounded bg-actionHover' />
+            <img src={API_URL_ROOT+ row.original.photos[0]} width={60} className='rounded bg-actionHover' />
             <div className='flex flex-col'>
               <Typography variant='body2'>PROD-{row.original?._id?.toString().slice(0, 6).toUpperCase()}</Typography>
               <Typography variant='body2' className='font-medium' color='text.primary' style={{ whiteSpace: 'wrap' }}>

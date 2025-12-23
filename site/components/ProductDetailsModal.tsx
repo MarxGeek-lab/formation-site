@@ -22,6 +22,9 @@ import {
   Language,
   AddShoppingCart,
   ShoppingBag,
+  WhatsApp,
+  VideoCall,
+  Update,
 } from '@mui/icons-material';
 import styles from './ProductDetailsModal.module.scss';
 import { useCart } from '@/contexts/CartContext';
@@ -29,6 +32,7 @@ import { useNotification } from '@/contexts/NotificationContext';
 import { formatPrice } from '@/utils/formatPrice';
 import { Translate } from './Translate';
 import ProductImage from './ProductImage';
+import { API_URL2 } from '@/settings/constant';
 
 interface ProductDetailsModalProps {
   open: boolean;
@@ -95,30 +99,20 @@ const defaultBenefits = [
     description: 'Consultez le contenu quand vous voulez',
   },
   {
-    icon: <Lightbulb />,
-    title: 'Conseils pratiques',
-    description: 'Apprenez mieux avec des astuces efficaces',
+    icon: <WhatsApp />,
+    title: 'Support WhatsApp 24/7',
+    description: 'Assistance personnalisée par WhatsApp',
   },
   {
-    icon: <Check />,
-    title: 'Exercices',
-    description: 'Mettez vos connaissances en pratique',
+    icon: <VideoCall />,
+    title: 'Suivi Vidéo',
+    description: 'Sessions de suivi par Google Meet',
   },
-  // {
-  //   icon: <Timer />,
-  //   title: 'À votre rythme',
-  //   description: 'Progressez selon votre emploi du temps',
-  // },
   {
-    icon: <Language />,
-    title: 'Support FR',
-    description: 'Posez vos questions en français',
+    icon: <Update />,
+    title: 'Mises à jour gratuites',
+    description: 'Accès à vie aux nouvelles versions',
   },
-  // {
-  //   icon: <Star />,
-  //   title: 'Mises à jour',
-  //   description: 'Accédez aux nouveautés régulièrement',
-  // },
 ];
 
 
@@ -135,9 +129,7 @@ const defaultBenefits = [
   const [loading, setLoading] = useState(true);
   
     const imgSrc = product?.photos[0]
-      ? product.photos[0].startsWith("http://localhost:5000/")
-        ? product.photos[0].replace("http://localhost:5000/", "https://api.rafly.me/")
-        : product.photos[0]
+      ? API_URL2+ product.photos[0]
       : null;
   
     if (!imgSrc) return null;

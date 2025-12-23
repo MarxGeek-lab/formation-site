@@ -27,7 +27,7 @@ const siteSettingsSchema = new mongoose.Schema({
   },
   websiteTitle: {
     type: String,
-    default: 'Rafly',
+    default: 'MarxGeek Academy',
   },
   description: {
     type: String,

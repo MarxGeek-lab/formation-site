@@ -110,9 +110,9 @@ export default function ConnexionPage({
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
-      py: { xs: 4, md: 8 }
+      // py: { xs: 4, md: 8 }
     }}>
-      <Container maxWidth="sm">
+      <Container>
         <Box className={styles.authContainer}>
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>

@@ -8,6 +8,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
 import MysteryProductSection from "@/components/MysteryProductSection";
 import HeroSection from "@/components/HeroSection";
+import FreeGuideBanner from "@/components/FreeGuideBanner";
 import { Box, Container, Typography } from "@mui/material";
 import { MenuBook } from "@mui/icons-material";
 import Grid from "@mui/material/Grid2";
@@ -34,6 +35,8 @@ import VideoComponent from "@/components/VideoPlayer";
 import { translate } from "@/utils/translate";
 import { Translate } from "@/components/Translate";
 
+const FREE_GUIDE_ID = '693ebeaecf4689a490d71cda';
+
 export default function Home({ params }: { params: { locale: string } }) {
   const { locale } = params;
   const { currency } = useAuthStore();
@@ -41,11 +44,43 @@ export default function Home({ params }: { params: { locale: string } }) {
   const { allProducts } = useProductStore();
   const router = useRouter();
   const t = useTranslations('Home');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  // Filtrer pour exclure le Guide de Démarrage gratuit
+  let displayProducts = allProducts.filter(product => product._id !== FREE_GUIDE_ID);
+
+  // Filtrer par catégorie si une catégorie est sélectionnée
+  if (selectedCategory && selectedCategory !== 'all') {
+    displayProducts = displayProducts.filter(product =>
+      product.category?.toLowerCase() === selectedCategory.toLowerCase() ||
+      product.category === selectedCategory
+    );
+  }
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
+
+  // Écouter les changements de catégorie depuis la sidebar
+  useEffect(() => {
+    const handleCategoryEvent = (event: any) => {
+      setSelectedCategory(event.detail.category);
+    };
+
+    window.addEventListener('categoryChange', handleCategoryEvent);
+
+    return () => {
+      window.removeEventListener('categoryChange', handleCategoryEvent);
+    };
+  }, []);
 
   return (
     <>
       {/* Hero Section */}
       <HeroSection locale={locale} />
+
+      {/* Bannière Guide Gratuit */}
+      <FreeGuideBanner />
 
       <Box sx={{
         px: {xs: 0, sm: 6},
@@ -56,7 +91,7 @@ export default function Home({ params }: { params: { locale: string } }) {
         }}>
 
         {/* Products Section */}
-          <Container maxWidth="lg"
+          <Container id="formations" maxWidth="lg"
           sx={{
             position: 'relative',
           }}
@@ -72,7 +107,7 @@ export default function Home({ params }: { params: { locale: string } }) {
             
             <Grid container spacing={3}>
               {/* Product Card 1 */}
-              {allProducts.map((product) => (
+              {displayProducts.map((product) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product._id}>
                   <ProductCard
                     product={product}
@@ -101,7 +136,7 @@ export default function Home({ params }: { params: { locale: string } }) {
         <PricingSection locale={locale} />
         
         {/* FAQ Section */}
-        <FAQSection />
+        {/* <FAQSection /> */}
       </Box>
     </>
   );

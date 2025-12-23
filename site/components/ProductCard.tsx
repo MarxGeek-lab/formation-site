@@ -139,8 +139,10 @@ export default function ProductCard({
               </svg>
             </div>
           )}
-
-          {product?.demoVideo && (
+          <p className={styles.category}>
+            <Translate text={product?.category} lang={locale} />
+          </p>
+          {/* {product?.demoVideo && (
              <Button
                 variant="contained"
                 sx={{
@@ -167,16 +169,14 @@ export default function ProductCard({
               >
                 <Translate text="Voir démo" lang={locale} />
               </Button>
-          )}
+          )} */}
         </div>
 
       <div className={styles.content}>
         <h3 className={styles.title}>
           <Translate text={product?.name} lang={locale} />
         </h3>
-        <p className={styles.category}>
-          <Translate text={product?.category} lang={locale} />
-        </p>
+        
         
         <div className={styles.priceSection}>
           {product?.pricePromo && product?.pricePromo !== 0 ? (
@@ -226,7 +226,7 @@ export default function ProductCard({
         }}
       >
         <DialogTitle>{t("videoDemo")}</DialogTitle>
-        <DialogContent
+        {/* <DialogContent
           sx={{
             p: 0,
             overflow: "hidden",
@@ -254,7 +254,7 @@ export default function ProductCard({
               {t("browserNotSupported")}
             </video>
           </Box>
-        </DialogContent>
+        </DialogContent> */}
         <DialogActions>
           <Button color="error" size="small" variant="contained" onClick={() => setOpenDemo(false)}>{t("close")}</Button>
         </DialogActions>

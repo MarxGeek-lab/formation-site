@@ -83,8 +83,8 @@ exports.createOrder = async (req, res) => {
         
         // Configuration de l'email à envoyer
         const emailService = new EmailService();
-        emailService.setSubject("Activation de votre compte sur Rafly");
-        emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+        emailService.setSubject("Activation de votre compte sur MarxGeek Academy");
+        emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
         emailService.addTo(email);
         emailService.setHtml(generateTemplateHtml("templates/activeAccount.html", emailData));
         await emailService.send(); // Envoi de l'email
@@ -188,16 +188,16 @@ exports.createOrder = async (req, res) => {
     };
 
     const emailService = new EmailService();
-    emailService.setSubject(`Nouvelle commande sur Rafly`);
-    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+    emailService.setSubject(`Nouvelle commande sur MarxGeek Academy`);
+    emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
     emailService.addTo(user.email);
     emailService.setHtml(generateTemplateHtml("templates/notificationOrderCustomer.html", templateData));
     await emailService.send();
 
     // Notification for admin
     const emailServiceAdmin = new EmailService();
-    emailServiceAdmin.setSubject(`Nouvelle commande sur Rafly`);
-    emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+    emailServiceAdmin.setSubject(`Nouvelle commande sur MarxGeek Academy`);
+    emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
     // emailServiceAdmin.addTo('mgangbala610@gmail.com');
     emailServiceAdmin.addTo('1enockbotoyiye@gmail.com');
     emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationOrderAdmin.html", templateData));
@@ -205,7 +205,7 @@ exports.createOrder = async (req, res) => {
 
     const notification = new Notifications({
       type: 'order',
-      message: `Nouvelle commande sur Rafly. ID: ORD-${savedOrder._id.toString().slice(0, 6).toUpperCase()}`,
+      message: `Nouvelle commande sur MarxGeek Academy. ID: ORD-${savedOrder._id.toString().slice(0, 6).toUpperCase()}`,
       user: null,
       data: JSON.stringify(savedOrder),
     });
@@ -408,8 +408,8 @@ exports.createOrderByAdmin = async (req, res) => {
 
     // Email de notification à l'utilisateur
     const emailService = new EmailService();
-    emailService.setSubject(`${autoConfirm ? 'Nouvelle commande confirmée' : 'Nouvelle commande'} sur Rafly`);
-    emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+    emailService.setSubject(`${autoConfirm ? 'Nouvelle commande confirmée' : 'Nouvelle commande'} sur MarxGeek Academy`);
+    emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
     emailService.addTo(user.email);
     emailService.setHtml(generateTemplateHtml("templates/notificationOrderCustomer.html", templateData));
     await emailService.send();
@@ -425,8 +425,8 @@ exports.createOrderByAdmin = async (req, res) => {
 
     // Notification pour les autres admins
     const emailServiceAdmin = new EmailService();
-    emailServiceAdmin.setSubject(`Commande créée par admin sur Rafly`);
-    emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+    emailServiceAdmin.setSubject(`Commande créée par admin sur MarxGeek Academy`);
+    emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
     emailServiceAdmin.addTo('1enockbotoyiye@gmail.com');
     emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationOrderAdmin.html", {
       ...templateData,
@@ -533,8 +533,8 @@ const sendOrderEmailByAdmin = async (order, admin) => {
       <table style="margin: 0 auto;" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
         <tr>
           <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background: #5E3AFC;">
-            <img src="https://api.rafly.me/logo/icon.webp" alt="Logo" style="width:40px; height:auto;" />
-            <h3 style="color: #fff; font-size: 24px;">Rafly</h3>
+            <img src="https://api.marxgeek.com/logo/icon.webp" alt="Logo" style="width:40px; height:auto;" />
+            <h3 style="color: #fff; font-size: 24px;">MarxGeek Academy</h3>
           </td>
         </tr>
 
@@ -577,7 +577,7 @@ const sendOrderEmailByAdmin = async (order, admin) => {
 
         <tr>
           <td align="center" style="padding:20px; font-size:12px; color:#888;">
-            © 2025 Rafly. Tous droits réservés.
+            © 2025 MarxGeek Academy. Tous droits réservés.
           </td>
         </tr>
       </table>
@@ -587,8 +587,8 @@ const sendOrderEmailByAdmin = async (order, admin) => {
 
   // Envoyer le mail
   const emailService = new EmailService();
-  emailService.setSubject(`${isSubscription ? 'Abonnement ':'Commande '} ORD-${order?._id?.toString().slice(0, 6).toUpperCase()} confirmée par l'admin sur Rafly`);
-  emailService.setFrom(process.env.EMAIL_HOST_USER, "Rafly");
+  emailService.setSubject(`${isSubscription ? 'Abonnement ':'Commande '} ORD-${order?._id?.toString().slice(0, 6).toUpperCase()} confirmée par l'admin sur MarxGeek Academy`);
+  emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
   emailService.addTo(order?.customer?.email || order?.email);
   emailService.setHtml(html);
 
@@ -1103,3 +1103,163 @@ const generateContrat = async (orderId) => {
 
   }
 }
+// Créer une commande simple avec compte automatique
+exports.createSimpleOrder = async (req, res) => {
+  try {
+    const { email, phone, items, totalPrice, totalItems, paymentMethod } = req.body;
+
+    // Validation
+    if (!email || !phone || !items || items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email, téléphone et produits sont requis',
+      });
+    }
+
+    // Vérifier ou créer l'utilisateur
+    let user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      // Créer un nouveau compte utilisateur
+      const crypto = require('crypto');
+      const bcrypt = require('bcryptjs');
+      const randomPassword = crypto.randomBytes(8).toString('hex');
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+      user = new User({
+        email: email.toLowerCase(),
+        password: hashedPassword,
+        phone,
+        firstName: email.split('@')[0],
+        role: 'user',
+        isActive: true,
+      });
+
+      await user.save();
+
+      console.log('Nouveau compte créé:', {
+        email: user.email,
+        password: randomPassword,
+      });
+    }
+
+    // Créer la commande
+    const order = new Order({
+      customer: user._id,
+      email,
+      phoneNumber: phone,
+      items: items.map((item) => ({
+        product: item.productId,
+        quantity: item.quantity || 1,
+        price: item.price,
+      })),
+      totalAmount: totalPrice,
+      paymentMethod: paymentMethod || 'mobile_money',
+      paymentStatus: 'pending',
+      status: 'pending',
+      currency: 'FCFA',
+      fromOrder: 'from site',
+    });
+
+    await order.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Commande créée avec succès',
+      orderId: order._id,
+      userId: user._id,
+    });
+  } catch (error) {
+    console.error('Erreur création commande:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la création de la commande',
+      error: error.message,
+    });
+  }
+};
+
+// Télécharger les previews verrouillés
+exports.downloadLockedPreviews = async (req, res) => {
+  try {
+    const { email, phone, items, totalPrice, totalItems } = req.body;
+
+    // Validation
+    if (!email || !phone || !items || items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email, téléphone et produits sont requis',
+      });
+    }
+
+    // Vérifier ou créer l'utilisateur
+    let user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      const crypto = require('crypto');
+      const bcrypt = require('bcryptjs');
+      const randomPassword = crypto.randomBytes(8).toString('hex');
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+      user = new User({
+        email: email.toLowerCase(),
+        password: hashedPassword,
+        phone,
+        firstName: email.split('@')[0],
+        role: 'user',
+        isActive: true,
+      });
+
+      await user.save();
+    }
+
+    // Créer la commande avec type download locked
+    const order = new Order({
+      customer: user._id,
+      email,
+      phoneNumber: phone,
+      items: items.map((item) => ({
+        product: item.productId,
+        quantity: item.quantity || 1,
+        price: item.price,
+      })),
+      totalAmount: totalPrice,
+      paymentMethod: 'mobile_money',
+      paymentStatus: 'pending',
+      status: 'pending',
+      currency: 'FCFA',
+      description: 'Téléchargement preview - En attente de paiement',
+      fromOrder: 'from site - preview download',
+    });
+
+    await order.save();
+
+    // Récupérer les liens de téléchargement des previews
+    const downloadLinks = [];
+
+    for (const item of items) {
+      const product = await Product.findById(item.productId);
+
+      if (product && product.ebookPreview) {
+        // Construire l'URL complète du preview
+        const previewUrl = `${process.env.API_URL || 'http://localhost:5000/'}uploads/ebook-previews/${path.basename(product.ebookPreview)}`;
+        downloadLinks.push(previewUrl);
+      }
+    }
+
+    res.status(201).json({
+      success: true,
+      message: 'Commande créée. Téléchargement des previews disponible',
+      orderId: order._id,
+      userId: user._id,
+      downloadLinks,
+    });
+  } catch (error) {
+    console.error('Erreur téléchargement locked:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la création de la commande',
+      error: error.message,
+    });
+  }
+};

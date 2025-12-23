@@ -1,4 +1,4 @@
-# Système de Gestion de Paniers - Rafly
+# Système de Gestion de Paniers - MarxGeek Academy
 
 ## Vue d'ensemble
 
