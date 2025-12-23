@@ -4,7 +4,7 @@ module.exports = {
       {
         name: "marxgeek-api",
         script: "index.js",        // version compilée
-        cwd: "/var/www/marxgeek.com/api",
+        cwd: "/var/www/marxgeek/marxgeek.com/api",
         watch: false,
         env: {
           NODE_ENV: "production",

@@ -4,7 +4,7 @@ module.exports = {
       name: "marxgeek-academy",
       script: "npm",
       args: "run start",
-      cwd: "/var/www/marxgeek.com/site",
+      cwd: "/var/www/marxgeek/marxgeek.com/site",
       interpreter: "node",
       autorestart: false,
       env: {
