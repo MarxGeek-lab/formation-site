@@ -1,13 +1,14 @@
 import { useState } from "react";
 import styles from './ProductCard.module.scss';
 import CircularProgress from "@mui/material/CircularProgress";
-import { API_URL2 } from "@/settings/constant";
+import { API_URL3 } from "@/settings/constant";
 
 const ProductImage = ({ product }: { product: any }) => {
   const [loading, setLoading] = useState(true);
 
+  console.log("product ==", product)
   const imgSrc = product?.photos[0]
-    ? API_URL2+ product.photos[0]
+    ? API_URL3+ product.photos[0]
     : null;
 
   if (!imgSrc) return null;

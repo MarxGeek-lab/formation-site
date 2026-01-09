@@ -50,7 +50,6 @@ import {
 import { useRouter } from 'next/navigation';
 import styles from './ordersList.module.scss';
 import { useAuthStore, useOrderStore } from '@/contexts/GlobalContext';
-import { API_URL2 } from '@/settings/constant';
 import { formatAmount } from '@/utils/formatAmount';
 import { COLORS } from '@/settings/theme';
 
@@ -217,7 +216,7 @@ const OrdersPage = ({ params }: { params: { locale: string } }) => {
   }
 
   const subTotal = selectedOrder ? selectedOrder?.items?.reduce((total: any, item: any) => total + item?.price * item?.quantity, 0) : 0;
-console.log(selectedOrder)
+
   return (
     <ProtectedRoute>
     <Container 

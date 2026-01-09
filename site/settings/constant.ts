@@ -1,6 +1,7 @@
 
 export const API_URL = "https://api.marxgeek.com/api/";
 export const API_URL2 = "https://api.marxgeek.com/";
+export const API_URL3 = "https://api.marxgeek.com";
 
 // export const API_URL = "http://localhost:5000/api/";
 // export const API_URL2 = "http://localhost:5000";

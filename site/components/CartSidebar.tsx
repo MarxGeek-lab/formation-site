@@ -26,7 +26,7 @@ import {
 import { useCart } from '@/contexts/CartContext';
 import PaymentModal from './PaymentModal';
 import styles from './CartSidebar.module.scss';
-import { API_URL2 } from '@/settings/constant';
+import { API_URL3 } from '@/settings/constant';
 
 export default function CartSidebar({ params }: { params: { locale: string } }) {
   const { cart, removeFromCart, updateQuantity, clearCart, toggleCart } = useCart();
@@ -94,7 +94,7 @@ export default function CartSidebar({ params }: { params: { locale: string } }) 
                 <ListItem key={item.id} className={styles.cartItem}>
                   <ListItemAvatar>
                     <Avatar
-                      src={API_URL2+ item.image}
+                      src={API_URL3+ item.image}
                       alt={item.name}
                       variant="rounded"
                       className={styles.productImage}

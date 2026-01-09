@@ -32,7 +32,7 @@ import { useNotification } from '@/contexts/NotificationContext';
 import { formatPrice } from '@/utils/formatPrice';
 import { Translate } from './Translate';
 import ProductImage from './ProductImage';
-import { API_URL2 } from '@/settings/constant';
+import { API_URL3 } from '@/settings/constant';
 
 interface ProductDetailsModalProps {
   open: boolean;
@@ -129,7 +129,7 @@ const defaultBenefits = [
   const [loading, setLoading] = useState(true);
   
     const imgSrc = product?.photos[0]
-      ? API_URL2+ product.photos[0]
+      ? API_URL3+ product.photos[0]
       : null;
   
     if (!imgSrc) return null;

@@ -51,7 +51,6 @@ import {
 import { useRouter } from 'next/navigation';
 import styles from './ordersList.module.scss';
 import { useAuthStore, useOrderStore } from '@/contexts/GlobalContext';
-import { API_URL2 } from '@/settings/constant';
 import { formatAmount } from '@/utils/formatAmount';
 import { COLORS } from '@/settings/theme';
 import dayjs from 'dayjs';
