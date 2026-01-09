@@ -146,7 +146,7 @@ class CartUsageExample {
   async start() {
     try {
       // Connexion à MongoDB
-      await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/rafly', {
+      await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/academy.marxgeek.com', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         ...cartConfig.database.options

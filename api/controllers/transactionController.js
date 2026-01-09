@@ -490,7 +490,7 @@ const transactionController = {
     const zipDir = path.join(__dirname, "../uploads/zips");
     if (!fs.existsSync(zipDir)) fs.mkdirSync(zipDir, { recursive: true });
   
-    const startNameFile = order.typeOrder === 'abonnement' ? 'abonnement-rafly-ORD-':'produits-rafly-ORD-';
+    const startNameFile = order.typeOrder === 'abonnement' ? 'abonnement-academy.marxgeek.com-ORD-':'produits-academy.marxgeek.com-ORD-';
     const zipPath = path.join(zipDir, `${startNameFile}${order._id}_${new Date().toISOString()}.zip`);
     const output = fs.createWriteStream(zipPath);
     const archive = archiver("zip", { zlib: { level: 9 } });
@@ -564,8 +564,8 @@ const transactionController = {
       <body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f7f7f7;">
         <table style="margin: 0 auto;" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
           <tr>
-            <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background: #5E3AFC;">
-              <img src="https://api.marxgeek.com/logo/icon.webp" alt="Logo" style="width:40px; height:auto;" />
+            <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background-color: white;">
+              <img src="https://api.marxgeek.com/logo/logo_academie_marxgeek.png" alt="Logo" style="width:40px; height:auto;" />
               <h3 style="color: #fff; font-size: 24px;">MarxGeek Academy</h3>
             </td>
           </tr>
@@ -597,7 +597,7 @@ const transactionController = {
                     ${fileContratLink ? `
                     <a href="${fileContratLink}" 
                        target="_blank"
-                       download="contrat-rafly-ORD-${order._id}_${new Date().toISOString()}.pdf"
+                       download="contrat-academy.marxgeek.com-ORD-${order._id}_${new Date().toISOString()}.pdf"
                        style="display:inline-block; background:#28a745; color:#fff; padding:12px 20px; border-radius:6px; text-decoration:none; font-size:16px; font-weight:bold;">
                        📑 Télécharger Contrat (PDF)
                     </a>` : ''}

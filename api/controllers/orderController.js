@@ -1,6 +1,7 @@
 const Notifications = require('../models/Notifications');
 const Order = require('../models/Order');
 const Product = require('../models/Product'); // Optionnel si tu veux valider les produits
+const Subscription = require('../models/Subscription');
 const SiteSettings = require('../models/Settings');
 const User = require('../models/User');
 const { generateTemplateHtml } = require('../services/generateTemplateHtml');
@@ -26,7 +27,7 @@ exports.createOrder = async (req, res) => {
     const {
       customer,
       items,
-      email, 
+      email,
       phoneNumber,
       country,
       city,
@@ -38,7 +39,10 @@ exports.createOrder = async (req, res) => {
       totalAmountConvert,
       currency,
       sessionId, // Ajouter sessionId pour lier avec le panier
-      typeOrder
+      typeOrder,
+      paymentMethod,
+      paymentStatus,
+      fedapayTransaction
     } = req.body;
     console.log("totalAmountConvert == ", req.body)
 
@@ -94,40 +98,66 @@ exports.createOrder = async (req, res) => {
     }
 
     const productItems = []
-    // const itemsProduct = typeOrder === 'abonnement' ? 
-    for(const item of items){
-      const product = await Product.findById(item.id);
+    let subscriptionPlanData = null;
 
-      if (item.type !== 'abonnement') {
+    for(const item of items){
+      const isSubscription = item.type === 'abonnement' || item.subscription;
+      let product = null;
+      let subscriptionPlan = null;
+
+      if (isSubscription) {
+        // Pour les abonnements, récupérer le plan depuis la base de données
+        if (item.id && item.id !== 'subscription') {
+          subscriptionPlan = await Subscription.findById(item.id);
+          if (!subscriptionPlan) {
+            return res.status(404).json({ message: 'Plan d\'abonnement introuvable' });
+          }
+          subscriptionPlanData = subscriptionPlan; // Conserver pour calculer expiredAt
+        }
+      } else {
+        // Pour les produits normaux
+        product = await Product.findById(item.id);
         if (!product) {
           return res.status(404).json({ message: 'Produit introuvable' });
         }
       }
 
-      const isSubscription = item.type === 'abonnement' || item.subscription;
-      
+      // Construction de l'objet subscription à partir des données
+      let subscriptionObject = null;
+      if (isSubscription) {
+        if (subscriptionPlan) {
+          // Si on a le plan depuis la BDD
+          subscriptionObject = {
+            title: subscriptionPlan.title,
+            duration: subscriptionPlan.duration,
+            products: subscriptionPlan.products || []
+          };
+        } else if (item.subscription) {
+          // Si les données sont passées en JSON string
+          subscriptionObject = JSON.parse(item.subscription);
+        }
+      }
+
       productItems.push({
         product: isSubscription ? null : product._id,
+        subscriptionPlan: isSubscription && subscriptionPlan ? subscriptionPlan._id : null,
         quantity: isSubscription ? 1 : item.quantity,
-        price: item?.price || product.price || 0,
+        price: item?.price || (product ? product.price : 0),
         options: item?.options,
-        category: product?.category,
-        subscription: isSubscription ? JSON.parse(item.subscription) : '',
-        nameSubs: isSubscription ? JSON.parse(item.subscription)?.title : '',
-        productList: isSubscription ? JSON.stringify(JSON.parse(item.subscription).products) : "",
+        category: isSubscription ? 'Abonnement' : (product?.category || ''),
+        subscription: isSubscription ? subscriptionObject : null,
+        nameSubs: isSubscription ? (subscriptionPlan?.title || item.name || '') : '',
+        productList: isSubscription && subscriptionObject ? JSON.stringify(subscriptionObject.products) : "",
         type: item.type || 'achat',
       })
     }
 
-    let affiliate_ = null;
-    if (affiliateRef) {
-      const affiliate = await Affiliate.findOne({ refCode: affiliateRef });
-      if (affiliate) {
-        affiliate_ = affiliate._id;
-      }
+    // Calculer la date d'expiration pour les abonnements
+    let expiredAt = '';
+    if (typeOrder === 'abonnement') {
+      const duration = subscriptionPlanData?.duration || (items[0].subscription ? JSON.parse(items[0].subscription)?.duration : 30);
+      expiredAt = new Date(new Date().getTime() + duration * 24 * 60 * 60 * 1000);
     }
-
-    const expiredAt = typeOrder === 'abonnement' ? new Date(new Date().getTime() + JSON.parse(items[0].subscription)?.duration * 24 * 60 * 60 * 1000) : '';
 
     const order = new Order({
       customer: customer_,
@@ -143,10 +173,14 @@ exports.createOrder = async (req, res) => {
       phoneNumber,
       totalAmountConvert,
       currency,
-      affiliate: affiliate_ || null,
+      affiliate: null,
       typeOrder,
       subscriptionExpiredAt: expiredAt,
-      fromOrder: 'from site'
+      fromOrder: 'from site',
+      paymentMethod: paymentMethod || 'Monero',
+      paymentStatus: "paid" || 'pending',
+      status: paymentStatus === 'paid' ? 'confirmed' : 'pending',
+      ...(fedapayTransaction && { fedapayTransaction })
     });
 
     const savedOrder = await order.save();
@@ -198,8 +232,7 @@ exports.createOrder = async (req, res) => {
     const emailServiceAdmin = new EmailService();
     emailServiceAdmin.setSubject(`Nouvelle commande sur MarxGeek Academy`);
     emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
-    // emailServiceAdmin.addTo('mgangbala610@gmail.com');
-    emailServiceAdmin.addTo('1enockbotoyiye@gmail.com');
+    emailServiceAdmin.addTo('mgangbala610@gmail.com');
     emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationOrderAdmin.html", templateData));
     await emailServiceAdmin.send();
 
@@ -211,31 +244,40 @@ exports.createOrder = async (req, res) => {
     });
     await notification.save();
 
-    // Affiliation
-    if (affiliateRef) {
-      const affiliate = await Affiliate.findOne({ refCode: affiliateRef });
-      const settings = await SiteSettings.findOne();
+    // Si le paiement est confirmé (FedaPay)
+    if (paymentStatus === 'paid' && savedOrder._id) {
+      try {
+        // Populate les produits
+        const populatedOrder = await Order.findById(savedOrder._id)
+          .populate('items.product')
+          .populate('customer');
 
-      if (affiliate) {
-        const referral = await Referral.create({
-          affiliate: affiliate._id,
-          refCode: affiliateRef,
-          type: "order",
-          orderId: savedOrder._id,
-          amount: savedOrder.totalAmount,
-          commissionAmount: Number(((savedOrder.totalAmount * settings.percentAffiliate)/100).toFixed(2)),
-          status: "pending",
-        });
+        // Créer un objet admin fictif pour FedaPay (système automatique)
+        const systemAdmin = {
+          name: 'Martial C. GANGBALA',
+          email: "mgangbala610@gmail.com"
+        };
 
-        await referral.save();
+        // Si c'est un abonnement, envoyer seulement email d'instructions
+        if (typeOrder === 'abonnement') {
+          await sendSubscriptionEmailConfirmation(populatedOrder, systemAdmin);
+          console.log('Email d\'instructions abonnement envoyé après paiement FedaPay');
+        } else {
+          // Si c'est un achat de formation, envoyer les fichiers
+          await sendOrderEmailByAdmin(populatedOrder, systemAdmin);
+          console.log('Email avec fichiers envoyé après paiement FedaPay');
+        }
+      } catch (emailError) {
+        console.error('Erreur lors de l\'envoi de l\'email:', emailError);
+        // Ne pas faire échouer la commande si l'envoi d'email échoue
       }
     }
 
-    // Générer le contrat
-    const contrat = await generateContrat(savedOrder._id);
-    console.log('Contrat généré à :', contrat);
+    const orderCreate = await Order.findById(savedOrder._id)
+        .populate('items.product')
+        .populate('customer');
 
-    res.status(201).json(savedOrder);
+    res.status(201).json(orderCreate);
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
@@ -427,7 +469,7 @@ exports.createOrderByAdmin = async (req, res) => {
     const emailServiceAdmin = new EmailService();
     emailServiceAdmin.setSubject(`Commande créée par admin sur MarxGeek Academy`);
     emailServiceAdmin.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
-    emailServiceAdmin.addTo('1enockbotoyiye@gmail.com');
+    // emailServiceAdmin.addTo('1enockbotoyiye@gmail.com');
     emailServiceAdmin.setHtml(generateTemplateHtml("templates/notificationOrderAdmin.html", {
       ...templateData,
       adminAction: true,
@@ -462,32 +504,34 @@ const sendOrderEmailByAdmin = async (order, admin) => {
   let fileSale = [];
   if (!isSubscription) {
     fileSale = products
-    .filter(product => product && product.saleDocument)
-    .map(product => product.saleDocument);
+    .filter(product => product && product.ebookFile)
+    .map(product => product.ebookFile);
   } else {
     fileSale = order.items[0].subscription?.relatedProducts?.map(item => item.saleDocument);
   }
 
+  console.log(fileSale)
+
   const allFiles = fileSale.flat();
-  const fileContrat = order.contrat || null;
 
   // Créer le ZIP des fichiers produits
   const zipDir = path.join(__dirname, "../uploads/zips");
   if (!fs.existsSync(zipDir)) fs.mkdirSync(zipDir, { recursive: true });
 
-  const startNameFile = order.typeOrder === 'abonnement' ? 'abonnement-rafly-ORD-':'produits-rafly-ORD-';
-  const zipPath = path.join(zipDir, `${startNameFile}${order._id}_${new Date().toISOString()}.zip`);
+  const startNameFile = order.typeOrder === 'abonnement' ? 'abo_academy_marxgeek-ORD':'produits-academy_marxgeek-ORD-';
+  const zipPath = path.join(zipDir, `${startNameFile}${order?._id?.toString()?.slice(0,6)}_${new Date().toISOString()}.zip`);
   const output = fs.createWriteStream(zipPath);
   const archive = archiver("zip", { zlib: { level: 9 } });
   archive.pipe(output);
 
-  const basePath = path.join(__dirname, "../uploads/documents");
+  const basePath = path.join(__dirname, "../uploads/ebooks");
 
   for (const fileUrl of allFiles) {
     const fileName = decodeURIComponent(path.basename(fileUrl));
     const filePath = path.join(basePath, fileName);
 
     if (fs.existsSync(filePath)) {
+      console.log("found == ", filePath)
       archive.file(filePath, { name: fileName });
     } else {
       console.log("File not found:", filePath);
@@ -498,24 +542,6 @@ const sendOrderEmailByAdmin = async (order, admin) => {
 
   const fileNameZip = decodeURIComponent(path.basename(zipPath));
   const fileZipLink = `${process.env.API_URL}${fileNameZip}`;
-  const fileNameContrat = fileContrat ? decodeURIComponent(path.basename(fileContrat)) : null;
-  let fileContratLink = fileContrat ? `${process.env.API_URL}${fileNameContrat}` : null;
-
-  if (!fileContratLink) {
-    // Générer le fichier contrat
-    const pdfFileName = await generatePDF({
-      clientName: order?.customer?.name,
-      clientEmail: order.customer.email,
-      orderNumber: 'ORD-' + order._id.toString().slice(0, 6).toUpperCase(),
-      purchaseDate: order.createdAt.toLocaleDateString(),
-      productName: order.typeOrder === 'abonnement' ? order?.items[0].nameSubs : order.items.map(i => i.product.name).join(', '),
-      licenceType: 'Licence de revente'
-    });
-
-    const contratFile = process.env.API_URL+pdfFileName.filename;
-    order.contrat = contratFile;
-    fileContratLink = contratFile;
-  }
   
   order.productZip = fileZipLink;
   await order.save();
@@ -532,8 +558,8 @@ const sendOrderEmailByAdmin = async (order, admin) => {
     <body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f7f7f7;">
       <table style="margin: 0 auto;" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
         <tr>
-          <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background: #5E3AFC;">
-            <img src="https://api.marxgeek.com/logo/icon.webp" alt="Logo" style="width:40px; height:auto;" />
+          <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background-color: white;">
+            <img src="https://api.marxgeek.com/logo/logo_academie_marxgeek.png" alt="Logo" style="width:40px; height:auto;" />
             <h3 style="color: #fff; font-size: 24px;">MarxGeek Academy</h3>
           </td>
         </tr>
@@ -560,15 +586,6 @@ const sendOrderEmailByAdmin = async (order, admin) => {
                      📄 Télécharger Produits (PDF)
                   </a>
                   <br />
-
-                  <!-- Button Contrat -->
-                  ${fileContratLink ? `
-                  <a href="${fileContratLink}" 
-                     target="_blank"
-                     download="contrat-rafly-ORD-${order._id}_${new Date().toISOString()}.pdf"
-                     style="display:inline-block; background:#28a745; color:#fff; padding:12px 20px; border-radius:6px; text-decoration:none; font-size:16px; font-weight:bold;">
-                     📑 Télécharger Contrat (PDF)
-                  </a>` : ''}
                 </td>
               </tr>
             </table>
@@ -595,10 +612,118 @@ const sendOrderEmailByAdmin = async (order, admin) => {
   await emailService.send();
   console.log("Email de commande admin envoyé avec succès");
 
-  return { zipPath, fileContratLink };
+  return { zipPath };
 };
 
-// Récupérer les commandes d’un utilisateur
+// Envoyer email de confirmation pour abonnement (sans fichiers)
+const sendSubscriptionEmailConfirmation = async (order, admin) => {
+  const WHATSAPP_NUMBER = '+2290169816413';
+  const subscriptionName = order.items[0]?.nameSubs || order.items[0]?.subscription?.title || 'MarxGeek Academy';
+  const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=Bonjour,%20j%27ai%20souscrit%20à%20l%27abonnement%20${encodeURIComponent(subscriptionName)}%20-%20Commande%20${order._id}`;
+
+  // Liste des produits inclus dans l'abonnement
+  let productsList = '';
+  if (order.items[0]?.subscription?.products && order.items[0].subscription.products.length > 0) {
+    productsList = order.items[0].subscription.products.map(p => `<li style="text-align:left; color:#555; margin-bottom:5px;">✓ ${p}</li>`).join('');
+  }
+
+  // Générer le mail HTML
+  const html = `
+  <!DOCTYPE html>
+  <html lang="fr">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Abonnement Confirmé</title>
+    </head>
+    <body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f7f7f7;">
+      <table style="margin: 0 auto;" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
+        <tr>
+          <td align="center" style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; padding:2px 0; background-color: white;">
+            <img src="https://api.marxgeek.com/logo/logo_academie_marxgeek.png" alt="Logo" style="width:40px; height:auto;" />
+            <h3 style="color: #fff; font-size: 24px;">MarxGeek Academy</h3>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+              <tr>
+                <td style="padding:30px; text-align:center;">
+                  <h2 style="margin-bottom:15px; color:#333;">🎉 Abonnement confirmé !</h2>
+                  <p style="color:#555; font-size:16px; margin-bottom:25px;">
+                    Votre paiement pour l'abonnement <strong>${subscriptionName}</strong> a été reçu avec succès !
+                  </p>
+                  <p style="color:#555; font-size:14px; margin-bottom:25px;">
+                    <strong>Numéro de commande:</strong> ORD-${order._id.toString().slice(0, 8).toUpperCase()}<br/>
+                    <strong>Montant:</strong> ${order.totalAmount.toLocaleString('fr-FR')} FCFA<br/>
+                    <strong>Date:</strong> ${order.createdAt.toLocaleDateString('fr-FR')}
+                  </p>
+
+                  ${productsList ? `
+                  <div style="background:#f0f0f0; padding:15px; border-radius:8px; margin:20px 0; text-align:left;">
+                    <h4 style="color:#333; margin-top:0;">📚 Formations incluses:</h4>
+                    <ul style="list-style:none; padding:0; margin:0;">
+                      ${productsList}
+                    </ul>
+                  </div>
+                  ` : ''}
+
+                  <div style="background:#e7f5ff; padding:20px; border-radius:8px; margin:25px 0; border-left:4px solid #25D366;">
+                    <h3 style="color:#25D366; margin-top:0;">📱 Prochaines étapes</h3>
+                    <p style="color:#555; text-align:left; margin-bottom:10px;">
+                      <strong>1.</strong> Contactez-nous sur WhatsApp en cliquant sur le bouton ci-dessous
+                    </p>
+                    <p style="color:#555; text-align:left; margin-bottom:10px;">
+                      <strong>2.</strong> Notre équipe vous enverra le pack complet de formation
+                    </p>
+                    <p style="color:#555; text-align:left; margin-bottom:10px;">
+                      <strong>3.</strong> Vous recevrez toutes les instructions pour commencer
+                    </p>
+                    <p style="color:#555; text-align:left; margin-bottom:0;">
+                      <strong>4.</strong> Profitez de l'accompagnement personnalisé par WhatsApp 24/7
+                    </p>
+                  </div>
+
+                  <a href="${WHATSAPP_LINK}"
+                     target="_blank"
+                     style="display:inline-block; background:#25D366; color:#fff; padding:15px 30px; border-radius:6px; text-decoration:none; font-size:18px; font-weight:bold; margin-top:15px;">
+                     💬 Contacter sur WhatsApp
+                  </a>
+
+                  <p style="color:#888; font-size:12px; margin-top:25px;">
+                    Vous pouvez également nous contacter directement au: ${WHATSAPP_NUMBER}
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center" style="padding:20px; font-size:12px; color:#888;">
+            © 2025 MarxGeek Academy. Tous droits réservés.
+          </td>
+        </tr>
+      </table>
+    </body>
+  </html>
+  `;
+
+  // Envoyer le mail
+  const emailService = new EmailService();
+  emailService.setSubject(`Abonnement ORD-${order._id.toString().slice(0, 6).toUpperCase()} confirmé - MarxGeek Academy`);
+  emailService.setFrom(process.env.EMAIL_HOST_USER, "MarxGeek Academy");
+  emailService.addTo(order?.customer?.email || order?.email);
+  emailService.setHtml(html);
+
+  await emailService.send();
+  console.log("Email de confirmation abonnement envoyé avec succès");
+
+  return true;
+};
+
+// Récupérer les commandes d'un utilisateur
 exports.getUserOrders = async (req, res) => {
   try {
     const customerId = req.params.customerId;
@@ -1144,7 +1269,7 @@ exports.createSimpleOrder = async (req, res) => {
     }
 
     // Créer la commande
-    const order = new Order({
+    const orderData = {
       customer: user._id,
       email,
       phoneNumber: phone,
@@ -1155,11 +1280,18 @@ exports.createSimpleOrder = async (req, res) => {
       })),
       totalAmount: totalPrice,
       paymentMethod: paymentMethod || 'mobile_money',
-      paymentStatus: 'pending',
-      status: 'pending',
+      paymentStatus: paymentStatus || 'pending',
+      status: paymentStatus === 'paid' ? 'confirmed' : 'pending',
       currency: 'FCFA',
       fromOrder: 'from site',
-    });
+    };
+
+    // Ajouter les données FedaPay si présentes
+    if (fedapayTransaction) {
+      orderData.fedapayTransaction = fedapayTransaction;
+    }
+
+    const order = new Order(orderData);
 
     await order.save();
 

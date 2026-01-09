@@ -28,7 +28,7 @@ async function testOrderCreation() {
     console.log(`   Mot de passe: ${product.ebookPassword || 'N/A'}\n`);
 
     // Données de test
-    const testEmail = `test${Date.now()}@rafly.me`;
+    const testEmail = `test${Date.now()}@academy.marxgeek.com.me`;
     const testPhone = '+229 97 12 34 56';
 
     console.log('📝 Données de test:');

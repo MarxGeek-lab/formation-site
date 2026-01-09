@@ -79,3 +79,23 @@ exports.getAllSubscription = async (req, res) => {
         return res.status(500).json({ message: 'Erreur lors de la récupération' });
     }
 }
+
+// Get published subscriptions for public site
+exports.getPublishedSubscriptions = async (req, res) => {
+    try {
+        const subscriptions = await Subscription.find({ isPublished: true })
+            .populate('relatedProducts')
+            .sort({ price: 1 }); // Sort by price ascending
+
+        return res.json({
+            success: true,
+            data: subscriptions
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: 'Erreur lors de la récupération des abonnements'
+        });
+    }
+}

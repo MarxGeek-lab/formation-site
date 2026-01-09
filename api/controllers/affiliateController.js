@@ -22,7 +22,7 @@ const affiliateController = {
             refCode = generateRefCode();
         }
 
-        const baseUrl = process.env.URL_APP || "https://rafly.me";
+        const baseUrl = process.env.URL_APP || "https://academy.marxgeek.com.me";
         let affiliate = await Affiliate.findOne({ user: user._id });
         if (!affiliate) {
             const settings = await SiteSettings.findOne();
@@ -297,7 +297,7 @@ const affiliateController = {
         try {
             const { name, email, phoneNumber, refCode } = req.body;
 
-            const hashedPassword = await encryptPassword("rafly@2025");
+            const hashedPassword = await encryptPassword("academy.marxgeek.com@2025");
 
             let code = refCode
             while (await Affiliate.findOne({ refCode: code })) {
@@ -312,7 +312,7 @@ const affiliateController = {
                     const affiliate = await Affiliate.create({ 
                         user: existingUser._id, 
                         refCode: code,
-                        referralLink: `${process.env.URL_APP || "https://rafly.me/fr"}?ref=${code}`,
+                        referralLink: `${process.env.URL_APP || "https://academy.marxgeek.com.me/fr"}?ref=${code}`,
                         commissionRate: 0.1,
                     });
                     await affiliate.save();
@@ -331,7 +331,7 @@ const affiliateController = {
             const affiliate = await Affiliate.create({ 
                 user: user._id, 
                 refCode: code,
-                referralLink: `${process.env.URL_APP || "https://rafly.me/fr"}?ref=${code}`,
+                referralLink: `${process.env.URL_APP || "https://academy.marxgeek.com.me/fr"}?ref=${code}`,
                 commissionRate: 0.1,
             });
             await affiliate.save();

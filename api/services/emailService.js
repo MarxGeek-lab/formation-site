@@ -109,7 +109,7 @@ async function sendAbandonedCartEmail(cart) {
 		/*
 		const emailService = new EmailService();
 		
-		emailService.setFrom(process.env.EMAIL_FROM || 'noreply@rafly.com', 'MarxGeek Academy');
+		emailService.setFrom(process.env.EMAIL_FROM || 'noreply@academy.marxgeek.com.com', 'MarxGeek Academy');
 		emailService.addTo(cart.email);
 		emailService.setSubject('Vous avez oublié quelque chose dans votre panier ! 🛒');
 		
@@ -187,7 +187,7 @@ function generateAbandonedCartEmailHTML(cart) {
 				</div>
 				
 				<div style="text-align: center; margin-bottom: 30px;">
-					<a href="${process.env.FRONTEND_URL || 'https://rafly.com'}/panier?restore=${cart._id}" 
+					<a href="${process.env.FRONTEND_URL || 'https://academy.marxgeek.com.com'}/panier?restore=${cart._id}" 
 					   style="background: #3498db; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
 						Finaliser ma commande
 					</a>
@@ -206,7 +206,7 @@ function generateAbandonedCartEmailHTML(cart) {
 				
 				<p style="font-size: 12px; color: #999; text-align: center; margin-top: 30px;">
 					Vous recevez cet email car vous avez des articles dans votre panier sur MarxGeek Academy.<br>
-					<a href="${process.env.FRONTEND_URL || 'https://rafly.com'}/unsubscribe?email=${cart.email}" style="color: #999;">Se désabonner</a>
+					<a href="${process.env.FRONTEND_URL || 'https://academy.marxgeek.com.com'}/unsubscribe?email=${cart.email}" style="color: #999;">Se désabonner</a>
 				</p>
 			</div>
 		</body>

@@ -21,14 +21,28 @@ const SubscriptionSchema = new mongoose.Schema({
     type: Number,
     min: 0
   },
+  period: {
+    type: String,
+    default: '/mois'
+  },
+  popular: {
+    type: Boolean,
+    default: false
+  },
   features: [{
     type: String,
     trim: true
   }],
   duration: {
     type: Number,
-    min: 0
+    min: 0,
+    comment: 'Duration in days'
   },
+  products: [{
+    type: String,
+    trim: true,
+    comment: 'List of included products/formations'
+  }],
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product'

@@ -136,7 +136,7 @@ class ReminderService {
     `;
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'noreply@rafly.me',
+      from: process.env.SMTP_FROM || 'noreply@academy.marxgeek.com.me',
       to: userEmail,
       subject: emailSubject,
       html: emailContent

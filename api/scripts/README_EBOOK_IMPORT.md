@@ -149,7 +149,7 @@ Le script utilise :
 
 ## Support
 
-Pour toute question : support@rafly.me
+Pour toute question : support@academy.marxgeek.com.me
 
 ---
 

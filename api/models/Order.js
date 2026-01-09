@@ -14,6 +14,11 @@ const orderSchema = new mongoose.Schema(
           ref: 'Product',
           required: false,
         },
+        subscriptionPlan: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Subscription',
+          required: false,
+        },
         quantity: {
           type: Number,
           required: false,
@@ -28,8 +33,21 @@ const orderSchema = new mongoose.Schema(
           type: Object,
           required: false,
         },
+        nameSubs: {
+          type: String,
+          required: false,
+        },
         productList: {
           type: String
+        },
+        category: {
+          type: String,
+          required: false,
+        },
+        type: {
+          type: String,
+          enum: ['achat', 'abonnement'],
+          default: 'achat',
         },
         options: {
           type: Object,
@@ -67,6 +85,34 @@ const orderSchema = new mongoose.Schema(
     paymentMethod: {
       type: String,
       default: 'Monero'
+    },
+    fedapayTransaction: {
+      transactionId: { type: Number },
+      reference: { type: String },
+      status: { type: String },
+      mode: { type: String },
+      operation: { type: String },
+      amount: { type: Number },
+      amountDebited: { type: Number },
+      amountTransferred: { type: Number },
+      fees: { type: Number },
+      commission: { type: String },
+      fixedCommission: { type: Number },
+      approvedAt: { type: Date },
+      canceledAt: { type: Date },
+      declinedAt: { type: Date },
+      refundedAt: { type: Date },
+      transferredAt: { type: Date },
+      toBeTransferredAt: { type: Date },
+      transactionKey: { type: String },
+      lastErrorCode: { type: String },
+      receiptUrl: { type: String },
+      paymentUrl: { type: String },
+      description: { type: String },
+      customerId: { type: Number },
+      paymentMethodId: { type: Number },
+      metadata: { type: Object },
+      customMetadata: { type: Object }
     },
     totalAmount: {
       type: Number,

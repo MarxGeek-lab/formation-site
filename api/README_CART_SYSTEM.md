@@ -37,17 +37,17 @@ Ajoutez ces variables à votre fichier `.env` :
 
 ```env
 # Base de données
-MONGODB_URI=mongodb://localhost:27017/rafly
+MONGODB_URI=mongodb://localhost:27017/academy.marxgeek.com
 
 # Configuration email
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=465
 EMAIL_HOST_USER=your-email@gmail.com
 EMAIL_HOST_PASSWORD=your-app-password
-EMAIL_FROM=noreply@rafly.com
+EMAIL_FROM=noreply@academy.marxgeek.com.com
 
 # URLs
-FRONTEND_URL=https://rafly.com
+FRONTEND_URL=https://academy.marxgeek.com.com
 
 # Environnement
 NODE_ENV=production

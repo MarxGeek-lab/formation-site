@@ -75,7 +75,7 @@ const newsletterMessageController = {
                         salutation: getGreeting(),
                         content: message.htmlContent,
                         websiteTitle: 'MarxGeek Academy',
-                        contactEmail: 'contact@rafly.com'
+                        contactEmail: 'contact@academy.marxgeek.com.com'
                     }));
 
                     emailService.send();

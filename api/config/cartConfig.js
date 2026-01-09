@@ -32,12 +32,12 @@ module.exports = {
     templates: {
       abandonedCart: {
         subject: 'Vous avez oublié quelque chose dans votre panier ! 🛒',
-        from: process.env.EMAIL_FROM || 'noreply@rafly.com',
+        from: process.env.EMAIL_FROM || 'noreply@academy.marxgeek.com.com',
         fromName: 'MarxGeek Academy'
       },
       followUp: {
         subject: 'Dernière chance ! Votre panier vous attend 💔',
-        from: process.env.EMAIL_FROM || 'noreply@rafly.com',
+        from: process.env.EMAIL_FROM || 'noreply@academy.marxgeek.com.com',
         fromName: 'MarxGeek Academy'
       }
     }
@@ -104,7 +104,7 @@ module.exports = {
   // URLs et liens
   urls: {
     // URL de base du frontend
-    frontend: process.env.FRONTEND_URL || 'https://rafly.com',
+    frontend: process.env.FRONTEND_URL || 'https://academy.marxgeek.com.com',
     
     // URL de restauration de panier
     cartRestore: '/panier?restore=',

@@ -72,7 +72,7 @@ const userController = {
             refCode = generateRefCode();
         }
 
-        const baseUrl = process.env.URL_APP || "https://rafly.me";
+        const baseUrl = process.env.URL_APP || "https://academy.marxgeek.com.me";
         let affiliate_user = await Affiliate.findOne({ user: newUser._id });
         if (!affiliate_user) {
           const settings = await SiteSettings.findOne();
@@ -181,7 +181,7 @@ const userController = {
             refCode = generateRefCode();
         }
 
-        const baseUrl = process.env.URL_APP || "https://rafly.me";
+        const baseUrl = process.env.URL_APP || "https://academy.marxgeek.com.me";
         let affiliate_user = await Affiliate.findOne({ user: userExisting._id });
         if (!affiliate_user) {
           const settings = await SiteSettings.findOne();

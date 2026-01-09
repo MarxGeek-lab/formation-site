@@ -8,7 +8,7 @@ const subscription = require('../controllers/subscriptionController');
 router.route('/').get(auth, subscription.getAllSubscription)
                 .post(auth, subscription.create)
 
-router.get('/public', subscription.getAllSubscription)
+router.get('/public', subscription.getPublishedSubscriptions)
 
 router.route('/:id').put(auth, subscription.update)
                     .delete(auth, subscription.delete);
