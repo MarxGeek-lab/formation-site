@@ -38,6 +38,12 @@ export default async function LocaleLayout({
    return (
     <html lang={locale} data-theme="dark">
     <head>
+        {/* FedaPay Checkout Script */}
+        <Script
+          src="https://cdn.fedapay.com/checkout.js?v=1.1.7"
+          strategy="beforeInteractive"
+        />
+
         {/* Facebook Pixel Script */}
         <Script
           id="fb-pixel"
@@ -81,26 +87,40 @@ export default async function LocaleLayout({
                   {/* Sidebar E-Books - Fixed on all pages */}
                   <Box sx={{
                     display: "flex",
+                    width: "100%",
+                    overflow: "hidden"
                   }}>
                     <EbookSidebar locale={locale} />
-                    <Box sx={{position: "relative"}}>
+                    <Box sx={{
+                      position: "relative",
+                      flex: 1,
+                      width: "100%",
+                      minWidth: 0,
+                      overflow: "hidden"
+                    }}>
                        {/* Header */}
                       <Header locale={locale} />
-                  
+
                       <Box
                         component="main"
                         sx={{
                           minHeight: '100vh',
                           ml: { xs: 0, lg: '280px' },
                           transition: 'margin 0.3s ease',
-                          pt: { xs: '80px', lg: 0 }
+                          pt: { xs: '0px', lg: 0 },
+                          width: { xs: '100%', lg: 'calc(100% - 280px)' },
+                          maxWidth: '100%',
+                          overflowX: 'hidden'
                         }}
                       >
                         {children}
                       </Box>
 
                       {/* Footer */}
-                      <Box sx={{ ml: { xs: 0, lg: '280px' } }}>
+                      <Box sx={{
+                        ml: { xs: 0, lg: '280px' },
+                        width: "100%"
+                      }}>
                         <Footer locale={locale} />
                       </Box>
                     </Box>
@@ -109,7 +129,7 @@ export default async function LocaleLayout({
                   <CartSidebar params={{ locale }} />
                   <NotificationToast />
                   <FloatingContactButtons />
-                  <SocialFloat />
+                  {/* <SocialFloat /> */}
                 </CartProvider>
               </NotificationProvider>
             </GlobalProvider>

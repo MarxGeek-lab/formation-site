@@ -298,12 +298,12 @@ export default function DashboardPage({ params }: { params: { locale: string } }
           justifyContent: 'space-between',
           p: 2,
           mb: 2,
-          backgroundColor: 'var(--primary-subtle)',
+          border: '1px solid var(--primary-main)',
           borderRadius: 2,
           boxShadow: 1
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
           <Avatar 
             sx={{ 
               width: 50, 
@@ -323,6 +323,19 @@ export default function DashboardPage({ params }: { params: { locale: string } }
               {user?.email}
             </Typography>
           </Box>
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<LogoutIcon />}
+            onClick={handleLogout}
+            sx={{ 
+              borderRadius: 2,
+              textTransform: 'none',
+              fontWeight: 500
+            }}
+          >
+            Mon profil
+          </Button>
         </Box>
         
         <Button
@@ -348,8 +361,8 @@ export default function DashboardPage({ params }: { params: { locale: string } }
           sx={{ 
             mb: { xs: 2, sm: 3 },
             borderRadius: 2,
-            background: 'rgba(255, 76, 60, 0.08)',
-            backdropFilter: 'blur(10px)',
+            // background: 'rgba(255, 76, 60, 0.02)',
+            // backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 76, 60, 0.15)',
             color: 'warning.dark',
             boxShadow: 'none',
@@ -464,7 +477,7 @@ export default function DashboardPage({ params }: { params: { locale: string } }
 
       <Grid2 container spacing={{ xs: 2, sm: 3 }}>
         {/* Actions rapides */}
-        <Grid2 size={{ xs: 12, md: 4 }}>
+        {/* <Grid2 size={{ xs: 12, md: 4 }}>
           <Card
             sx={{
               borderRadius: 2,
@@ -545,11 +558,11 @@ export default function DashboardPage({ params }: { params: { locale: string } }
               </Box>
             </CardContent>
           </Card>
-        </Grid2>
+        </Grid2> */}
 
 
         {/* Commandes récentes */}
-        <Grid2 size={{ xs: 12, md: 8 }}>
+        <Grid2 size={{ xs: 12 }}>
           <Card
             sx={{
               borderRadius: 2,

@@ -3,8 +3,8 @@ import styles from './ProductCard.module.scss';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { generateSlug } from "@/utils/utils";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
-import { AddShoppingCart } from "@mui/icons-material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Chip } from "@mui/material";
+import { AddShoppingCart, WhatsApp } from "@mui/icons-material";
 import { useCart } from '@/contexts/CartContext';
 import { useNotification } from '@/contexts/NotificationContext';
 import { useTracking } from '@/utils/trackingPixel';
@@ -21,13 +21,13 @@ interface ProductCardProps {
   locale: string;
 }
 
-export default function ProductCard({ 
-  product, 
-  locale 
+export default function ProductCard({
+  product,
+  locale
 }: ProductCardProps) {
   const router = useRouter();
   const t = useTranslations('Home');
-  const { addToCart, cart } = useCart();
+  const { addToCart, cart, toggleCart } = useCart();
   const { addNotification } = useNotification();
   const { trackProductView, trackAddToCart } = useTracking();
   const [openDemo, setOpenDemo] = useState(false);
@@ -38,6 +38,58 @@ export default function ProductCard({
     // Ouvrir le modal de détails au lieu de rediriger
     setOpenDetails(true);
     trackProductView(product._id);
+  };
+
+  const handleBuyClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    try {
+      const finalPrice = product?.pricePromo && product?.pricePromo !== 0 ? product.pricePromo : product.price;
+
+      // Tracker l'ajout au panier
+      trackAddToCart(product._id);
+
+      // Ajouter au panier
+      await addToCart({
+        id: product._id,
+        name: product.name,
+        price: finalPrice,
+        image: product?.photos?.[0] || '',
+        category: product.category,
+        type: 'achat'
+      });
+
+      // Tracking Facebook Pixel
+      if (typeof window.fbq !== "undefined") {
+        window.fbq('track', 'AddToCart', {
+          content_name: product.name,
+          content_ids: [product.id],
+          content_type: 'product',
+          value: finalPrice,
+        });
+      }
+
+      // Afficher notification de succès
+      addNotification({
+        type: 'success',
+        message: 'Produit ajouté au panier',
+        productName: product.name,
+        productImage: product?.photos?.[0] || '',
+        duration: 4000
+      });
+
+      // Ouvrir le panier sidebar après l'ajout
+      toggleCart();
+    } catch (error) {
+      console.error('Erreur ajout au panier:', error);
+
+      addNotification({
+        type: 'error',
+        message: 'Erreur lors de l\'ajout au panier',
+        productName: product.name,
+        duration: 4000
+      });
+    }
   };
 
   const handleAddToCart = async (e: React.MouseEvent) => {
@@ -130,7 +182,6 @@ export default function ProductCard({
         <div className={styles.imageContainer}>
           {product?.photos?.length > 0 ? (
             <ProductImage product={product} />
-          
           ) : (
             <div className={styles.imagePlaceholder}>
               <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
@@ -142,42 +193,32 @@ export default function ProductCard({
           <p className={styles.category}>
             <Translate text={product?.category} lang={locale} />
           </p>
-          {/* {product?.demoVideo && (
-             <Button
-                variant="contained"
-                sx={{
-                  position: "absolute",
-                  right: 8,
-                  bottom: 8,
-                  px: 1,
-                  py: 0.5,
-                  borderRadius: "8px",
-                  fontWeight: "600",
-                  textTransform: "none",
-                  fontSize: "15px",
-                  backgroundColor: "rgba(255, 255, 255, 1)",
-                  color: "#333",
-                  boxShadow: "0px 4px 10px rgba(0,0,0,0.8)",
-                  backdropFilter: "blur(4px)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    boxShadow: "0px 6px 14px rgba(0,0,0,0.4)",
-                    transform: "translateY(-2px)"
-                  },
-                }}
-                onClick={(e) => { e.stopPropagation(); setOpenDemo(true); }}
-              >
-                <Translate text="Voir démo" lang={locale} />
-              </Button>
-          )} */}
         </div>
 
       <div className={styles.content}>
         <h3 className={styles.title}>
           <Translate text={product?.name} lang={locale} />
         </h3>
-        
-        
+
+        {/* Badge WhatsApp Support */}
+        <Chip
+          icon={<WhatsApp sx={{ fontSize: 14 }} />}
+          label="Support WhatsApp inclus"
+          size="small"
+          sx={{
+            mt: 1,
+            mb: 1.5,
+            background: 'rgba(37, 211, 102, 0.15)',
+            color: '#25D366',
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            border: '1px solid rgba(37, 211, 102, 0.3)',
+            '& .MuiChip-icon': {
+              color: '#25D366',
+            },
+          }}
+        />
+
         <div className={styles.priceSection}>
           {product?.pricePromo && product?.pricePromo !== 0 ? (
             <Box className={styles.priceContainer}
@@ -195,7 +236,7 @@ export default function ProductCard({
               <span className={styles.price}>{price || 'F CFA '+product?.price}</span>
             </Box>
           )}
-          <button className={styles.accessButton} onClick={(e) => { e.stopPropagation(); handleClick(); }}>
+          <button className={styles.accessButton} onClick={handleBuyClick}>
             Acheter
           </button>
         </div>

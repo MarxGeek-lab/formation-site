@@ -1,6 +1,6 @@
 .floatingContainer {
   position: fixed;
-  bottom: 32px;
+  bottom: 250px;
   right: 32px;
   z-index: 1000;
   display: flex;
@@ -9,12 +9,10 @@
   align-items: flex-end;
 
   @media (max-width: 768px) {
-    bottom: 24px;
     right: 24px;
   }
 
   @media (max-width: 480px) {
-    bottom: 20px;
     right: 20px;
   }
 }

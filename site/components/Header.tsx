@@ -12,7 +12,7 @@ import LoginModal from './LoginModal';
 
 import styles from './Header/Header.module.scss';
 
-import logo from '@/assets/images/logo-1.webp';
+import logo from '@/assets/images/logo_academie_marxgeek.png';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/contexts/GlobalContext";
 import { Translate } from "./Translate";
@@ -33,7 +33,7 @@ export default function Header({ locale }: { locale: string }) {
     if (user) {
       router.push(`/${locale}/dashboard`);
     } else {
-      setIsLoginModalOpen(true);
+      router.push(`/${locale}/connexion`);
     }
   };
 
@@ -47,9 +47,8 @@ export default function Header({ locale }: { locale: string }) {
               <Image
                 src={logo}
                 alt="MarxGeek Academy Logo"
-                width={120}
-                height={42}
-                className={styles.logo}
+                width={160}
+                // className={styles.logo}
               />
             </a>
           </Box>
@@ -112,17 +111,20 @@ export default function Header({ locale }: { locale: string }) {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <nav className={styles.mobileNav}>
-            <a href={`/${locale}#tarification`} className={styles.mobileNavLink}>
-              {t('pricing')}
+            <a href={`/${locale}#tarification`} className={styles.navLink}>
+              {/* {t('pricing')} */}
+              Accueil
             </a>
-            <a href={`/${locale}/affiliation`} className={styles.mobileNavLink}>
-              {t('affiliation')}
+            <a href={`/${locale}#formations`} className={styles.navLink}>
+              {/* {t('pricing')} */}
+              Nos Formations
             </a>
-            <a href={`/${locale}/a-propos`} className={styles.mobileNavLink}>
+            <a href={`/${locale}#abonnements`} className={styles.navLink}>
+              {/* {t('pricing')} */}
+              Nos Abonnements
+            </a>
+            <a href={`/${locale}/a-propos`} className={styles.navLink}>
               {t('about')}
-            </a>
-            <a href={`/${locale}/panier`} className={styles.mobileNavLink}>
-              {t('cart')}
             </a>
 
             <button className={styles.ctaButtonMobile} onClick={handleAccountClick}>

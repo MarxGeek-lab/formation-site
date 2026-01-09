@@ -1,13 +1,18 @@
 .banner {
   position: fixed;
   bottom: 0;
-  left: 0;
+  // left: 0;
+  width: calc(100vw - 280px) !important;
   right: 0;
   z-index: 1000;
   background: linear-gradient(135deg, rgba(250, 0, 63, 0.95) 0%, rgba(199, 0, 50, 0.95) 100%);
   backdrop-filter: blur(10px);
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
   border-top: 2px solid rgba(255, 255, 255, 0.1);
+
+   @media (max-width: 1200px) {
+    width: 100% !important;
+  }
 }
 
 .content {

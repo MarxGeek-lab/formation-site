@@ -8,6 +8,9 @@ import { useRouter } from "next/navigation";
 import { useProductStore } from "@/contexts/GlobalContext";
 import styles from "./EbookSidebar.module.scss";
 
+import logo from '@/assets/images/logo_academie_marxgeek.png';
+import Image from "next/image";
+
 interface EbookSidebarProps {
   locale: string;
   onCategoryChange?: (category: string) => void;
@@ -23,21 +26,6 @@ const defaultCategories = [
   { id: "cloud", name: "Cloud & DevOps", icon: Cloud },
   { id: "security", name: "Sécurité", icon: Security },
   { id: "database", name: "Base de données", icon: Storage },
-];
-
-const priceRanges = [
-  { value: "all", label: "Tous les prix" },
-  { value: "0-20", label: "0€ - 20€" },
-  { value: "20-50", label: "20€ - 50€" },
-  { value: "50-100", label: "50€ - 100€" },
-  { value: "100+", label: "100€ et plus" },
-];
-
-const levels = [
-  { value: "all", label: "Tous les niveaux" },
-  { value: "beginner", label: "Débutant" },
-  { value: "intermediate", label: "Intermédiaire" },
-  { value: "advanced", label: "Avancé" },
 ];
 
 export default function EbookSidebar({ locale, onCategoryChange, onSearchChange, onFilterChange }: EbookSidebarProps) {
@@ -109,22 +97,20 @@ export default function EbookSidebar({ locale, onCategoryChange, onSearchChange,
     setMobileOpen(false);
   };
 
-  const handleFilterChange = () => {
-    onFilterChange?.({
-      priceRange,
-      level,
-      category: selectedCategory,
-      search: searchTerm,
-    });
-  };
-
   const sidebarContent = (
     <Box className={`${styles.sidebar} ${theme === 'light' ? styles.light : styles.dark}`}>
       {/* Header */}
       <Box className={styles.sidebarHeader}>
         <h2 className={styles.sidebarTitle}>
-          <MenuBook sx={{ mr: 1 }} />
-          E-Books
+          <a href={`/${locale}`}>
+            <Image
+              src={logo}
+              alt="MarxGeek Academy Logo"
+              width={150}
+              // height={52}
+              // className={styles.logo}
+            />
+          </a>
         </h2>
         <IconButton 
           className={styles.closeButton}
@@ -179,92 +165,13 @@ export default function EbookSidebar({ locale, onCategoryChange, onSearchChange,
                 className={`${styles.categoryItem} ${selectedCategory === category.id ? styles.active : ''}`}
                 onClick={() => handleCategoryChange(category.id)}
               >
-                <IconComponent sx={{ fontSize: 20, mr: 1 }} />
+                <IconComponent sx={{ fontSize: 20, mr: 1, color: "white" }} />
                 <span>{category.name}</span>
               </button>
             );
           })}
         </Box>
       </Box>
-
-      {/* Filters */}
-      {/* <Box className={styles.filtersSection}>
-        <h3 className={styles.sectionTitle}>Filtres</h3>
-        
-        <FormControl fullWidth size="small" className={styles.filterControl}>
-          <InputLabel>Prix</InputLabel>
-          <Select
-            value={priceRange}
-            label="Prix"
-            onChange={(e) => {
-              setPriceRange(e.target.value);
-              handleFilterChange();
-            }}
-          >
-            {priceRanges.map((range) => (
-              <MenuItem key={range.value} value={range.value}>
-                {range.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl fullWidth size="small" className={styles.filterControl}>
-          <InputLabel>Niveau</InputLabel>
-          <Select
-            value={level}
-            label="Niveau"
-            onChange={(e) => {
-              setLevel(e.target.value);
-              handleFilterChange();
-            }}
-          >
-            {levels.map((lvl) => (
-              <MenuItem key={lvl.value} value={lvl.value}>
-                {lvl.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {(priceRange !== "all" || level !== "all" || selectedCategory !== "all") && (
-          <Box className={styles.activeFilters}>
-            <p className={styles.activeFiltersLabel}>Filtres actifs:</p>
-            <Box className={styles.chipContainer}>
-              {selectedCategory !== "all" && (
-                <Chip
-                  label={categories.find(c => c.id === selectedCategory)?.name}
-                  onDelete={() => handleCategoryChange("all")}
-                  size="small"
-                  color="primary"
-                />
-              )}
-              {priceRange !== "all" && (
-                <Chip
-                  label={priceRanges.find(p => p.value === priceRange)?.label}
-                  onDelete={() => {
-                    setPriceRange("all");
-                    handleFilterChange();
-                  }}
-                  size="small"
-                  color="primary"
-                />
-              )}
-              {level !== "all" && (
-                <Chip
-                  label={levels.find(l => l.value === level)?.label}
-                  onDelete={() => {
-                    setLevel("all");
-                    handleFilterChange();
-                  }}
-                  size="small"
-                  color="primary"
-                />
-              )}
-            </Box>
-          </Box>
-        )}
-      </Box> */}
 
       {/* CTA Button */}
       <Box className={styles.ctaSection}>
@@ -289,7 +196,7 @@ export default function EbookSidebar({ locale, onCategoryChange, onSearchChange,
           display: { lg: 'none' },
           position: 'fixed',
           left: 16,
-          top: 100,
+          top: 60,
           zIndex: 1200,
           bgcolor: 'primary.main',
           color: 'white',

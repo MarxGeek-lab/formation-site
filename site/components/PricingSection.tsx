@@ -1,119 +1,136 @@
 'use client';
 
-import { Box, Container, Typography } from '@mui/material';
-import { Check } from '@mui/icons-material';
+import { useState, useEffect } from 'react';
+import { Box, Container, Typography, Alert, CircularProgress } from '@mui/material';
+import { Check, WhatsApp } from '@mui/icons-material';
 import { useTranslations } from 'next-intl';
 import Grid from '@mui/material/Grid2';
 import styles from './PricingSection.module.scss';
 import { useRouter } from 'next/navigation';
+import PaymentModal from './PaymentModal';
+import { API_URL } from '@/settings/constant';
 
-const plans = [
-  {
-    name: 'Basic',
-    xofPrice: '10 000 XOF',
-    period: 'paiement unique',
-    description:
-      'Pour apprendre les bases du développement web à ton rythme.',
-    features: [
-      'Accès complet aux formations HTML, CSS et JavaScript',
-      'Parcours pédagogique structuré et progressif',
-      'Exercices pratiques après chaque module',
-      'Suivi de progression automatisé',
-      'Support par email',
-      'Accès à vie aux contenus',
-    ],
-    popular: false,
-  },
-  {
-    name: 'Populaire',
-    price: '79 €',
-    xofPrice: '25 000 XOF',
-    period: '/mois',
-    description:
-      'Idéal pour progresser rapidement avec un suivi actif et interactif',
-    features: [
-      'Accès complet aux formations HTML, CSS et JavaScript',
-      'Accès au module de formation React.js',
-      'Projets pratiques encadrés (HTML / CSS / JavaScript / React)',
-      'Suivi actif et interactif avec retours personnalisés',
-      'Corrections détaillées des exercices et projets',
-      'Sessions d’échanges (chat ou visio selon planning)',
-      'Support WhatsApp prioritaire',
-    ],
-    popular: true,
-  },
-  {
-    name: 'Avancé',
-    price: '199 €',
-    xofPrice: '70 000 XOF',
-    period: '/mois',
-    description:
-      'Un accompagnement intensif pour atteindre un niveau professionnel',
-    features: [
-      'Toutes les fonctionnalités du plan Populaire',
-      'Suivi personnalisé individuel (one-to-one)',
-      'Coaching technique régulier',
-      'Projets réels simulant des cas professionnels',
-      'Revue de code approfondie et bonnes pratiques',
-      'Plan de progression personnalisé selon le niveau',
-      'Préparation à l’insertion professionnelle (portfolio, conseils, orientation)',
-    ],
-    popular: false,
-  },
-];
-
+interface Subscription {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  priceEUR?: number;
+  period: string;
+  popular: boolean;
+  features: string[];
+  products: string[];
+  duration: number;
+}
 
 export default function PricingSection({ locale }: { locale: string }) {
   const t = useTranslations('Pricing');
   const router = useRouter();
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch subscriptions from API
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      try {
+        const response = await fetch(`${API_URL}subscription/public`);
+        const data = await response.json();
+        if (data.success) {
+          setSubscriptions(data.data);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des abonnements:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSubscriptions();
+  }, []);
+
+  const handleSelectPlan = (plan: any) => {
+    setSelectedPlan(plan);
+    setPaymentModalOpen(true);
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
+    <>
     <Box
       id="tarification"
       className={styles.pricingSection}
     >
       <Container maxWidth="lg">
         <Box className={styles.pricingHeader}>
-          <Typography variant="h2" 
+          <Typography variant="h2"
           // className="titlePageSection"
           sx={{textAlign: "center", fontWeight: "700", fontSize: "40px"}}>
             Nos abonnements
           </Typography>
         </Box>
 
-        <Grid container spacing={3} justifyContent="center">
-          {plans.map((plan) => (
-            <Grid size={{ xs: 12, md: 4 }} key={plan.name}>
+        {/* Section mise en avant WhatsApp */}
+        <Alert
+          icon={<WhatsApp sx={{ fontSize: 28 }} />}
+          severity="success"
+          sx={{
+            mb: 4,
+            background: 'linear-gradient(135deg, rgba(37, 211, 102, 0.15) 0%, rgba(29, 168, 81, 0.15) 100%)',
+            border: '2px solid rgba(37, 211, 102, 0.4)',
+            borderRadius: '12px',
+            '& .MuiAlert-icon': {
+              color: '#25D366',
+            },
+          }}
+        >
+          <Typography variant="h6" fontWeight={700} gutterBottom sx={{ color: '#25D366' }}>
+            🎯 Notre avantage principal : Suivi WhatsApp personnalisé
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
+            Tous nos abonnements incluent un accompagnement direct par WhatsApp. Posez vos questions, partagez vos difficultés,
+            et recevez des réponses rapides et personnalisées. Vous n'êtes jamais seul dans votre apprentissage !
+          </Typography>
+        </Alert>
+
+        <Grid container spacing={3} justifyContent="center" id="abonnements">
+          {subscriptions.map((subscription) => (
+            <Grid size={{ xs: 12, md: 4 }} key={subscription._id}>
               <Box
-                className={`${styles.pricingCard} ${plan.popular ? styles.popular : ''}`}
+                className={`${styles.pricingCard} ${subscription.popular ? styles.popular : ''}`}
               >
-                {plan.popular && (
+                {subscription.popular && (
                   <Box className={styles.popularBadge}>
                     Plus populaire
                   </Box>
                 )}
                 <Typography className={styles.planName}>
-                  {plan.name}
+                  {subscription.title}
                 </Typography>
                 <Typography className={styles.planDescription}>
-                  {plan.description}
+                  {subscription.description}
                 </Typography>
                 <Box className={styles.planPrice}>
                   <Typography className={styles.price}>
-                    {plan.xofPrice}
+                    {subscription.price.toLocaleString('fr-FR')} XOF
                   </Typography>
                   <Typography className={styles.period}>
-                    {plan.period}
+                    / {subscription.duration > 1 ? subscription.duration : '' } {subscription.period}
                   </Typography>
                 </Box>
-                {/* <Typography className={styles.xofPrice}>
-                  {plan.xofPrice}
-                </Typography> */}
-                <button className={styles.planButton}>
+                <button className={styles.planButton} onClick={() => handleSelectPlan(subscription)}>
                   Choisir ce plan
                 </button>
                 <Box className={styles.featuresList}>
-                  {plan.features.map((feature, index) => (
+                  {subscription.features.map((feature, index) => (
                     <Box key={index} className={styles.feature}>
                       <Check className={styles.checkIcon} />
                       <Typography>{feature}</Typography>
@@ -126,5 +143,14 @@ export default function PricingSection({ locale }: { locale: string }) {
         </Grid>
       </Container>
     </Box>
+
+    {/* Modal de paiement pour abonnement */}
+    <PaymentModal
+      open={paymentModalOpen}
+      onClose={() => setPaymentModalOpen(false)}
+      locale={locale}
+      subscription={selectedPlan}
+    />
+    </>
   );
 }

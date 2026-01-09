@@ -44,10 +44,9 @@ interface PaymentModalProps {
   open: boolean;
   onClose: () => void;
   locale: string;
-  subscription?: any; // Pour les abonnements
 }
 
-export default function PaymentModal({ open, onClose, locale, subscription }: PaymentModalProps) {
+export default function PaymentModal({ open, onClose, locale }: PaymentModalProps) {
   const { cart, clearCart } = useCart();
   const { addNotification } = useNotification();
 
@@ -56,7 +55,6 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
-  const [orderData, setOrderData] = useState<any>(null);
   const [errors, setErrors] = useState<{ email?: string; phone?: string }>({});
 
   const PAYMENT_NUMBER = '+229 01 69 81 64 13';
@@ -197,123 +195,45 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
     setLoading(true);
 
     try {
-      const isSubscription = !!subscription;
-
-      // Helper pour obtenir le prix de l'abonnement (compatible avec ancien et nouveau format)
-      const getSubscriptionPrice = () => {
-        if (subscription.price && typeof subscription.price === 'number') {
-          return subscription.price; // Nouveau format depuis API
-        }
-        if (subscription.xofPrice) {
-          return parseInt(subscription.xofPrice.replace(/\s/g, '')); // Ancien format
-        }
-        return 0;
-      };
-
-      const amount = isSubscription
-        ? getSubscriptionPrice()
-        : cart.totalPrice;
-      const description = isSubscription
-        ? `Abonnement ${subscription.title || subscription.name} - MarxGeek Academy`
-        : `Achat de ${cart.totalItems} formation(s) - MarxGeek Academy`;
-
       const checkout = window.FedaPay.init({
         public_key: 'pk_live_wcljr02MctKoLB1XRzS16wis',
         environment: 'live',
         locale: locale === 'fr' ? 'fr' : 'en',
         transaction: {
-          amount: 100,
-          // amount: amount,
-          description: description,
+          amount: cart.totalPrice,
+          description: `Achat de ${cart.totalItems} formation(s) - MarxGeek Academy`,
         },
         customer: {
           email: email,
           phone_number: phone,
         },
-        onComplete: async (reason: any, transaction: any) => {
+        onComplete: async (reason: string, transaction: any) => {
           setLoading(false);
-          console.log(transaction)
-          console.log(reason)
-          if (reason?.reason === "CHECKOUT COMPLETE") {
+
+          if (reason === window.FedaPay.CHECKOUT_COMPLETED) {
             // Paiement réussi
             try {
-              const txn = reason?.transaction || {};
-              const isSubscription = !!subscription;
-
-              // Helper pour obtenir le prix de l'abonnement
-              const getSubscriptionPrice = () => {
-                if (subscription.price && typeof subscription.price === 'number') {
-                  return subscription.price;
-                }
-                if (subscription.xofPrice) {
-                  return parseInt(subscription.xofPrice.replace(/\s/g, ''));
-                }
-                return 0;
-              };
-
               // Créer la commande dans la base de données
-              const response = await fetch(`${API_URL}orders`, {
+              const response = await fetch(`${API_URL}orders/create`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                   email,
-                  phoneNumber: phone,
-                  items: isSubscription
-                    ? [{
-                        id: subscription._id || 'subscription',
-                        name: subscription.title || subscription.name,
-                        price: getSubscriptionPrice(),
-                        quantity: 1,
-                        type: 'abonnement',
-                        subscription: JSON.stringify({
-                          title: subscription.title || subscription.name,
-                          duration: subscription.duration || 30,
-                          products: subscription.products || []
-                        })
-                      }]
-                    : cart.items.map((item) => ({
-                        id: item.id,
-                        name: item.name,
-                        price: item.price,
-                        quantity: item.quantity,
-                        type: item.type || 'achat'
-                      })),
-                  totalAmount: isSubscription
-                    ? getSubscriptionPrice()
-                    : cart.totalPrice,
-                  typeOrder: isSubscription ? 'abonnement' : 'achat',
+                  phone,
+                  items: cart.items.map((item) => ({
+                    productId: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                  })),
+                  totalPrice: cart.totalPrice,
+                  totalItems: cart.totalItems,
                   paymentMethod: 'fedapay',
+                  transactionId: transaction.id,
+                  transactionReference: transaction.reference,
                   paymentStatus: 'paid',
-                  fedapayTransaction: {
-                    transactionId: txn.id,
-                    reference: txn.reference,
-                    status: txn.status,
-                    mode: txn.mode,
-                    operation: txn.operation,
-                    amount: txn.amount,
-                    amountDebited: txn.amount_debited,
-                    amountTransferred: txn.amount_transferred,
-                    fees: txn.fees,
-                    commission: txn.commission,
-                    fixedCommission: txn.fixed_commission,
-                    approvedAt: txn.approved_at,
-                    canceledAt: txn.canceled_at,
-                    declinedAt: txn.declined_at,
-                    refundedAt: txn.refunded_at,
-                    transferredAt: txn.transferred_at,
-                    toBeTransferredAt: txn.to_be_transferred_at,
-                    transactionKey: txn.transaction_key,
-                    lastErrorCode: txn.last_error_code,
-                    receiptUrl: txn.receipt_url,
-                    paymentUrl: txn.payment_url,
-                    description: txn.description,
-                    customerId: txn.customer_id,
-                    paymentMethodId: txn.payment_method_id,
-                    metadata: txn.metadata,
-                    customMetadata: txn.custom_metadata
-                  }
                 }),
               });
 
@@ -323,10 +243,7 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
                 throw new Error(data.message || 'Erreur lors de la création de la commande');
               }
 
-              console.log(data)
-
-              setOrderId(data._id);
-              setOrderData(data);
+              setOrderId(data.orderId);
               addNotification({
                 type: 'success',
                 message: 'Paiement réussi ! Commande créée avec succès',
@@ -514,34 +431,22 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
                 mb: 2,
                 '& .MuiInputBase-input': {
                   color: '#fff',
-                  outline: 'none',
-                  background: 'none'
                 },
                 '& .MuiInputLabel-root': {
                   color: '#fff',
-                   outline: 'none',
-                  background: 'none'
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
                   color: '#fff',
-                   outline: 'none',
-                  background: 'none'
                 },
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
                     borderColor: 'rgba(255,255,255,0.5)',
-                     outline: 'none',
-                  background: 'none'
                   },
                   '&:hover fieldset': {
                     borderColor: '#fff',
-                     outline: 'none',
-                  background: 'none'
                   },
                   '&.Mui-focused fieldset': {
                     borderColor: '#fff',
-                     outline: 'none',
-                  background: 'none'
                   },
                 },
                 '& .MuiFormHelperText-root': {
@@ -592,39 +497,18 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
             <Divider sx={{ my: 3 }} />
 
             <Typography variant="h6" gutterBottom fontWeight={600}>
-              {subscription ? 'Détails de l\'abonnement' : 'Récapitulatif de la commande'}
+              Récapitulatif de la commande
             </Typography>
 
             <Box className={styles.orderSummary}>
-              {subscription ? (
-                <>
-                  <Box className={styles.orderItem}>
-                    <Typography variant="body2" fontWeight={600}>{subscription.title || subscription.name}</Typography>
-                    <Typography variant="body2" fontWeight={600}>
-                      {subscription.price ? `${subscription.price.toLocaleString('fr-FR')} XOF` : subscription.xofPrice}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ mt: 2, p: 2, background: 'rgba(37, 211, 102, 0.1)', borderRadius: '8px', border: '1px solid rgba(37, 211, 102, 0.3)' }}>
-                    <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
-                      <strong>Inclus dans cet abonnement:</strong>
-                    </Typography>
-                    {subscription.features.slice(0, 3).map((feature: string, index: number) => (
-                      <Typography key={index} variant="body2" sx={{ fontSize: '0.85rem', mb: 0.5, color: 'rgba(255,255,255,0.8)' }}>
-                        • {feature}
-                      </Typography>
-                    ))}
-                  </Box>
-                </>
-              ) : (
-                cart.items.map((item) => (
-                  <Box key={item.id} className={styles.orderItem}>
-                    <Typography variant="body2">{item.name}</Typography>
-                    <Typography variant="body2" fontWeight={600}>
-                      {formatPrice(item.price)}
-                    </Typography>
-                  </Box>
-                ))
-              )}
+              {cart.items.map((item) => (
+                <Box key={item.id} className={styles.orderItem}>
+                  <Typography variant="body2">{item.name}</Typography>
+                  <Typography variant="body2" fontWeight={600}>
+                    {formatPrice(item.price)}
+                  </Typography>
+                </Box>
+              ))}
 
               <Divider sx={{ my: 2 }} />
 
@@ -633,9 +517,7 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
                   Total
                 </Typography>
                 <Typography variant="h6" fontWeight={700} color="#FA003F">
-                  {subscription
-                    ? (subscription.price ? `${subscription.price.toLocaleString('fr-FR')} XOF` : subscription.xofPrice)
-                    : formatPrice(cart.totalPrice)}
+                  {formatPrice(cart.totalPrice)}
                 </Typography>
               </Box>
             </Box>
@@ -645,6 +527,12 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
         {/* Étape 2: Paiement */}
         {activeStep === 1 && (
           <Box className={styles.step2}>
+            <Alert severity="info" sx={{ mb: 3, background: '#7e4444ff' }}>
+              <Typography variant="body2" fontWeight={600}>
+                Deux options s'offrent à vous pour accéder aux formations
+              </Typography>
+            </Alert>
+
             {/* Option 1: Payer maintenant */}
             <Box className={styles.paymentOption}>
               <Box className={styles.optionHeader}>
@@ -654,33 +542,13 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
                 </Typography>
               </Box>
 
-              {/* <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2, p: 2, background: 'rgba(255, 255, 255, 0.05)', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                <Image src={fedapay} alt="FedaPay" width={120} height={40} style={{ objectFit: 'contain' }} />
-              </Box> */}
-
-              <Alert severity="success" sx={{ my: 2, background: "rgba(16, 185, 129, 0.1)", border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+              <Alert severity="success" sx={{ my: 2, background: "rgba(16, 185, 129, 0.1)" }}>
                 <Typography variant="body2" fontWeight={600} gutterBottom>
                   Paiement sécurisé via FedaPay
                 </Typography>
-                <Typography variant="body2" sx={{ fontSize: '0.875rem', mb: 1.5 }}>
-                  Payez en toute sécurité avec Mobile Money ou Carte bancaire
+                <Typography variant="body2">
+                  Payez en toute sécurité avec Mobile Money (MTN, Moov, etc.)
                 </Typography>
-                <Box sx={{ display: 'flex', flexDirection: "row", gap: 0.5, mt: 1.5, pt: 1.5, borderTop: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                  <Image src={fedapay} alt="FedaPay" width={100}  style={{ objectFit: 'contain' }} />
-                  <Box sx={{ display: 'flex', flexDirection: "row", flexWrap: 'wrap', gap: 0.5, pt: 1.5, borderTop: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                    {['MTN Bénin', 'MTN Côte d\'Ivoire', 'Moov Bénin', 'Moov Togo', 'Wave Côte d\'Ivoire', 'T-Money', 'Orange Mali', 'Free Sénégal', 'Airtel Niger', 'Celtiis Cash', 'Bestcash Money'].map((method) => (
-                      <Box key={method} sx={{ 
-                        px: 1, 
-                        height: "30px", 
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: 'rgba(16, 185, 129, 0.15)', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 500, color: 'rgba(255, 255, 255, 0.9)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                        {method}
-                      </Box>
-                    ))}
-                  </Box>
-                </Box>
               </Alert>
 
               <Button
@@ -695,7 +563,6 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
                   fontSize: '1.1rem',
                   fontWeight: 700,
                   py: 1.5,
-                  height: "52px",
                   '&:hover': {
                     background: 'linear-gradient(135deg, #C70032 0%, #8B0022 100%)',
                   },
@@ -704,9 +571,7 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
                 {loading ? (
                   <CircularProgress size={24} color="inherit" />
                 ) : (
-                  subscription
-                    ? `Payer ${subscription.price ? subscription.price.toLocaleString('fr-FR') + ' XOF' : subscription.xofPrice}`
-                    : `Payer ${formatPrice(cart.totalPrice)}`
+                  `Payer ${formatPrice(cart.totalPrice)}`
                 )}
               </Button>
 
@@ -723,7 +588,6 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
                   onClick={handleWhatsAppContact}
                   fullWidth
                   sx={{
-                    height: "52px",
                     background: '#25D366',
                     '&:hover': {
                       background: '#1DA851',
@@ -733,13 +597,35 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
                   Contact
                 </Button>
               </Box>
+
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={handleConfirmPayment}
+                disabled={loading}
+                sx={{
+                  mt: 2,
+                  borderColor: '#FA003F',
+                  color: '#FA003F',
+                  '&:hover': {
+                    borderColor: '#C70032',
+                    background: 'rgba(250, 0, 63, 0.05)',
+                  },
+                }}
+              >
+                {loading ? (
+                  <CircularProgress size={24} />
+                ) : (
+                  "J'ai payé manuellement"
+                )}
+              </Button>
             </Box>
 
-            {/* <Divider sx={{ my: 3 }}>
+            <Divider sx={{ my: 3 }}>
               <Typography variant="body2" color="textSecondary">
                 OU
               </Typography>
-            </Divider> */}
+            </Divider>
 
             {/* Option 2: Télécharger et payer après */}
             {/* <Box className={styles.paymentOption}>
@@ -788,127 +674,22 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
             <CheckCircle sx={{ fontSize: 80, color: '#10B981', mb: 2 }} />
 
             <Typography variant="h5" fontWeight={700} gutterBottom>
-              {orderData?.paymentStatus === 'paid' ? 'Paiement confirmé !' : 'Commande enregistrée !'}
+              Commande enregistrée !
             </Typography>
 
             <Typography variant="body1" color="textSecondary" mb={3}>
               Numéro de commande : <strong>ORD-{orderId?.slice(0, 8).toLocaleUpperCase()}</strong>
             </Typography>
 
-            {orderData?.paymentStatus === 'paid' && orderData?.typeOrder === 'abonnement' ? (
-              <>
-                <Alert severity="success" sx={{ mb: 3, textAlign: 'left', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                  <Typography variant="body2" fontWeight={600} gutterBottom>
-                    🎉 Votre abonnement est confirmé !
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 2 }}>
-                    Votre paiement a été reçu avec succès. Un email de confirmation vous a été envoyé.
-                  </Typography>
-                  <Typography variant="body2" fontWeight={600} gutterBottom>
-                    Prochaines étapes :
-                  </Typography>
-                  <Typography variant="body2">
-                    1. Contactez-nous sur WhatsApp pour recevoir le pack complet
-                  </Typography>
-                  <Typography variant="body2" mt={1}>
-                    2. Vous recevrez toutes les instructions pour commencer votre formation
-                  </Typography>
-                  <Typography variant="body2" mt={1}>
-                    3. Notre équipe vous accompagnera tout au long de votre apprentissage
-                  </Typography>
-                </Alert>
-
-                <Box display="flex" flexDirection="column" gap={2}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={<WhatsApp />}
-                    onClick={handleWhatsAppContact}
-                    sx={{
-                      background: '#25D366',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      py: 1.5,
-                      '&:hover': {
-                        background: '#1DA851',
-                      },
-                    }}
-                  >
-                    Contacter sur WhatsApp
-                  </Button>
-                </Box>
-              </>
-            ) : orderData?.paymentStatus === 'paid' && orderData?.productZip ? (
-              <>
-                <Alert severity="success" sx={{ mb: 3, textAlign: 'left', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                  <Typography variant="body2" fontWeight={600} gutterBottom>
-                    🎉 Votre paiement a été confirmé !
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 2 }}>
-                    Vos fichiers sont prêts à être téléchargés. Un email contenant les liens vous a également été envoyé.
-                  </Typography>
-                  <Typography variant="body2" fontWeight={600} gutterBottom>
-                    Prochaines étapes :
-                  </Typography>
-                  <Typography variant="body2">
-                    1. Téléchargez vos formations ci-dessous
-                  </Typography>
-                  <Typography variant="body2" mt={1}>
-                    2. Contactez-nous sur WhatsApp pour toute assistance
-                  </Typography>
-                </Alert>
-
-                <Box display="flex" flexDirection="column" gap={2}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={<Download />}
-                    href={orderData.productZip}
-                    download
-                    target="_blank"
-                    sx={{
-                      background: '#10B981',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      py: 1.5,
-                      '&:hover': {
-                        background: '#059669',
-                      },
-                    }}
-                  >
-                    Télécharger mes formations
-                  </Button>
-
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    startIcon={<WhatsApp />}
-                    onClick={handleWhatsAppContact}
-                    sx={{
-                      background: '#25D366',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      py: 1.5,
-                      '&:hover': {
-                        background: '#1DA851',
-                      },
-                    }}
-                  >
-                    Contacter sur WhatsApp
-                  </Button>
-                </Box>
-              </>
-            ) : (
-              <>
-              <Alert severity="success" sx={{ mb: 3, textAlign: 'left', background: 'none' }}>
-                <Typography variant="body2" fontWeight={600} gutterBottom>
-                  Prochaines étapes :
-                </Typography>
-                <Typography variant="body2">
-                  1. Effectuez le paiement au numéro{' '}
-                  <span style={{ color: '#FA003F', fontWeight: 700 }}>
-                    {PAYMENT_NUMBER}
-                  </span>
+            <Alert severity="success" sx={{ mb: 3, textAlign: 'left', background: 'none' }}>
+              <Typography variant="body2" fontWeight={600} gutterBottom>
+                Prochaines étapes :
+              </Typography>
+              <Typography variant="body2">
+                1. Effectuez le paiement au numéro{' '}
+                <span style={{ color: '#FA003F', fontWeight: 700 }}>
+                  {PAYMENT_NUMBER}
+                </span>
               </Typography>
               <Typography variant="body2" mt={1}>
                 2. Contactez-nous via WhatsApp ou par téléphone
@@ -918,7 +699,7 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
               </Typography>
             </Alert>
 
-            <Box display="flex" gap={2} justifyContent="center" mt={2}>
+            <Box display="flex" gap={2} justifyContent="center">
               <Button
                 variant="outlined"
                 startIcon={<Phone />}
@@ -948,8 +729,6 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
                 Contacter sur WhatsApp
               </Button>
             </Box>
-            </>
-            )}
           </Box>
         )}
       </DialogContent>

@@ -105,14 +105,15 @@ export default function ConnexionPage({
   };
 
   return (
-    <Box sx={{ 
-      backgroundColor: 'var(--background)', 
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      // py: { xs: 4, md: 8 }
+    <Box sx={{
+      width: '100%',
+      maxWidth: '100%',
+      overflow: 'hidden',
+      py: 4
     }}>
-      <Container>
+      <Container maxWidth="lg" sx={{
+        px: { xs: 2, sm: 3, md: 4 }
+      }}>
         <Box className={styles.authContainer}>
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>

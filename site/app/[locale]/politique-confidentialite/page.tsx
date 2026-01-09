@@ -11,16 +11,17 @@ export default function PolitiqueConfidentialitePage({ params }: { params: { loc
   const t = useTranslations('PrivacyPolicy');
 
   return (
-    <Box sx={{ 
-      backgroundColor: 'var(--background)', 
-      minHeight: '100vh',
-      py: { xs: 4, md: 8 },
-      px: { xs: 2, md: 0 },
-      pb: 12
+    <Box sx={{
+      width: '100%',
+      maxWidth: '100%',
+      overflow: 'hidden',
+      py: 4
     }}>
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{
+        px: { xs: 2, sm: 3, md: 4 }
+      }}>
         <Box sx={{ mb: 6, textAlign: 'center' }}>
-          <Typography variant="h3" sx={{ 
+          <Typography variant="h3" sx={{
             fontSize: { xs: '1.8rem', md: '2.5rem' },
             fontWeight: 700,
             color: 'var(--foreground)',
@@ -29,7 +30,7 @@ export default function PolitiqueConfidentialitePage({ params }: { params: { loc
           }} className={'titlePageSection'}>
             {t('title')}
           </Typography>
-          <Typography variant="body1" sx={{ 
+          <Typography variant="body1" sx={{
             color: 'var(--muted-foreground)',
             maxWidth: '600px',
             mx: 'auto'
@@ -193,7 +194,7 @@ export default function PolitiqueConfidentialitePage({ params }: { params: { loc
           </section>
 
           {/* Contact Section */}
-          <section className={styles.contactSection}>
+          <section className={styles.contactSectionss}>
             <Typography variant="h4" className={styles.sectionTitle}>
               {t('contact.title')}
             </Typography>
@@ -202,10 +203,7 @@ export default function PolitiqueConfidentialitePage({ params }: { params: { loc
                 {t('contact.description')}
               </Typography>
               <Typography variant="body1" sx={{ mb: 1 }}>
-                <strong>{t('contact.email')}:</strong> support@rafly.me
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 1 }}>
-                <strong>{t('contact.supportPage')}:</strong> <a href={`/${locale}/support`} style={{ color: 'var(--primary)' }}>rafly.me/support</a>
+                <strong>{t('contact.email')}:</strong> mgangbala610@gmail.com
               </Typography>
               <Typography variant="body2" sx={{ 
                 color: 'var(--muted-foreground)',

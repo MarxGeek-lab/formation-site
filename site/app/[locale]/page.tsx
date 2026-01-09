@@ -57,6 +57,34 @@ export default function Home({ params }: { params: { locale: string } }) {
     );
   }
 
+  // Trier les produits : HTML, CSS, JavaScript en tête
+  displayProducts = displayProducts.sort((a, b) => {
+    const priorityOrder = ['html', 'css', 'javascript', 'javascript avancé'];
+    const categoryA = a.category?.toLowerCase() || '';
+    const categoryB = b.category?.toLowerCase() || '';
+
+    const indexA = priorityOrder.indexOf(categoryA);
+    const indexB = priorityOrder.indexOf(categoryB);
+
+    // Si les deux catégories sont dans la liste prioritaire
+    if (indexA !== -1 && indexB !== -1) {
+      return indexA - indexB;
+    }
+
+    // Si seulement A est dans la liste prioritaire
+    if (indexA !== -1) {
+      return -1;
+    }
+
+    // Si seulement B est dans la liste prioritaire
+    if (indexB !== -1) {
+      return 1;
+    }
+
+    // Sinon, trier par ordre alphabétique du nom
+    return (a.name || '').localeCompare(b.name || '');
+  });
+
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
   };
@@ -78,10 +106,6 @@ export default function Home({ params }: { params: { locale: string } }) {
     <>
       {/* Hero Section */}
       <HeroSection locale={locale} />
-
-      {/* Bannière Guide Gratuit */}
-      <FreeGuideBanner />
-
       <Box sx={{
         px: {xs: 0, sm: 6},
         pb: 14,
@@ -96,6 +120,8 @@ export default function Home({ params }: { params: { locale: string } }) {
             position: 'relative',
           }}
           >
+             {/* Bannière Guide Gratuit */}
+      <FreeGuideBanner />
             <div className="text-center mb-12">
               <Typography 
                 sx={{my: 2, mx: 'auto', textAlign: 'center'}} 

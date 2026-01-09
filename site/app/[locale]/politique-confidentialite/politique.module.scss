@@ -1,6 +1,7 @@
 .policyContent {
   max-width: 800px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .section {
@@ -8,9 +9,10 @@
   background: var(--card-background);
   border-radius: 12px;
   border: 1px solid var(--border);
-  
+  padding: 1.5rem;
+
   @media (max-width: 768px) {
-    padding: 0;
+    padding: 1rem;
   }
 }
 
@@ -51,14 +53,15 @@
   }
 }
 
-.contactSection {
+.contactSection,
+.contactSections {
   background: linear-gradient(135deg, var(--primary-subtle), var(--card-background));
   border: 2px solid var(--primary);
-  
+
   .sectionTitle {
     color: var(--primary) !important;
   }
-  
+
   .sectionContent {
     p {
       color: var(--foreground);

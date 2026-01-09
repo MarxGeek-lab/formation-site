@@ -24,7 +24,7 @@ export default function FloatingContactButtons() {
   return (
     <Box className={styles.floatingContainer}>
       {/* Boutons de contact */}
-      <Zoom in={isOpen} style={{ transitionDelay: isOpen ? '50ms' : '0ms' }}>
+      <Zoom in={true} style={{ transitionDelay: isOpen ? '50ms' : '0ms' }}>
         <Box>
           <Tooltip title="WhatsApp" placement="left">
             <Fab
@@ -44,7 +44,7 @@ export default function FloatingContactButtons() {
         </Box>
       </Zoom>
 
-      <Zoom in={isOpen} style={{ transitionDelay: isOpen ? '100ms' : '0ms' }}>
+      <Zoom in={true} style={{ transitionDelay: isOpen ? '100ms' : '0ms' }}>
         <Box>
           <Tooltip title="Email" placement="left">
             <Fab
@@ -65,7 +65,7 @@ export default function FloatingContactButtons() {
       </Zoom>
 
       {/* Bouton principal */}
-      <Fab
+      {/* <Fab
         className={styles.mainButton}
         onClick={toggleButtons}
         sx={{
@@ -79,7 +79,7 @@ export default function FloatingContactButtons() {
         }}
       >
         {isOpen ? <Close /> : <WhatsApp />}
-      </Fab>
+      </Fab> */}
     </Box>
   );
 }
