@@ -212,7 +212,7 @@ exports.createOrder = async (req, res) => {
     }
     // Notification for user
     const templateData = {
-      fullname: user.fullName,
+      fullname: user?.fullName || '',
       amount: totalAmount,
       orderId: "ORD-" + savedOrder._id.toString().slice(0, 6).toUpperCase(),
       status: statusObj[savedOrder.status],
@@ -364,9 +364,9 @@ exports.createOrderByAdmin = async (req, res) => {
       totalAmount,
       description: note || `Commande créée par l'admin ${req.user.name || req.user.email}`,
       email: user.email,
-      fullName: user.name,
-      address: user.address,
-      city: user.city,
+      fullName: user?.name || '',
+      address: user?.address,
+      city: user?.city,
       district: user.district,
       country: user.country,
       phoneNumber: user.phoneNumber,
@@ -437,7 +437,7 @@ exports.createOrderByAdmin = async (req, res) => {
     };
 
     const templateData = {
-      fullname: user.name,
+      fullname: user?.name || '',
       amount: totalAmount,
       orderId: "ORD-" + savedOrder._id?.toString().slice(0, 6).toUpperCase(),
       status: statusObj[savedOrder.status],
@@ -826,7 +826,7 @@ exports.reminderOrder = async (req, res) => {
 
       const templateData = {
         title: "Rappel pour votre commande ORD-" + order._id?.toString().slice(0, 6).toUpperCase()+" sur " + siteSetting?.websiteTitle,
-        fullname: order.customer.name,
+        fullname: order?.customer?.name || '',
         message: `Votre commande ORD- ${order._id?.toString().slice(0, 6).toUpperCase()} sur ${siteSetting?.websiteTitle} est en attente de confirmation.
         Veuillez confirmer votre commande en passant au paiement en passant par votre tableau de bord.`,
         orderId: "ORD-" + order._id?.toString().slice(0, 6).toUpperCase(),
@@ -900,7 +900,7 @@ exports.reminderOrder = async (req, res) => {
 
       const templateData = {
         title: "Annulation de votre commande ORD-" + order._id?.toString().slice(0, 6).toUpperCase()+" sur " + siteSetting?.websiteTitle,
-        fullname: order.customer.name,
+        fullname: order?.customer?.name || '',
         message: `Votre commande ORD- ${order._id?.toString().slice(0, 6).toUpperCase()} sur ${siteSetting?.websiteTitle} a été annulée. <br/>
         Raison: ${reason}`,
         orderId: "ORD-" + order._id?.toString().slice(0, 6).toUpperCase(),
@@ -959,7 +959,7 @@ exports.reminderOrder = async (req, res) => {
 
       const templateData = {
         title: "Facture de votre commande ORD-" + order._id?.toString().slice(0, 6).toUpperCase()+" sur " + siteSetting?.websiteTitle,
-        fullname: order.customer.name,
+        fullname: order?.customer?.name || '',
         message: `Veuillez télécharger la facture de votre commande ORD- ${order._id?.toString().slice(0, 6).toUpperCase()} sur ${siteSetting?.websiteTitle}.`,
         orderId: "ORD-" + order._id?.toString().slice(0, 6).toUpperCase(),
         items: `${order?.items?.map(item => {
@@ -980,7 +980,7 @@ exports.reminderOrder = async (req, res) => {
         websiteAddress: [siteSetting?.address || '', siteSetting?.city || '', siteSetting?.country || ''].join(', '),
         websitePhone: siteSetting?.contactPhoneCall,
         websiteEmail: siteSetting?.supportEmail,
-        client_name: order.shippingAddress.fullName || order.customer.name,
+        client_name: order.shippingAddress?.fullName || order.customer?.name || '',
         client_email: order.shippingAddress.email || order.customer.email,
         client_phone: order.shippingAddress.phone || order.customer.phone,
         client_address: [order.shippingAddress.address || "", order.shippingAddress.city || "", order.shippingAddress.district || "", order.shippingAddress.postalCode || "", order.shippingAddress.country || ""].join(", ") || [order.customer.address || "", order.customer.city || "", order.customer.district || "", order.customer.postalCode || "", order.customer.country || ""].join(", "),
