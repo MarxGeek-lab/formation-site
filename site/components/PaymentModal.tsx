@@ -222,8 +222,8 @@ export default function PaymentModal({ open, onClose, locale, subscription }: Pa
         environment: 'live',
         locale: locale === 'fr' ? 'fr' : 'en',
         transaction: {
-          amount: 100,
-          // amount: amount,
+          // amount: 100,
+          amount: amount,
           description: description,
         },
         customer: {
